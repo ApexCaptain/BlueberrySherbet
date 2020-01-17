@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="ble_scan_permission_request_title">주변 위치 권한 요청</string>
+    <string name="ble_scan_permission_request_message">블루투스 장비를 검색하기 위해 위치권한이 필요합니다.</string>
+
+</resources>

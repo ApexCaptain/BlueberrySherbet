@@ -1,0 +1,2 @@
+include ':BlueberrySherbetTestApplication', ':BlueberrySherbetAnnotations', ':BlueberrySherbetAnnotationProcessor', ':BlueberrySherbetCore'
+rootProject.name='BlueberrySherbet'

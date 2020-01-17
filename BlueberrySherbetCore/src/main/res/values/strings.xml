@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">BlueberrySherbet</string>
+
+    <string name="ble_scan_permission_request_title">Locational Permission Requested</string>
+    <string name="ble_scan_permission_request_message">Locational Permission required in order to scan for nearby bluetooth devices.</string>
+
+</resources>
