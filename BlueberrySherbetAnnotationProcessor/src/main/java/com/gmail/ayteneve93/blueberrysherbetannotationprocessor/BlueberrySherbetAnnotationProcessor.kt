@@ -1,12 +1,13 @@
 package com.gmail.ayteneve93.blueberrysherbetannotationprocessor
 
-import com.gmail.ayteneve93.blueberrysherbetannotations.Blueberry
+import com.gmail.ayteneve93.blueberrysherbetannotations.BlueberryService
 import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE
 
 
 import com.google.auto.service.AutoService
 import com.squareup.kotlinpoet.*
 import java.io.File
+import java.util.*
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment
@@ -25,7 +26,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
         return mutableSetOf(
-            Blueberry::class.java.name,
+            BlueberryService::class.java.name,
             WRITE::class.java.name
         )
     }
@@ -34,10 +35,17 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
 
     override fun process(annotations: MutableSet<out TypeElement>?, roundEnv: RoundEnvironment): Boolean {
         val writeMethodElements = roundEnv.getElementsAnnotatedWith(WRITE::class.java).filter { it.kind == ElementKind.METHOD }.map { it as ExecutableElement }
-        roundEnv.getElementsAnnotatedWith(Blueberry::class.java)
+        roundEnv.getElementsAnnotatedWith(BlueberryService::class.java)
             .forEach { eachBlueberryElement ->
                 if(eachBlueberryElement.kind != ElementKind.INTERFACE) {
-                    processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "The Class '${(eachBlueberryElement as TypeElement).asClassName()}' annotated with '${Blueberry::class.java}' is not an interface")
+                    processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "The Class '${(eachBlueberryElement as TypeElement).asClassName()}' annotated with '${BlueberryService::class.java}' is not an interface")
+                    return true
+                }
+                eachBlueberryElement.enclosedElements.find {
+                    it.getAnnotation(WRITE::class.java) == null
+                }?.let { unsupportedElement ->
+                    val unsupportedElementTypeName = unsupportedElement.kind.name.let { "${it.substring(0,1).toUpperCase(Locale.US)}${it.substring(1).toLowerCase(Locale.US)}" }
+                    processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "The $unsupportedElementTypeName '${unsupportedElement.simpleName}' is not Annotated with Blueberry Method Annotation")
                     return true
                 }
                 generateDeviceServiceImplement(

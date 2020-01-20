@@ -1,12 +1,13 @@
 package com.gmail.ayteneve93.blueberrysherbet
 
-import com.gmail.ayteneve93.blueberrysherbetannotations.Blueberry
+import com.gmail.ayteneve93.blueberrysherbetannotations.BlueberryService
 import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE
 
-@Blueberry
+@BlueberryService
 interface TestDeviceService {
 
     @WRITE
     fun test(msg : String) : String
+
 
 }
