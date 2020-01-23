@@ -1,11 +1,12 @@
-package com.gmail.ayteneve93.blueberrysherbet.device
+package com.gmail.ayteneve93.blueberrysherbetcore.device
 
 import android.bluetooth.*
 import android.content.Context
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
-import com.gmail.ayteneve93.blueberrysherbet.utility.BlueberryLogger
+import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
 import io.reactivex.disposables.Disposable
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 abstract class BlueberryDevice {
@@ -27,7 +28,6 @@ abstract class BlueberryDevice {
     private lateinit var mContext : Context
     private lateinit var mBluetoothGatt : BluetoothGatt
 
-
     private var mBluetoothGattCallback = object : BluetoothGattCallback() {
 
         override fun onReadRemoteRssi(gatt: BluetoothGatt?, rssi: Int, status: Int) {
@@ -41,7 +41,14 @@ abstract class BlueberryDevice {
 
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status)
-            setServices()
+            gatt?.let { bluetoothGatt ->
+                mCharacteristicList.clear()
+                bluetoothGatt.services.forEach { eachGattService ->
+                    mCharacteristicList.addAll(eachGattService.characteristics)
+                }
+            }
+            mIsServiceDiscovered = true
+            initiateBluetoothProgress()
         }
 
         override fun onPhyRead(gatt: BluetoothGatt?, txPhy: Int, rxPhy: Int, status: Int) {
@@ -102,7 +109,6 @@ abstract class BlueberryDevice {
         }
 
     }
-
     internal fun initialize(bluetoothDevice: BluetoothDevice, context : Context, autoConnect : Boolean) {
         this.mBluetoothDevice = bluetoothDevice
         mContext = context
@@ -143,9 +149,34 @@ abstract class BlueberryDevice {
     open fun onDeviceDisconnecting() = BlueberryLogger.d("Disconnecting from ${mBluetoothDevice.address}")
 
     /** Service Setting */
-    private fun setServices() {
+    private val mCharacteristicList = ArrayList<BluetoothGattCharacteristic>()
+    private var mIsServiceDiscovered = false
+    private var mIsBluetoothOnProgress = false
+    private val mBlueberryRequestQueue : PriorityQueue<BlueberryRequest<*>> = PriorityQueue { front, rear -> front.mPriority - rear.mPriority }
+    private var mCurrentRequest : BlueberryRequest<*>? = null
+    internal fun enqeueBlueberryRequest(blueberryRequest: BlueberryRequest<*>) {
+        if(mIsServiceDiscovered
+            && mCharacteristicList.find { it.uuid == blueberryRequest.mUuid } == null) {
+            BlueberryLogger.w("No Such Uuid Exists of '${blueberryRequest.mUuid}'")
+            return
+        }
+        mBlueberryRequestQueue.offer(blueberryRequest)
+        initiateBluetoothProgress()
+    }
+    private fun initiateBluetoothProgress() {
+        if(mIsServiceDiscovered
+            && bluetoothState.get() == BluetoothState.STATE_CONNECTED
+            && !mIsBluetoothOnProgress
+            && mBlueberryRequestQueue.isNotEmpty())
+            executeRequest()
+    }
+    private fun executeRequest() {
+        mCurrentRequest = mBlueberryRequestQueue.poll()
+        mCurrentRequest?.let { currentRequest ->
+            mCharacteristicList.find { it.uuid == currentRequest.mUuid }?.let {
 
-
+            }
+        }
     }
 
     /** Rssi Value Change Delegate */

@@ -1,27 +1,34 @@
 package com.gmail.ayteneve93.blueberrysherbetannotationprocessor
 
+import com.gmail.ayteneve93.blueberrysherbetannotations.BlueberryRequestType
 import com.gmail.ayteneve93.blueberrysherbetannotations.BlueberryService
 import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE
 
 
 import com.google.auto.service.AutoService
 import com.squareup.kotlinpoet.*
+import org.jetbrains.annotations.Nullable
 import java.io.File
+import java.lang.reflect.Type
 import java.util.*
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.TypeElement
+import javax.lang.model.element.*
+import javax.lang.model.type.TypeMirror
 import javax.tools.Diagnostic
+import kotlin.collections.ArrayList
+import kotlin.reflect.jvm.internal.impl.name.FqName
+import kotlin.reflect.jvm.internal.impl.platform.JavaToKotlinClassMap
+import kotlin.reflect.typeOf
 
 @AutoService(Processor::class)
+@Suppress("spellCheckingInspection")
 class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
     companion object {
-        const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
+        private const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
+        private const val BLUEBERRY_SHERBE_CORE_PACKAGE_NAME = "com.gmail.ayteneve93.blueberrysherbetcore"
     }
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
@@ -48,16 +55,19 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                     processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "The $unsupportedElementTypeName '${unsupportedElement.simpleName}' is not Annotated with Blueberry Method Annotation")
                     return true
                 }
-                generateDeviceServiceImplement(
+                return generateDeviceServiceImplement(
                     eachBlueberryElement,
                     writeMethodElements.filter { it.enclosingElement == eachBlueberryElement })
             }
         return false
     }
 
-    private val blueberryDeviceClass = Class.forName("com.gmail.ayteneve93.blueberrysherbet.device.BlueberryDevice")
+    private val blueberryDeviceClass = Class.forName("$BLUEBERRY_SHERBE_CORE_PACKAGE_NAME.device.BlueberryDevice")
     private val blueberryDevicePropertyName = "mBlueberryDevice"
-    private fun generateDeviceServiceImplement(blueberryElement : Element, writeMethods : List<ExecutableElement>) {
+
+    private val blueberryRequestTypePackageString = "com.gmail.ayteneve93.blueberrysherbetannotations.BlueberryRequestType"
+
+    private fun generateDeviceServiceImplement(blueberryElement : Element, writeMethods : List<ExecutableElement>) : Boolean {
         val className = blueberryElement.simpleName.toString()
         val packageName = processingEnv.elementUtils.getPackageOf(blueberryElement).toString()
         val fileName = "Blueberry${className}Impl"
@@ -76,12 +86,54 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                     .addStatement("this.${blueberryDevicePropertyName} = $blueberryDevicePropertyName")
                     .build()
             )
-
+            writeMethods.forEach { eachWriteMethod ->
+                if(!eachWriteMethod.returnType.asTypeName().toString().contains("com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryRequest")) {
+                    processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "Return Type of Method '${eachWriteMethod.simpleName}' Must be 'com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryRequest'")
+                    return true
+                }
+                addFunction(
+                    FunSpec.builder("${eachWriteMethod.simpleName}")
+                        .addModifiers(KModifier.OVERRIDE)
+                        .apply {
+                            eachWriteMethod.parameters.forEach { eachVariableElement ->
+                                addParameter(eachVariableElement.simpleName.toString(), eachVariableElement.javaToKotlinType())
+                            }
+                        }
+                        .returns(eachWriteMethod.returnType.javaToKotlinType())
+                        .addCode(
+                            """
+                                return ${eachWriteMethod.returnType.javaToKotlinType()}(mBlueberryDevice, "${eachWriteMethod.getAnnotation(WRITE::class.java).uuidString}", $blueberryRequestTypePackageString.WRITE, 10)
+                            """.trimIndent()
+                        )
+                        .build()
+                )
+            }
         }
 
         val file = fileBuilder.addType(classBuilder.build()).build()
         val kaptKotlinGeneratedDir = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
-        file.writeTo(File(kaptKotlinGeneratedDir))
+        file.writeTo(File(kaptKotlinGeneratedDir!!))
+        return false
+    }
+
+    private fun VariableElement.javaToKotlinType() : TypeName {
+        return asType().javaToKotlinType().let {
+            if(getAnnotation(Nullable::class.java) == null) it.asNonNullable()
+            else it.asNullable()
+        }
+    }
+    private fun TypeMirror.javaToKotlinType() : TypeName = asTypeName().javaToKotlinType()
+    private fun TypeName.javaToKotlinType() : TypeName {
+        return if(this is ParameterizedTypeName) {
+            ParameterizedTypeName.get(
+                rawType.javaToKotlinType() as ClassName,
+                *typeArguments.map { it.javaToKotlinType() }.toTypedArray()
+            )
+        } else {
+            val className = JavaToKotlinClassMap.INSTANCE.mapJavaToKotlin(FqName(toString()))?.asSingleFqName()?.asString()
+            if(className == null) this
+            else ClassName.bestGuess(className)
+        }
     }
 
     private fun log(msg : String) {

@@ -1,4 +1,4 @@
-package com.gmail.ayteneve93.blueberrysherbet.scanner
+package com.gmail.ayteneve93.blueberrysherbetcore.scanner
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
@@ -9,7 +9,7 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import androidx.databinding.ObservableField
 import com.gmail.ayteneve93.blueberrysherbetcore.R
-import com.gmail.ayteneve93.blueberrysherbet.utility.BlueberryLogger
+import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
 import com.tedpark.tedpermission.rx2.TedRx2Permission
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers

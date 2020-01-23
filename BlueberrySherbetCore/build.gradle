@@ -8,7 +8,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -35,5 +35,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "gun0912.ted:tedpermission-rx2:$tedpermission_rxjava2_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxjava2_version"
+
+    implementation project(':BlueberrySherbetAnnotations')
 
 }

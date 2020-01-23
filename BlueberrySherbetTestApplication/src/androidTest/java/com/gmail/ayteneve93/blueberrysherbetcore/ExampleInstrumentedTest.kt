@@ -1,4 +1,4 @@
-package com.gmail.ayteneve93.blueberrysherbet
+package com.gmail.ayteneve93.blueberrysherbetcore
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

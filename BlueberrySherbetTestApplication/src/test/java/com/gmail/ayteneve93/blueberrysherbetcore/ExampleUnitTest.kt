@@ -1,4 +1,4 @@
-package com.gmail.ayteneve93.blueberrysherbet
+package com.gmail.ayteneve93.blueberrysherbetcore
 
 import org.junit.Test
 

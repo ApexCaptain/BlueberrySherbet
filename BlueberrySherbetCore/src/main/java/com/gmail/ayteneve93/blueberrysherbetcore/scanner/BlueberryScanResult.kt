@@ -1,8 +1,8 @@
-package com.gmail.ayteneve93.blueberrysherbet.scanner
+package com.gmail.ayteneve93.blueberrysherbetcore.scanner
 
 import android.bluetooth.BluetoothDevice
 import android.content.Context
-import com.gmail.ayteneve93.blueberrysherbet.device.BlueberryDevice
+import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
 
 class BlueberryScanResult {
 

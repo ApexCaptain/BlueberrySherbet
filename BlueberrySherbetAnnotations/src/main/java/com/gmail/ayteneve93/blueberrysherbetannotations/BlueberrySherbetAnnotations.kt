@@ -6,4 +6,8 @@ annotation class BlueberryService
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class WRITE
+annotation class Priority(val priority : Int)
+
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class WRITE(val uuidString : String)

@@ -1,4 +1,4 @@
-package com.gmail.ayteneve93.blueberrysherbet.utility
+package com.gmail.ayteneve93.blueberrysherbetcore.utility
 
 import android.util.Log
 import androidx.annotation.Keep
