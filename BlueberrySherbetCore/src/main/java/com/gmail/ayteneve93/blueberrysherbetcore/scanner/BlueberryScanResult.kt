@@ -11,7 +11,7 @@ class BlueberryScanResult {
     internal constructor(bluetoothDevice : BluetoothDevice) { updateDevice(bluetoothDevice) }
     internal fun updateDevice(bluetoothDevice: BluetoothDevice) { mBluetoothDevice = bluetoothDevice }
 
-    fun <BlueberryDeviceType : BlueberryDevice> connect(context : Context, autoConnect : Boolean, blueberryDeviceType : Class<BlueberryDeviceType>) : BlueberryDeviceType  {
+    fun <BlueberryDeviceType : BlueberryDevice<Any>> connect(context : Context, autoConnect : Boolean, blueberryDeviceType : Class<BlueberryDeviceType>) : BlueberryDeviceType  {
         val blueberryDevice = blueberryDeviceType.newInstance()
         blueberryDevice.initialize(mBluetoothDevice, context, autoConnect)
         return blueberryDevice

@@ -1,5 +1,6 @@
 package com.gmail.ayteneve93.blueberrysherbetannotations
 
+
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
 annotation class BlueberryService

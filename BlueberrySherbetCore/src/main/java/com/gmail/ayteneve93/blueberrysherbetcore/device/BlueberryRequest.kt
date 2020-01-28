@@ -5,14 +5,14 @@ import java.util.*
 
 class BlueberryRequest<ReturnType> {
 
-    internal val mBlueberryDevice : BlueberryDevice
+    internal val mBlueberryDevice : BlueberryDevice<Any>
     internal val mUuid : UUID
     internal val mRequestType : BlueberryRequestType
     internal val mRequestCode : Int
 
     internal var mPriority : Int
 
-    constructor(blueberryDevice: BlueberryDevice, uuidString : String, requestType: BlueberryRequestType, priority : Int = 10) {
+    constructor(blueberryDevice: BlueberryDevice<Any>, uuidString : String, requestType: BlueberryRequestType, priority : Int = 10) {
         mBlueberryDevice = blueberryDevice
         mUuid = UUID.fromString(uuidString)
         mRequestType = requestType

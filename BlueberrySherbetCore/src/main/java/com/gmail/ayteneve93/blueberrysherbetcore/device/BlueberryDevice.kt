@@ -9,7 +9,7 @@ import io.reactivex.disposables.Disposable
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-abstract class BlueberryDevice {
+abstract class BlueberryDevice<T> {
 
     var autoConnect: Boolean = true
 

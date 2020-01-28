@@ -2,8 +2,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore
 
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
 
-class TestDevice : BlueberryDevice() {
+class TestDevice : BlueberryDevice<TestDeviceService>() {
 
-     val mBlueberryService : TestDeviceService = BlueberryTestDeviceServiceImpl(this)
 
 }
