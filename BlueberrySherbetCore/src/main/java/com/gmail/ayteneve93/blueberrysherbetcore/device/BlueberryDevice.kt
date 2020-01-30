@@ -2,18 +2,25 @@ package com.gmail.ayteneve93.blueberrysherbetcore.device
 
 import android.bluetooth.*
 import android.content.Context
+import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
+import com.gmail.ayteneve93.blueberrysherbetannotations.READ
+import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE
+import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE_WITHOUT_RESPONSE
+import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryRequest
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
 import io.reactivex.disposables.Disposable
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-abstract class BlueberryDevice<T> {
+abstract class BlueberryDevice<BlueberryService> {
 
     var autoConnect: Boolean = true
-
     val bluetoothState = ObservableField(BluetoothState.STATE_DISCONNECTED)
+    val blueberryService : BlueberryService by lazy { setServiceImpl() }
+    abstract fun setServiceImpl() : BlueberryService
+
     enum class BluetoothState(val stateCode : Int) {
         STATE_DISCONNECTED(0x00000000),
         STATE_CONNECTING(0x00000001),
@@ -61,6 +68,8 @@ abstract class BlueberryDevice<T> {
             status: Int
         ) {
             super.onCharacteristicRead(gatt, characteristic, status)
+            mCurrentRequest?.onResponse(status, characteristic?.getStringValue(0))
+            characteristic?.setValue("")
         }
 
         override fun onCharacteristicWrite(
@@ -69,6 +78,8 @@ abstract class BlueberryDevice<T> {
             status: Int
         ) {
             super.onCharacteristicWrite(gatt, characteristic, status)
+            mCurrentRequest?.onResponse(status, null)
+            characteristic?.setValue("")
         }
 
 
@@ -154,7 +165,7 @@ abstract class BlueberryDevice<T> {
     private var mIsBluetoothOnProgress = false
     private val mBlueberryRequestQueue : PriorityQueue<BlueberryRequest<*>> = PriorityQueue { front, rear -> front.mPriority - rear.mPriority }
     private var mCurrentRequest : BlueberryRequest<*>? = null
-    internal fun enqeueBlueberryRequest(blueberryRequest: BlueberryRequest<*>) {
+    internal fun enqueueBlueberryRequest(blueberryRequest: BlueberryRequest<*>) {
         if(mIsServiceDiscovered
             && mCharacteristicList.find { it.uuid == blueberryRequest.mUuid } == null) {
             BlueberryLogger.w("No Such Uuid Exists of '${blueberryRequest.mUuid}'")
@@ -173,8 +184,20 @@ abstract class BlueberryDevice<T> {
     private fun executeRequest() {
         mCurrentRequest = mBlueberryRequestQueue.poll()
         mCurrentRequest?.let { currentRequest ->
-            mCharacteristicList.find { it.uuid == currentRequest.mUuid }?.let {
-
+            mCharacteristicList.find { it.uuid == currentRequest.mUuid }?.let { characteristic ->
+                when(mCurrentRequest!!.mRequestType) {
+                    WRITE::class.java, WRITE_WITHOUT_RESPONSE::class.java -> {
+                        characteristic.setValue(mCurrentRequest!!.mInputString)
+                        characteristic.writeType = when(mCurrentRequest!!.mRequestType) {
+                            WRITE::class.java ->  BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                            WRITE_WITHOUT_RESPONSE::class.java -> BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
+                            else -> BluetoothGattCharacteristic.WRITE_TYPE_SIGNED
+                        }
+                        mBluetoothGatt.writeCharacteristic(characteristic)
+                    }
+                    READ::class.java -> mBluetoothGatt.readCharacteristic(characteristic)
+                    else -> null
+                }
             }
         }
     }

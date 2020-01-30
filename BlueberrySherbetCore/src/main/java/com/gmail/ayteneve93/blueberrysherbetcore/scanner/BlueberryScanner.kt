@@ -54,7 +54,7 @@ object BlueberryScanner {
                             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                                 super.onScanResult(callbackType, result)
                                 result?.device?.let { bluetoothDevice ->
-                                    val prevResult = blueberryScanResults.find { blueberryScanResult -> blueberryScanResult.mBluetoothDevice.address == bluetoothDevice.address }
+                                    val prevResult = blueberryScanResults.find { blueberryScanResult -> blueberryScanResult.bluetoothDevice.address == bluetoothDevice.address }
                                     if(prevResult == null) {
                                         val newBlueberryScanResult = BlueberryScanResult(bluetoothDevice)
                                         BlueberryLogger.i("New Ble Device is Found. Mac Address : ${bluetoothDevice.address}")

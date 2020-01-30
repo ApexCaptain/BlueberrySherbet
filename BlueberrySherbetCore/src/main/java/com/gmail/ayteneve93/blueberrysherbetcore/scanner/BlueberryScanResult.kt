@@ -5,15 +5,12 @@ import android.content.Context
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
 
 class BlueberryScanResult {
-
-    lateinit var mBluetoothDevice : BluetoothDevice
-
+    lateinit var bluetoothDevice : BluetoothDevice
     internal constructor(bluetoothDevice : BluetoothDevice) { updateDevice(bluetoothDevice) }
-    internal fun updateDevice(bluetoothDevice: BluetoothDevice) { mBluetoothDevice = bluetoothDevice }
-
-    fun <BlueberryDeviceType : BlueberryDevice<Any>> connect(context : Context, autoConnect : Boolean, blueberryDeviceType : Class<BlueberryDeviceType>) : BlueberryDeviceType  {
+    internal fun updateDevice(bluetoothDevice: BluetoothDevice) { this.bluetoothDevice = bluetoothDevice }
+    fun <BlueberryDeviceType : BlueberryDevice<out Any>> connect(context : Context, blueberryDeviceType : Class<BlueberryDeviceType>, autoConnect : Boolean = true) : BlueberryDeviceType  {
         val blueberryDevice = blueberryDeviceType.newInstance()
-        blueberryDevice.initialize(mBluetoothDevice, context, autoConnect)
+        blueberryDevice.initialize(bluetoothDevice, context, autoConnect)
         return blueberryDevice
     }
 
