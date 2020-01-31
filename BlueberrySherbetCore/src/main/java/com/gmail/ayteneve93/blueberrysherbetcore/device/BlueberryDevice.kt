@@ -9,6 +9,9 @@ import com.gmail.ayteneve93.blueberrysherbetannotations.READ
 import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE
 import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE_WITHOUT_RESPONSE
 import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryRequest
+import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryRequestInfo
+import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryRequestInfoWithoutResult
+import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryWriteRequest
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
 import io.reactivex.disposables.Disposable
 import java.util.*
@@ -55,7 +58,7 @@ abstract class BlueberryDevice<BlueberryService> {
                 }
             }
             mIsServiceDiscovered = true
-            initiateBluetoothProgress()
+            executeRequest()
         }
 
         override fun onPhyRead(gatt: BluetoothGatt?, txPhy: Int, rxPhy: Int, status: Int) {
@@ -68,8 +71,10 @@ abstract class BlueberryDevice<BlueberryService> {
             status: Int
         ) {
             super.onCharacteristicRead(gatt, characteristic, status)
-            mCurrentRequest?.onResponse(status, characteristic?.getStringValue(0))
+            mCurrentRequestInfo?.onResponse(status, characteristic?.getStringValue(0))
             characteristic?.setValue("")
+            mIsBluetoothOnProgress = false
+            executeRequest()
         }
 
         override fun onCharacteristicWrite(
@@ -78,8 +83,10 @@ abstract class BlueberryDevice<BlueberryService> {
             status: Int
         ) {
             super.onCharacteristicWrite(gatt, characteristic, status)
-            mCurrentRequest?.onResponse(status, null)
+            mCurrentRequestInfo?.onResponse(status, null)
             characteristic?.setValue("")
+            mIsBluetoothOnProgress = false
+            executeRequest()
         }
 
 
@@ -146,9 +153,13 @@ abstract class BlueberryDevice<BlueberryService> {
                     BluetoothState.STATE_DISCONNECTING -> {
                         dismissRssiUpdateInterval()
                         onDeviceDisconnecting()
+                        mIsServiceDiscovered = false
                     }
 
-                    BluetoothState.STATE_DISCONNECTED -> { onDeviceDisconnected() }
+                    BluetoothState.STATE_DISCONNECTED -> {
+                        mBlueberryRequestInfoQueue.clear()
+                        onDeviceDisconnected()
+                    }
 
                 }
             }
@@ -159,45 +170,50 @@ abstract class BlueberryDevice<BlueberryService> {
     open fun onDeviceConnected()     = BlueberryLogger.d("Connected to ${mBluetoothDevice.address}")
     open fun onDeviceDisconnecting() = BlueberryLogger.d("Disconnecting from ${mBluetoothDevice.address}")
 
+
+
     /** Service Setting */
     private val mCharacteristicList = ArrayList<BluetoothGattCharacteristic>()
     private var mIsServiceDiscovered = false
     private var mIsBluetoothOnProgress = false
-    private val mBlueberryRequestQueue : PriorityQueue<BlueberryRequest<*>> = PriorityQueue { front, rear -> front.mPriority - rear.mPriority }
-    private var mCurrentRequest : BlueberryRequest<*>? = null
-    internal fun enqueueBlueberryRequest(blueberryRequest: BlueberryRequest<*>) {
+
+    private val mBlueberryRequestInfoQueue : PriorityQueue<BlueberryRequestInfo> = PriorityQueue { front, rear -> front.priority - rear.priority }
+    private var mCurrentRequestInfo : BlueberryRequestInfo? = null
+
+    internal fun enqueueBlueberryRequestInfo(blueberryRequestInfo: BlueberryRequestInfo) {
         if(mIsServiceDiscovered
-            && mCharacteristicList.find { it.uuid == blueberryRequest.mUuid } == null) {
-            BlueberryLogger.w("No Such Uuid Exists of '${blueberryRequest.mUuid}'")
-            return
+            && mCharacteristicList.find { it.uuid == blueberryRequestInfo.uuid } == null) {
+            BlueberryLogger.w("No Such Uuid Exists : '${blueberryRequestInfo.uuid}'")
         }
-        mBlueberryRequestQueue.offer(blueberryRequest)
-        initiateBluetoothProgress()
+        mBlueberryRequestInfoQueue.offer(blueberryRequestInfo)
+        if(mBlueberryRequestInfoQueue.size == 1) executeRequest()
     }
-    private fun initiateBluetoothProgress() {
+
+    @Synchronized
+    private fun executeRequest() {
         if(mIsServiceDiscovered
             && bluetoothState.get() == BluetoothState.STATE_CONNECTED
             && !mIsBluetoothOnProgress
-            && mBlueberryRequestQueue.isNotEmpty())
-            executeRequest()
-    }
-    private fun executeRequest() {
-        mCurrentRequest = mBlueberryRequestQueue.poll()
-        mCurrentRequest?.let { currentRequest ->
-            mCharacteristicList.find { it.uuid == currentRequest.mUuid }?.let { characteristic ->
-                when(mCurrentRequest!!.mRequestType) {
-                    WRITE::class.java, WRITE_WITHOUT_RESPONSE::class.java -> {
-                        characteristic.setValue(mCurrentRequest!!.mInputString)
-                        characteristic.writeType = when(mCurrentRequest!!.mRequestType) {
-                            WRITE::class.java ->  BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-                            WRITE_WITHOUT_RESPONSE::class.java -> BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
-                            else -> BluetoothGattCharacteristic.WRITE_TYPE_SIGNED
+            && mBlueberryRequestInfoQueue.isNotEmpty()) {
+            mCurrentRequestInfo = mBlueberryRequestInfoQueue.poll()
+            mCurrentRequestInfo?.let { currentRequestInfo ->
+                mCharacteristicList.find { it.uuid == currentRequestInfo.uuid }
+                    ?.let { characteristic ->
+                        when(currentRequestInfo.requestType) {
+
+
+                            WRITE::class.java -> (currentRequestInfo as BlueberryRequestInfoWithoutResult).let { blueberryWriteRequestInfoWithoutResult ->
+                                characteristic.setValue(blueberryWriteRequestInfoWithoutResult.inputString)
+                                characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                                mBluetoothGatt.writeCharacteristic(characteristic)
+                                blueberryWriteRequestInfoWithoutResult.isOnProgress = true
+                                mIsBluetoothOnProgress = true
+                            }
+
+
+                            else -> throw IllegalAccessException("Blueberry Execution Access by Unknown Request Type")
                         }
-                        mBluetoothGatt.writeCharacteristic(characteristic)
                     }
-                    READ::class.java -> mBluetoothGatt.readCharacteristic(characteristic)
-                    else -> null
-                }
             }
         }
     }

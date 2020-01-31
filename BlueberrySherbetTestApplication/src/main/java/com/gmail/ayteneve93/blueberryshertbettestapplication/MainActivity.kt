@@ -7,6 +7,9 @@ import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
 import com.gmail.ayteneve93.blueberryshertbettestapplication.test.CertificationInfo
 import io.reactivex.disposables.CompositeDisposable
 import com.gmail.ayteneve93.blueberryshertbettestapplication.test.TestDevice
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,15 +37,40 @@ class MainActivity : AppCompatActivity() {
 
     fun nextProgress() {
         mCompositeDisposable.dispose()
-        testDevice.blueberryService.certificate(CertificationInfo(
+        val a = CertificationInfo(
             "Uv4OywyiZZhlJDvtm8JCH48WIs03",
             2
-        )).call { resultCode, any ->
-            testDevice.blueberryService.readSysconfInfo().call { status, data ->
-                Log.d("ayteneve93_test", "status : $status")
-                Log.d("ayteneve93_test", data?.toString()?:"null Data")
+        )
+        /*
+        testDevice.blueberryService.certificate(a).call().also {
+            it.enqueue { Log.d("ayteneve93_test", "1 - $it") }
+            it.byRx2()
+                .subscribe {
+                    status, throwable ->
+                    Log.d("ayteneve93_test", "2 - $it")
+                }
+            GlobalScope.launch {
+                Log.d("ayteneve93_test", "3 - ${it.byCoroutine()}")
+            }
+
+        }
+
+         */
+        testDevice.blueberryService.certificate(a).also {
+            it.call().enqueue { Log.d("ayteneve93_test", "1 - $it") }
+            it.call().byRx2()
+                .subscribe {
+                    status, throwable ->
+                    Log.d("ayteneve93_test", "2 - $it")
+                }
+            GlobalScope.launch {
+                Log.d("ayteneve93_test", "3 - ${it.call().byCoroutine()}")
             }
         }
+
+
+
+
     }
 
 }

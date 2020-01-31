@@ -42,6 +42,7 @@ dependencies {
 
     implementation "io.reactivex.rxjava2:rxandroid:$rxjava2_version"
     implementation "com.squareup.moshi:moshi:$moshi_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$corutine_version"
 
     implementation project(':BlueberrySherbetCore')
     implementation project(':BlueberrySherbetAnnotations')

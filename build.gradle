@@ -9,6 +9,9 @@ buildscript {
         // RxJava2
         rxjava2_version = '2.1.1'
 
+        // Coroutine
+        corutine_version = '1.3.3'
+
         // Ted RxJava2
         tedpermission_rxjava2_version = '2.2.2'
 

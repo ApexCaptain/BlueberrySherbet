@@ -41,33 +41,54 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latest()
 
     override fun process(annotations: MutableSet<out TypeElement>?, roundEnv: RoundEnvironment): Boolean {
-        val readMethodElements = roundEnv.getElementsAnnotatedWith(READ::class.java).filter { it.kind == ElementKind.METHOD }.map { it as ExecutableElement }
-        val writeMethodElements = roundEnv.getElementsAnnotatedWith(WRITE::class.java).filter { it.kind == ElementKind.METHOD }.map { it as ExecutableElement }
-        val notifyMethodElements = roundEnv.getElementsAnnotatedWith(NOTIFY::class.java).filter { it.kind== ElementKind.METHOD }.map { it as ExecutableElement }
+
+        var doesProcessingErrorExists = false
+        var blueberryElementWithProcessingError : Element? = null
 
         roundEnv.getElementsAnnotatedWith(BlueberryService::class.java)
             .forEach { eachBlueberryElement ->
+                blueberryElementWithProcessingError = eachBlueberryElement
                 if(eachBlueberryElement.kind != ElementKind.INTERFACE) {
                     errorLog("The Class '${(eachBlueberryElement as TypeElement).asClassName()}' annotated with '${BlueberryService::class.java}' is not an interface")
-                    return true
+                    doesProcessingErrorExists = true
+                    return@forEach
                 }
-                eachBlueberryElement.enclosedElements.find { eachEnclosedElement ->
-                    eachEnclosedElement.annotationMirrors.map { it.annotationType.toString() }.intersect(supportedAnnotationTypes).isEmpty()
-                }?.let { unsupportedEnclosedElement ->
-                    val unsupportedElementTypeName = unsupportedEnclosedElement.kind.name.let { "${it.substring(0,1).toUpperCase(Locale.US)}${it.substring(1).toLowerCase(Locale.US)}" }
-                    errorLog("The $unsupportedElementTypeName '${unsupportedEnclosedElement.simpleName}' is not Annotated with Blueberry Method Annotation")
-                    return true
-                }
-                if(generateDeviceServiceImplements(
-                    eachBlueberryElement,
-                    readMethodElements.filter { it.enclosingElement == eachBlueberryElement },
-                    writeMethodElements.filter { it.enclosingElement == eachBlueberryElement },
-                    notifyMethodElements.filter { it.enclosingElement == eachBlueberryElement })) {
-                    errorLog("Compilation Failed while Processing $eachBlueberryElement")
-                    return true
+                eachBlueberryElement.enclosedElements.also { enclosedElements ->
+
+                    enclosedElements
+                        .find { eachEnclosedElement -> eachEnclosedElement.kind != ElementKind.METHOD }
+                        ?.let { unsupportedEnclosedElement ->
+                            val unsupportedElementTypeName = unsupportedEnclosedElement.kind.name.let { "${it.substring(0,1).toUpperCase(Locale.US)}${it.substring(1).toLowerCase(Locale.US)}" }
+                            errorLog("The $unsupportedElementTypeName '${unsupportedEnclosedElement.simpleName}' is not a Method")
+                            doesProcessingErrorExists = true
+                            return@forEach
+                        }
+
+                    val blueberryMethods = enclosedElements.filter { eachEnclosedElement ->
+                        when(eachEnclosedElement.annotationMirrors
+                            .map { eachAnnotationMirror -> eachAnnotationMirror.annotationType.toString() }
+                            .intersect(supportedAnnotationTypes).size) {
+                            1 -> true
+                            0 -> {
+                                errorLog("The Method '${eachEnclosedElement.simpleName}' is not Annotated with Blueberry Method Annotation")
+                                doesProcessingErrorExists = true
+                                return@forEach
+                            }
+                            else -> {
+                                errorLog("The Method '${eachEnclosedElement.simpleName}' has too many Blueberry Annotations. it should have only one of $supportedAnnotationTypesQualifiedNames")
+                                doesProcessingErrorExists = true
+                                return@forEach
+                            }
+                        }
+                    }.map { it as ExecutableElement }
+                    if(generateDeviceServiceImplements(eachBlueberryElement, blueberryMethods)) {
+                        doesProcessingErrorExists = true
+                        return@forEach
+                    }
                 }
             }
-        return false
+        if(doesProcessingErrorExists) errorLog("Compilation Failed while Processing Service Interface : '$blueberryElementWithProcessingError'")
+        return doesProcessingErrorExists
     }
 
     // Refer : https://github.com/square/kotlinpoet
@@ -77,9 +98,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
 
     private fun generateDeviceServiceImplements
                 (blueberryElement : Element,
-                 readMethods : List<ExecutableElement>,
-                 writeMethods : List<ExecutableElement>,
-                 notifyMethods : List<ExecutableElement>) : Boolean {
+                 blueberryMethods : List<ExecutableElement>) : Boolean {
         val className = blueberryElement.simpleName.toString()
         val packageName = processingEnv.elementUtils.getPackageOf(blueberryElement).toString()
         val fileName = "Blueberry${className}Impl"
@@ -128,10 +147,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                     """.trimIndent())
                     .build()
             )
-            //this.mBlueberryDevice.setBlueberryServiceImpl(this)
-            if(generateDeviceServiceMethodImplements(this, readMethods, READ::class.java)
-                || generateDeviceServiceMethodImplements(this, writeMethods, WRITE::class.java)
-                || generateDeviceServiceMethodImplements(this, notifyMethods, NOTIFY::class.java)) return true
+            if(generateDeviceServiceMethodImplements(this, blueberryMethods)) return true
         }
 
         val file = fileBuilder.addType(classBuilder.build()).build()
@@ -143,14 +159,12 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
     private val uuidRegexWithHyphen = Regex("""[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}""")
     private val uuidRegexWithoutHyphen = Regex("""[0-9a-fA-F]{32}""")
     private val uuidRegex16bit = Regex("""[0-9a-fA-F]{4}""")
-    private fun generateDeviceServiceMethodImplements(classBuilder : TypeSpec.Builder, methods : List<ExecutableElement>, requestType : Class<out Annotation>) : Boolean {
+    private fun generateDeviceServiceMethodImplements(classBuilder : TypeSpec.Builder, methods : List<ExecutableElement>) : Boolean {
         classBuilder.apply {
             methods.forEach { eachMethod ->
-                if(!eachMethod.returnType.asTypeName().toString().contains("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryRequest")) {
-                    processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "Return Type of Method '${eachMethod.simpleName}' Must be '${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryRequest'")
-                    return true
-                }
 
+                // Checking Parameter Validation
+                val requestType = supportedAnnotationKotlinClasses.find { eachMethod.getAnnotation(it.java) != null }!!.java
                 val parameterCount = eachMethod.parameters.size
                 if(requestType in arrayOf(WRITE::class.java, WRITE_WITHOUT_RESPONSE::class.java)) {
                     if(parameterCount != 1) {
@@ -162,11 +176,35 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                     return true
                 }
 
-                val embededdGenericReturnType = (eachMethod.returnType as DeclaredType).typeArguments[0].asTypeName().javaToKotlinType().let {
-                        if(it.toString() == "*") Any::class.asTypeName()
-                        else it
+                // Checking Return Type Validation
+                val originalReturnTypeNameString = eachMethod.returnType.asTypeName().toString()
+                var originalReturnTypeArgumentTypeName : TypeName? = null
+                val returnTypeBlueberryRequestClass = when(requestType) {
+
+
+                    WRITE::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryWriteRequest")) {
+                        errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryWriteRequest")
+                        return@generateDeviceServiceMethodImplements true
+                    } else ClassName("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request", "BlueberryWriteRequest")
+
+
+                    READ::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryReadRequest")) {
+                        errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryReadRequest")
+                        return@generateDeviceServiceMethodImplements true
+                    } else {
+                        originalReturnTypeArgumentTypeName = (eachMethod.returnType as DeclaredType).typeArguments[0].asTypeName().javaToKotlinType().let {
+                            if(it.toString() == "*") Any::class.asTypeName()
+                            else it
+                        }
+                        ClassName("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request", "BlueberryReadRequest").parameterizedBy(originalReturnTypeArgumentTypeName!!)
                     }
-                val returnTypeBlueberryRequestClass = ClassName("$BLUEBERRY_SHERBET_CORE_PACKAGE_NAME.request", "BlueberryRequest").parameterizedBy(embededdGenericReturnType)
+
+
+                    else -> return@generateDeviceServiceMethodImplements true
+
+
+                }
+
 
                 val uuidString : String = eachMethod.annotationMirrors.filter { eachAnnotationMirror ->
                     eachAnnotationMirror.annotationType.toString() in supportedAnnotationTypesQualifiedNames
@@ -212,19 +250,44 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
 
                         .returns(returnTypeBlueberryRequestClass)
                         .addCode(
-                            """
-                                return ${returnTypeBlueberryRequestClass}(
-                                    $blueberryDeviceMemeberProrpertyName,
-                                    "$uuidString",
-                                    ${requestType.name}::class.java,
-                                    $moshiMemberPropertyName,
-                                    ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
-                                    ${parameterName?:"null"},
-                                    $embededdGenericReturnType::class.java
-                                )
-                            """.trimIndent()
+                            when(requestType) {
+                                WRITE::class.java -> {
+                                    """
+                                        return ${returnTypeBlueberryRequestClass}(
+                                            $moshiMemberPropertyName,
+                                            $blueberryDeviceMemeberProrpertyName,
+                                            ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
+                                            "$uuidString",
+                                            ${parameterName?:"null"}
+                                        )
+                                    """.trimIndent()
+                                }
+                                READ::class.java -> {
+                                    """
+                                        return ${returnTypeBlueberryRequestClass}(
+                                            $originalReturnTypeArgumentTypeName::class.java,
+                                            $moshiMemberPropertyName,
+                                            $blueberryDeviceMemeberProrpertyName,
+                                            
+                                        )
+                                    """.trimIndent()
+                                }
+                                else -> ""
+                            }
                         )
                         .build()
+                /*
+                                            """
+                                return ${returnTypeBlueberryRequestClass}(
+                                    $blueberryDeviceMemeberProrpertyName,
+                                    ${requestType.name}::class.java,
+                                    "$uuidString",
+                                    $moshiMemberPropertyName,
+                                    ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
+                                    ${parameterName?:"null"}
+                                )
+                            """.trimIndent()
+                 */
                 )
 
 
@@ -239,8 +302,8 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
         return when(this) {
             is ParameterizedTypeName -> {
                 (rawType.javaToKotlinType() as ClassName).parameterizedBy(
-                    *typeArguments.map {
-                        it.javaToKotlinType()
+                    *typeArguments.map { eachTypeArgument ->
+                        eachTypeArgument.javaToKotlinType()
                     }.toTypedArray()
                 )
             }
