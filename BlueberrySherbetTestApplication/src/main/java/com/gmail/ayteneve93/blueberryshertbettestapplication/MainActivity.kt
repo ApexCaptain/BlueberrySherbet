@@ -8,7 +8,6 @@ import com.gmail.ayteneve93.blueberryshertbettestapplication.test.CertificationI
 import io.reactivex.disposables.CompositeDisposable
 import com.gmail.ayteneve93.blueberryshertbettestapplication.test.TestDevice
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 
@@ -25,52 +24,15 @@ class MainActivity : AppCompatActivity() {
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
                 .subscribe {
-                    if(it.bluetoothDevice.name == "NYSLP19020031P") {
-                        testDevice = it.connect(this, TestDevice::class.java)
+                    if(it.bluetoothDevice.name == "NYSLP19020037P") {
+                        testDevice = it.connect(this, TestDevice::class.java, true)
                         BlueberryScanner.stopScan()
-                        nextProgress()
                     }
                 }
         )
 
     }
 
-    fun nextProgress() {
-        mCompositeDisposable.dispose()
-        val a = CertificationInfo(
-            "Uv4OywyiZZhlJDvtm8JCH48WIs03",
-            2
-        )
-        /*
-        testDevice.blueberryService.certificate(a).call().also {
-            it.enqueue { Log.d("ayteneve93_test", "1 - $it") }
-            it.byRx2()
-                .subscribe {
-                    status, throwable ->
-                    Log.d("ayteneve93_test", "2 - $it")
-                }
-            GlobalScope.launch {
-                Log.d("ayteneve93_test", "3 - ${it.byCoroutine()}")
-            }
 
-        }
-
-         */
-        testDevice.blueberryService.certificate(a).also {
-            it.call().enqueue { Log.d("ayteneve93_test", "1 - $it") }
-            it.call().byRx2()
-                .subscribe {
-                    status, throwable ->
-                    Log.d("ayteneve93_test", "2 - $it")
-                }
-            GlobalScope.launch {
-                Log.d("ayteneve93_test", "3 - ${it.call().byCoroutine()}")
-            }
-        }
-
-
-
-
-    }
 
 }

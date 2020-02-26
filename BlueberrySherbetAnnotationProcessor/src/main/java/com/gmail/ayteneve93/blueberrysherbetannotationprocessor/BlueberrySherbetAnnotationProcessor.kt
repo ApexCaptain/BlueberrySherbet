@@ -27,7 +27,9 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
     private val supportedAnnotationKotlinClasses = arrayOf(
         READ::class,
         WRITE::class,
-        NOTIFY::class
+        WRITE_WITHOUT_RESPONSE::class,
+        NOTIFY::class,
+        INDICATE::class
     )
 
     private val supportedAnnotationTypesQualifiedNames = supportedAnnotationKotlinClasses.map { eachAnnotationKotlinClass -> eachAnnotationKotlinClass.qualifiedName }
@@ -92,7 +94,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
     }
 
     // Refer : https://github.com/square/kotlinpoet
-    private val blueberryDeviceMemeberProrpertyName = "mBlueberryDevice"
+    private val blueberryDeviceMemeberPropertyName = "mBlueberryDevice"
     private val moshiClass = ClassName("com.squareup.moshi", "Moshi")
     private val moshiMemberPropertyName = "mMoshi"
 
@@ -114,7 +116,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
 
             // Blueberry Device Member
             addProperty(
-                PropertySpec.builder(blueberryDeviceMemeberProrpertyName, blueberryDeviceClass)
+                PropertySpec.builder(blueberryDeviceMemeberPropertyName, blueberryDeviceClass)
                     .addModifiers(KModifier.PRIVATE)
                     .build()
             )
@@ -130,8 +132,8 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
             // Construcotr
             primaryConstructor(
                 FunSpec.constructorBuilder()
-                    .addParameter(blueberryDeviceMemeberProrpertyName, blueberryDeviceClass)
-                    .addStatement("this.$blueberryDeviceMemeberProrpertyName = $blueberryDeviceMemeberProrpertyName")
+                    .addParameter(blueberryDeviceMemeberPropertyName, blueberryDeviceClass)
+                    .addStatement("this.$blueberryDeviceMemeberPropertyName = $blueberryDeviceMemeberPropertyName")
                     .addStatement("this.$moshiMemberPropertyName = ${moshiClass}.Builder().build()")
                     .build()
             )
@@ -181,12 +183,15 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                 var originalReturnTypeArgumentTypeName : TypeName? = null
                 val returnTypeBlueberryRequestClass = when(requestType) {
 
-
                     WRITE::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryWriteRequest")) {
                         errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryWriteRequest")
                         return@generateDeviceServiceMethodImplements true
                     } else ClassName("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request", "BlueberryWriteRequest")
 
+                    WRITE_WITHOUT_RESPONSE::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryWriteRequestWithoutResponse")) {
+                        errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryWriteRequestWithoutResponse")
+                        return@generateDeviceServiceMethodImplements true
+                    } else ClassName("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request", "BlueberryWriteRequestWithoutResponse")
 
                     READ::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryReadRequest")) {
                         errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryReadRequest")
@@ -199,9 +204,18 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                         ClassName("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request", "BlueberryReadRequest").parameterizedBy(originalReturnTypeArgumentTypeName!!)
                     }
 
+                    NOTIFY::class.java, INDICATE::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryNotifyOrIndicateRequest")) {
+                        errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryNotifyOrIndicateRequest")
+                        return@generateDeviceServiceMethodImplements true
+                    } else {
+                        originalReturnTypeArgumentTypeName = (eachMethod.returnType as DeclaredType).typeArguments[0].asTypeName().javaToKotlinType().let {
+                            if(it.toString() == "*") Any::class.java.asTypeName()
+                            else it
+                        }
+                        ClassName("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request", "BlueberryNotifyOrIndicateRequest").parameterizedBy(originalReturnTypeArgumentTypeName!!)
+                    }
 
                     else -> return@generateDeviceServiceMethodImplements true
-
 
                 }
 
@@ -255,7 +269,18 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                     """
                                         return ${returnTypeBlueberryRequestClass}(
                                             $moshiMemberPropertyName,
-                                            $blueberryDeviceMemeberProrpertyName,
+                                            $blueberryDeviceMemeberPropertyName,
+                                            ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
+                                            "$uuidString",
+                                            ${parameterName?:"null"}
+                                        )
+                                    """.trimIndent()
+                                }
+                                WRITE_WITHOUT_RESPONSE::class.java -> {
+                                    """
+                                        return ${returnTypeBlueberryRequestClass}(
+                                            $moshiMemberPropertyName,
+                                            $blueberryDeviceMemeberPropertyName,
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString",
                                             ${parameterName?:"null"}
@@ -267,8 +292,31 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                         return ${returnTypeBlueberryRequestClass}(
                                             $originalReturnTypeArgumentTypeName::class.java,
                                             $moshiMemberPropertyName,
-                                            $blueberryDeviceMemeberProrpertyName,
-                                            
+                                            $blueberryDeviceMemeberPropertyName,
+                                            ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
+                                            "$uuidString"
+                                        )
+                                    """.trimIndent()
+                                }
+                                NOTIFY::class.java, INDICATE::class.java -> {
+                                    var startString =
+                                        if(requestType == NOTIFY::class.java) eachMethod.getAnnotation(NOTIFY::class.java)!!.startString
+                                        else eachMethod.getAnnotation(INDICATE::class.java)!!.startString
+                                    var endString =
+                                        if(requestType == NOTIFY::class.java) eachMethod.getAnnotation(NOTIFY::class.java)!!.endString
+                                        else eachMethod.getAnnotation(INDICATE::class.java)!!.endString
+                                    if(startString.startsWith("\$")) startString = "\\$startString"
+                                    if(endString.startsWith("\$")) endString = "\\$endString"
+                                    """
+                                        return ${returnTypeBlueberryRequestClass}(
+                                            $originalReturnTypeArgumentTypeName::class.java,
+                                            $moshiMemberPropertyName,
+                                            $blueberryDeviceMemeberPropertyName,
+                                            ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
+                                            "$uuidString",
+                                            ${requestType.asTypeName()}::class.java,
+                                            "$startString",
+                                            "$endString"
                                         )
                                     """.trimIndent()
                                 }
@@ -276,18 +324,6 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                             }
                         )
                         .build()
-                /*
-                                            """
-                                return ${returnTypeBlueberryRequestClass}(
-                                    $blueberryDeviceMemeberProrpertyName,
-                                    ${requestType.name}::class.java,
-                                    "$uuidString",
-                                    $moshiMemberPropertyName,
-                                    ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
-                                    ${parameterName?:"null"}
-                                )
-                            """.trimIndent()
-                 */
                 )
 
 

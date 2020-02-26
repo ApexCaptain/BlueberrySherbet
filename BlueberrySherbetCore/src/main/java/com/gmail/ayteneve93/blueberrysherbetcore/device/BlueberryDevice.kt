@@ -5,18 +5,16 @@ import android.content.Context
 import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
-import com.gmail.ayteneve93.blueberrysherbetannotations.READ
-import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE
-import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE_WITHOUT_RESPONSE
-import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryRequest
-import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryRequestInfo
-import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryRequestInfoWithoutResult
-import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryWriteRequest
+import com.gmail.ayteneve93.blueberrysherbetannotations.*
+import com.gmail.ayteneve93.blueberrysherbetcore.request.*
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
 import io.reactivex.disposables.Disposable
+import java.lang.Exception
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
+@Suppress("spellCheckingInspection")
 abstract class BlueberryDevice<BlueberryService> {
 
     var autoConnect: Boolean = true
@@ -33,6 +31,16 @@ abstract class BlueberryDevice<BlueberryService> {
             internal fun getStateFromCode(stateCode : Int) : BluetoothState = values().find { it.stateCode == stateCode }!!
         }
     }
+
+    companion object {
+        private val CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
+        private val CCCF = UUID.fromString("00002901-0000-1000-8000-00805f9b34fb")
+        private val RX_SERVICE_UUID = UUID.fromString("0000fff0-0000-1000-8000-00805f9b34fb")
+        private val RX_CHAR_UUID = UUID.fromString("0000fff2-0000-1000-8000-00805f9b34fb")
+        private val TX_CHAR_UUID = UUID.fromString("0000fff1-0000-1000-8000-00805f9b34fb")
+    }
+
+
     val rssi = ObservableField<Int>()
     private lateinit var mBluetoothDevice : BluetoothDevice
     private lateinit var mContext : Context
@@ -59,6 +67,7 @@ abstract class BlueberryDevice<BlueberryService> {
             }
             mIsServiceDiscovered = true
             executeRequest()
+            onServicesDiscovered()
         }
 
         override fun onPhyRead(gatt: BluetoothGatt?, txPhy: Int, rxPhy: Int, status: Int) {
@@ -71,7 +80,7 @@ abstract class BlueberryDevice<BlueberryService> {
             status: Int
         ) {
             super.onCharacteristicRead(gatt, characteristic, status)
-            mCurrentRequestInfo?.onResponse(status, characteristic?.getStringValue(0))
+            mCurrentRequestInfo?.onResponse(status, characteristic)
             characteristic?.setValue("")
             mIsBluetoothOnProgress = false
             executeRequest()
@@ -89,6 +98,18 @@ abstract class BlueberryDevice<BlueberryService> {
             executeRequest()
         }
 
+        override fun onCharacteristicChanged(
+            gatt: BluetoothGatt?,
+            characteristic: BluetoothGattCharacteristic?
+        ) {
+            super.onCharacteristicChanged(gatt, characteristic)
+            characteristic?.let { notifyCharacteristic ->
+                mNotifyRequestList
+                    .find { it.blueberryRequest.mUuid == notifyCharacteristic.uuid }
+                    ?.onResponse(null, notifyCharacteristic)
+            }
+        }
+
 
 
         override fun onPhyUpdate(gatt: BluetoothGatt?, txPhy: Int, rxPhy: Int, status: Int) {
@@ -103,19 +124,13 @@ abstract class BlueberryDevice<BlueberryService> {
             super.onReliableWriteCompleted(gatt, status)
         }
 
+
         override fun onDescriptorWrite(
             gatt: BluetoothGatt?,
             descriptor: BluetoothGattDescriptor?,
             status: Int
         ) {
             super.onDescriptorWrite(gatt, descriptor, status)
-        }
-
-        override fun onCharacteristicChanged(
-            gatt: BluetoothGatt?,
-            characteristic: BluetoothGattCharacteristic?
-        ) {
-            super.onCharacteristicChanged(gatt, characteristic)
         }
 
         override fun onDescriptorRead(
@@ -125,6 +140,8 @@ abstract class BlueberryDevice<BlueberryService> {
         ) {
             super.onDescriptorRead(gatt, descriptor, status)
         }
+
+
 
     }
     internal fun initialize(bluetoothDevice: BluetoothDevice, context : Context, autoConnect : Boolean) {
@@ -158,6 +175,7 @@ abstract class BlueberryDevice<BlueberryService> {
 
                     BluetoothState.STATE_DISCONNECTED -> {
                         mBlueberryRequestInfoQueue.clear()
+                        mNotifyRequestList.clear()
                         onDeviceDisconnected()
                     }
 
@@ -169,6 +187,7 @@ abstract class BlueberryDevice<BlueberryService> {
     open fun onDeviceConnecting()    = BlueberryLogger.d("Connecting to ${mBluetoothDevice.address}")
     open fun onDeviceConnected()     = BlueberryLogger.d("Connected to ${mBluetoothDevice.address}")
     open fun onDeviceDisconnecting() = BlueberryLogger.d("Disconnecting from ${mBluetoothDevice.address}")
+    open fun onServicesDiscovered() = BlueberryLogger.d("Services of ${mBluetoothDevice.address} are Discovered")
 
 
 
@@ -178,6 +197,7 @@ abstract class BlueberryDevice<BlueberryService> {
     private var mIsBluetoothOnProgress = false
 
     private val mBlueberryRequestInfoQueue : PriorityQueue<BlueberryRequestInfo> = PriorityQueue { front, rear -> front.priority - rear.priority }
+    private val mNotifyRequestList : ArrayList<BlueberryRequestInfoWithRepetitiousResults<out Any>> = ArrayList()
     private var mCurrentRequestInfo : BlueberryRequestInfo? = null
 
     internal fun enqueueBlueberryRequestInfo(blueberryRequestInfo: BlueberryRequestInfo) {
@@ -189,7 +209,19 @@ abstract class BlueberryDevice<BlueberryService> {
         if(mBlueberryRequestInfoQueue.size == 1) executeRequest()
     }
 
+    internal fun cancelBlueberryRequest(blueberryRequestInfo: BlueberryRequestInfo) {
+        if(blueberryRequestInfo.requestType in arrayOf(NOTIFY::class.java)) {
+            mBlueberryRequestInfoQueue.offer(blueberryRequestInfo)
+        } else {
+            try {
+                mBlueberryRequestInfoQueue.find { it.requestCode == blueberryRequestInfo.requestCode
+                }?.let { mBlueberryRequestInfoQueue.remove(it) }
+            } catch (exception : Exception) { exception.printStackTrace() }
+        }
+    }
+
     @Synchronized
+    @Suppress("UNCHECKED_CAST")
     private fun executeRequest() {
         if(mIsServiceDiscovered
             && bluetoothState.get() == BluetoothState.STATE_CONNECTED
@@ -197,22 +229,65 @@ abstract class BlueberryDevice<BlueberryService> {
             && mBlueberryRequestInfoQueue.isNotEmpty()) {
             mCurrentRequestInfo = mBlueberryRequestInfoQueue.poll()
             mCurrentRequestInfo?.let { currentRequestInfo ->
+
                 mCharacteristicList.find { it.uuid == currentRequestInfo.uuid }
                     ?.let { characteristic ->
+
                         when(currentRequestInfo.requestType) {
 
 
                             WRITE::class.java -> (currentRequestInfo as BlueberryRequestInfoWithoutResult).let { blueberryWriteRequestInfoWithoutResult ->
                                 characteristic.setValue(blueberryWriteRequestInfoWithoutResult.inputString)
+                                if(currentRequestInfo.requestType == WRITE::class.java)
                                 characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
                                 mBluetoothGatt.writeCharacteristic(characteristic)
                                 blueberryWriteRequestInfoWithoutResult.isOnProgress = true
                                 mIsBluetoothOnProgress = true
                             }
 
+                            WRITE_WITHOUT_RESPONSE::class.java -> (currentRequestInfo as BlueberryRequestInfoWithNoResponse).let { blueberryWriteRequestInfoWithNoResponse ->
+                                characteristic.setValue(blueberryWriteRequestInfoWithNoResponse.inputString)
+                                characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
+                                mBluetoothGatt.writeCharacteristic(characteristic)
+                                blueberryWriteRequestInfoWithNoResponse.isOnProgress = true
+                                mIsBluetoothOnProgress = true
+                            }
+
+                            READ::class.java -> {
+                                mBluetoothGatt.readCharacteristic(characteristic)
+                                currentRequestInfo.isOnProgress = true
+                                mIsBluetoothOnProgress = true
+                            }
+
+                            NOTIFY::class.java, INDICATE::class.java -> (currentRequestInfo as BlueberryRequestInfoWithRepetitiousResults<Any>).let { blueberryRequestInfoWithRepetitiousResults ->
+                                mBluetoothGatt.setCharacteristicNotification(characteristic, blueberryRequestInfoWithRepetitiousResults.isNotificationEnabled)
+                                val descriptor = characteristic.getDescriptor(CCCD)
+                                /** ToDo : Notify Limit 확인 */
+                                if(descriptor != null) {
+                                    if(blueberryRequestInfoWithRepetitiousResults.isNotificationEnabled) {
+                                        descriptor.value =
+                                            if(currentRequestInfo.requestType == NOTIFY::class.java) BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                                            else BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
+
+                                        if(mNotifyRequestList.find { it.uuid == characteristic.uuid } != null) {
+                                            mNotifyRequestList.removeIf { it.uuid == characteristic.uuid }
+                                            mNotifyRequestList.add(blueberryRequestInfoWithRepetitiousResults)
+                                            return
+                                        }
+                                        mNotifyRequestList.add(blueberryRequestInfoWithRepetitiousResults)
+                                    } else {
+                                        descriptor.value = BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
+                                        mNotifyRequestList.removeIf { it.requestCode == blueberryRequestInfoWithRepetitiousResults.requestCode }
+                                    }
+                                    mBluetoothGatt.writeDescriptor(descriptor)
+                                } else disconnect()
+                            }
+
+
 
                             else -> throw IllegalAccessException("Blueberry Execution Access by Unknown Request Type")
                         }
+                        currentRequestInfo.startTimer()
                     }
             }
         }

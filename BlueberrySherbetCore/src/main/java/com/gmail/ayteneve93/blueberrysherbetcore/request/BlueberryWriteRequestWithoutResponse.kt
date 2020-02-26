@@ -1,11 +1,11 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.request
 
-import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE
+import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE_WITHOUT_RESPONSE
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
 import com.squareup.moshi.Moshi
 
 @Suppress("SpellCheckingInspection")
-class BlueberryWriteRequest(
+class BlueberryWriteRequestWithoutResponse(
     moshi : Moshi,
     blueberryDevice : BlueberryDevice<out Any>,
     priority : Int,
@@ -24,7 +24,7 @@ class BlueberryWriteRequest(
         else mMoshi.adapter<Any>(inputDataSource::class.java).toJson(inputDataSource)
     }
 
-    fun call(awaitingMills : Int = 29000) : BlueberryRequestInfoWithoutResult
-            = BlueberryRequestInfoWithoutResult(mUuid, mPriority, awaitingMills, this, WRITE::class.java, mInputString)
+    fun call(awaitingMills : Int = 29000) : BlueberryRequestInfoWithNoResponse
+        = BlueberryRequestInfoWithNoResponse(mUuid, mPriority, awaitingMills, this, WRITE_WITHOUT_RESPONSE::class.java, mInputString)
 
 }

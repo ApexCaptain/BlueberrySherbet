@@ -29,5 +29,9 @@ annotation class WRITE_WITHOUT_RESPONSE(val uuidString : String)
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class NOTIFY(val uuidString : String)
+annotation class NOTIFY(val uuidString : String, val startString : String, val endString : String)
+
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class INDICATE(val uuidString : String, val startString : String, val endString : String)
 
