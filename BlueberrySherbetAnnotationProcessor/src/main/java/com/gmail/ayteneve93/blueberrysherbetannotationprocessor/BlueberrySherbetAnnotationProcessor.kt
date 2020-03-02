@@ -272,7 +272,8 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                             $blueberryDeviceMemeberPropertyName,
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString",
-                                            ${parameterName?:"null"}
+                                            ${parameterName?:"null"},
+                                            ${eachMethod.getAnnotation(WRITE::class.java).checkIsReliable}
                                         )
                                     """.trimIndent()
                                 }
@@ -283,7 +284,8 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                             $blueberryDeviceMemeberPropertyName,
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString",
-                                            ${parameterName?:"null"}
+                                            ${parameterName?:"null"},
+                                            ${eachMethod.getAnnotation(WRITE_WITHOUT_RESPONSE::class.java).checkIsReliable}
                                         )
                                     """.trimIndent()
                                 }

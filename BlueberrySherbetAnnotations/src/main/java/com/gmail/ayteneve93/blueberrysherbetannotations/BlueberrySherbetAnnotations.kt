@@ -21,11 +21,11 @@ annotation class READ(val uuidString : String)
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class WRITE(val uuidString : String)
+annotation class WRITE(val uuidString : String, val checkIsReliable : Boolean = false)
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class WRITE_WITHOUT_RESPONSE(val uuidString : String)
+annotation class WRITE_WITHOUT_RESPONSE(val uuidString : String, val checkIsReliable : Boolean = false)
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)

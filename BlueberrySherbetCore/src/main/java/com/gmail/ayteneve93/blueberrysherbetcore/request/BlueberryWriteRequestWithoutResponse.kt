@@ -10,7 +10,8 @@ class BlueberryWriteRequestWithoutResponse(
     blueberryDevice : BlueberryDevice<out Any>,
     priority : Int,
     uuidString : String,
-    inputDataSource : Any?
+    inputDataSource : Any?,
+    private val checkIsReliable : Boolean
     ) : BlueberryRequest<Any>(
     Any::class.java,
     moshi,
@@ -25,6 +26,6 @@ class BlueberryWriteRequestWithoutResponse(
     }
 
     fun call(awaitingMills : Int = 29000) : BlueberryRequestInfoWithNoResponse
-        = BlueberryRequestInfoWithNoResponse(mUuid, mPriority, awaitingMills, this, WRITE_WITHOUT_RESPONSE::class.java, mInputString)
+        = BlueberryRequestInfoWithNoResponse(mUuid, mPriority, awaitingMills, this, WRITE_WITHOUT_RESPONSE::class.java, mInputString, checkIsReliable)
 
 }

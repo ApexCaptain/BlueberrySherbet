@@ -27,3 +27,17 @@ data class TestNotifyOrIndicateData(
     val test4 : String
 )
 
+@Suppress("SpellCheckingInspection")
+data class WifiStatus(
+    val connectionState : Boolean,
+    val ssid : String,
+    val ip_address : String
+)
+
+@Suppress("SpellCheckingInspection")
+data class WifiConnectionInfo(
+    val ssid : String,
+    val psk : String,
+    val timeout : Int
+)
+

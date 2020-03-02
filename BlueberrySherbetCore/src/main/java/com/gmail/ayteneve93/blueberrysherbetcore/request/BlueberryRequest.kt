@@ -76,7 +76,6 @@ class BlueberryRequestInfoWithSimpleResult<ReturnType>(
     suspend fun byCoroutine() : BlueberryCallbackResultData<ReturnType> = suspendCoroutine { continuation -> enqueue { status, value -> continuation.resume(BlueberryCallbackResultData(status, value)) } }
     override fun onResponse(status: Int?, characteristic: BluetoothGattCharacteristic?) {
         super.onResponse(status, characteristic)
-        val dataString = characteristic?.getStringValue(0)
         try {
             callback.invoke(status!!, with(characteristic?.getStringValue(0)) {
                 if(this.isNullOrEmpty()) null
@@ -158,7 +157,8 @@ class BlueberryRequestInfoWithoutResult(
     awaitingMills: Int,
     blueberryRequest: BlueberryRequest<out Any>,
     requestType : Class<out Annotation>,
-    internal val inputString : String?
+    internal val inputString : String?,
+    val checkIsReliable : Boolean
 ) : BlueberryRequestInfo(uuid, priority, awaitingMills, blueberryRequest, requestType) {
     private lateinit var callback : BlueberryCallbackWithoutResult
     fun enqueue(callback : BlueberryCallbackWithoutResult) {
@@ -180,7 +180,8 @@ class BlueberryRequestInfoWithNoResponse(
     awaitingMills: Int,
     blueberryRequest : BlueberryRequest<out Any>,
     requestType : Class<out Annotation>,
-    internal val inputString : String?
+    internal val inputString : String?,
+    val checkIsReliable: Boolean
 ) : BlueberryRequestInfo(uuid, priority, awaitingMills, blueberryRequest, requestType) {
     fun enqueue() {
         blueberryRequest.mBlueberryDevice.enqueueBlueberryRequestInfo(this)

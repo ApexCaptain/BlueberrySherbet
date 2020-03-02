@@ -2,6 +2,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore.device
 
 import android.bluetooth.*
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
@@ -42,9 +43,16 @@ abstract class BlueberryDevice<BlueberryService> {
 
 
     val rssi = ObservableField<Int>()
+    val txPhy = ObservableField<Int>()
+    val rxPhy = ObservableField<Int>()
+
     private lateinit var mBluetoothDevice : BluetoothDevice
     private lateinit var mContext : Context
-    private lateinit var mBluetoothGatt : BluetoothGatt
+
+    private var mIsReliableWriteOnProcess = false
+    private var mReliableWriteValue : String? = null
+
+    protected lateinit var mBluetoothGatt : BluetoothGatt
 
     private var mBluetoothGattCallback = object : BluetoothGattCallback() {
 
@@ -72,6 +80,14 @@ abstract class BlueberryDevice<BlueberryService> {
 
         override fun onPhyRead(gatt: BluetoothGatt?, txPhy: Int, rxPhy: Int, status: Int) {
             super.onPhyRead(gatt, txPhy, rxPhy, status)
+            this@BlueberryDevice.txPhy.set(txPhy)
+            this@BlueberryDevice.rxPhy.set(rxPhy)
+        }
+
+        override fun onPhyUpdate(gatt: BluetoothGatt?, txPhy: Int, rxPhy: Int, status: Int) {
+            super.onPhyUpdate(gatt, txPhy, rxPhy, status)
+            this@BlueberryDevice.txPhy.set(txPhy)
+            this@BlueberryDevice.rxPhy.set(rxPhy)
         }
 
         override fun onCharacteristicRead(
@@ -92,10 +108,22 @@ abstract class BlueberryDevice<BlueberryService> {
             status: Int
         ) {
             super.onCharacteristicWrite(gatt, characteristic, status)
+            if(mIsReliableWriteOnProcess) {
+                if(characteristic != null && characteristic.getStringValue(0) == mReliableWriteValue) {
+                    Log.d("ayteneve93_test", "executed")
+                    mBluetoothGatt.executeReliableWrite()
+                }
+                else {
+                    Log.d("ayteneve93_test", "aborted")
+                    mBluetoothGatt.abortReliableWrite()
+                }
+            }
             mCurrentRequestInfo?.onResponse(status, null)
             characteristic?.setValue("")
-            mIsBluetoothOnProgress = false
-            executeRequest()
+            if(!mIsReliableWriteOnProcess) {
+                executeRequest()
+                mIsBluetoothOnProgress = false
+            }
         }
 
         override fun onCharacteristicChanged(
@@ -110,20 +138,21 @@ abstract class BlueberryDevice<BlueberryService> {
             }
         }
 
-
-
-        override fun onPhyUpdate(gatt: BluetoothGatt?, txPhy: Int, rxPhy: Int, status: Int) {
-            super.onPhyUpdate(gatt, txPhy, rxPhy, status)
-        }
-
         override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
             super.onMtuChanged(gatt, mtu, status)
+
+            Log.d("ayteneve93_test", "mtu : $mtu")
+
         }
 
         override fun onReliableWriteCompleted(gatt: BluetoothGatt?, status: Int) {
             super.onReliableWriteCompleted(gatt, status)
+            mIsReliableWriteOnProcess = false
+            mReliableWriteValue = null
+            executeRequest()
+            mIsBluetoothOnProgress = false
+            Log.d("ayteneve93_test", "onReliableWriteCompleted : $status")
         }
-
 
         override fun onDescriptorWrite(
             gatt: BluetoothGatt?,
@@ -140,8 +169,6 @@ abstract class BlueberryDevice<BlueberryService> {
         ) {
             super.onDescriptorRead(gatt, descriptor, status)
         }
-
-
 
     }
     internal fun initialize(bluetoothDevice: BluetoothDevice, context : Context, autoConnect : Boolean) {
@@ -164,6 +191,7 @@ abstract class BlueberryDevice<BlueberryService> {
                     BluetoothState.STATE_CONNECTED -> {
                         mBluetoothGatt.discoverServices()
                         mBluetoothGatt.readRemoteRssi()
+                        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.O) mBluetoothGatt.readPhy()
                         onDeviceConnected()
                     }
 
@@ -176,6 +204,7 @@ abstract class BlueberryDevice<BlueberryService> {
                     BluetoothState.STATE_DISCONNECTED -> {
                         mBlueberryRequestInfoQueue.clear()
                         mNotifyRequestList.clear()
+                        mCurrentRequestInfo = null
                         onDeviceDisconnected()
                     }
 
@@ -240,6 +269,11 @@ abstract class BlueberryDevice<BlueberryService> {
                                 characteristic.setValue(blueberryWriteRequestInfoWithoutResult.inputString)
                                 if(currentRequestInfo.requestType == WRITE::class.java)
                                 characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                                if(blueberryWriteRequestInfoWithoutResult.checkIsReliable) {
+                                    mBluetoothGatt.beginReliableWrite()
+                                    mIsReliableWriteOnProcess = true
+                                    mReliableWriteValue = blueberryWriteRequestInfoWithoutResult.inputString
+                                }
                                 mBluetoothGatt.writeCharacteristic(characteristic)
                                 blueberryWriteRequestInfoWithoutResult.isOnProgress = true
                                 mIsBluetoothOnProgress = true
@@ -248,6 +282,12 @@ abstract class BlueberryDevice<BlueberryService> {
                             WRITE_WITHOUT_RESPONSE::class.java -> (currentRequestInfo as BlueberryRequestInfoWithNoResponse).let { blueberryWriteRequestInfoWithNoResponse ->
                                 characteristic.setValue(blueberryWriteRequestInfoWithNoResponse.inputString)
                                 characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
+                                if(blueberryWriteRequestInfoWithNoResponse.checkIsReliable) {
+                                    mBluetoothGatt.beginReliableWrite()
+                                    mIsReliableWriteOnProcess = true
+                                    mReliableWriteValue = blueberryWriteRequestInfoWithNoResponse.inputString
+                                }
+
                                 mBluetoothGatt.writeCharacteristic(characteristic)
                                 blueberryWriteRequestInfoWithNoResponse.isOnProgress = true
                                 mIsBluetoothOnProgress = true

@@ -24,7 +24,10 @@ class MainActivity : AppCompatActivity() {
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
                 .subscribe {
-                    if(it.bluetoothDevice.name == "NYSLP19020037P") {
+                    if(it.bluetoothDevice.name == TestDevice.name) {
+
+                        Log.d("ayteneve93_test", it.bluetoothDevice.name)
+
                         testDevice = it.connect(this, TestDevice::class.java, true)
                         BlueberryScanner.stopScan()
                     }

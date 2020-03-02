@@ -10,7 +10,8 @@ class BlueberryWriteRequest(
     blueberryDevice : BlueberryDevice<out Any>,
     priority : Int,
     uuidString : String,
-    inputDataSource : Any?
+    inputDataSource : Any?,
+    private val checkIsReliable : Boolean
     ) : BlueberryRequest<Any>(
     Any::class.java,
     moshi,
@@ -25,6 +26,6 @@ class BlueberryWriteRequest(
     }
 
     fun call(awaitingMills : Int = 29000) : BlueberryRequestInfoWithoutResult
-            = BlueberryRequestInfoWithoutResult(mUuid, mPriority, awaitingMills, this, WRITE::class.java, mInputString)
+            = BlueberryRequestInfoWithoutResult(mUuid, mPriority, awaitingMills, this, WRITE::class.java, mInputString, checkIsReliable)
 
 }
