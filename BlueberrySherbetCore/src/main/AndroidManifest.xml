@@ -1,7 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gmail.ayteneve93.blueberrysherbetcore" >
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <!-- Permission to Use Bluetooth Operation -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <!-- Permission to Set Bluetooth Option -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Permission for Scanning or Beacon Process in API Level <= 28 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Permission for Scanning or Beacon Process in API Level > 28 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
 </manifest>

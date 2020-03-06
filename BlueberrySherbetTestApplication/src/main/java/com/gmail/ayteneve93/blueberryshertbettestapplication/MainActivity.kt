@@ -25,9 +25,6 @@ class MainActivity : AppCompatActivity() {
             BlueberryScanner.rxStartScan(this)
                 .subscribe {
                     if(it.bluetoothDevice.name == TestDevice.name) {
-
-                        Log.d("ayteneve93_test", it.bluetoothDevice.name)
-
                         testDevice = it.connect(this, TestDevice::class.java, true)
                         BlueberryScanner.stopScan()
                     }
