@@ -1,6 +1,7 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.request
 
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
+import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryAbstractRequestInfo
 import com.squareup.moshi.Moshi
 import java.util.*
 import kotlin.collections.HashMap
@@ -34,6 +35,7 @@ abstract class BlueberryAbstractRequest<ReturnType>
         }
     )
 
+    abstract fun call(awaitingMills : Int = 29000) : BlueberryAbstractRequestInfo
 
     fun addMoshiAdapters(vararg adapters : Any) {
         mMoshi = mMoshi.newBuilder().apply {

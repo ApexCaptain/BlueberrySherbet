@@ -16,7 +16,7 @@ interface TestDeviceService {
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0503")
     fun readSysconfInfo() : BlueberryReadRequest<SysconfInfo>
 
-    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0201", "\$SoN", "\$EoD")
+    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0201","\$EoD")
     fun notifyLog() : BlueberryNotifyOrIndicateRequest<LogData>
 
     @WRITE_WITHOUT_RESPONSE("aaaaaaaabbbbccccddddeeeeeeee0801")
@@ -25,10 +25,10 @@ interface TestDeviceService {
     @WRITE("aaaaaaaabbbbccccddddeeeeeeee0801")
     fun testWriteWithResponse(string : String) : BlueberryWriteRequest
 
-    @NOTIFY("aaaaaaaabbbbccccddddeeeeeeee0801", "\$SoN", "\$EoD")
+    @NOTIFY("aaaaaaaabbbbccccddddeeeeeeee0801", "\$EoD")
     fun testNotify() : BlueberryNotifyOrIndicateRequest<TestNotifyOrIndicateData>
 
-    @INDICATE("aaaaaaaabbbbccccddddeeeeeeee0801", "\$SoN", "\$EoD")
+    @INDICATE("aaaaaaaabbbbccccddddeeeeeeee0801", "\$EoD")
     fun testIndicate() : BlueberryNotifyOrIndicateRequest<TestNotifyOrIndicateData>
 
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0602")

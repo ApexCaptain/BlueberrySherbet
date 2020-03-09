@@ -2,6 +2,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore.request
 
 import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
+import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestInfoWithoutResult
 import com.squareup.moshi.Moshi
 import java.util.HashMap
 
@@ -31,7 +32,14 @@ class BlueberryWriteRequest(
         this["Use Reliable Write"] = checkIsReliable
     }
 
-    fun call(awaitingMills : Int = 29000) : BlueberryRequestInfoWithoutResult
-            = BlueberryRequestInfoWithoutResult(mUuid, mPriority, awaitingMills, this, WRITE::class.java, mInputString, checkIsReliable)
+    override fun call(awaitingMills : Int) : BlueberryRequestInfoWithoutResult = BlueberryRequestInfoWithoutResult(
+        uuid = mUuid,
+        priority = mPriority,
+        awaitingMills = awaitingMills,
+        blueberryRequest = this,
+        requestType = WRITE::class.java,
+        inputString = mInputString,
+        checkIsReliable = checkIsReliable
+    )
 
 }

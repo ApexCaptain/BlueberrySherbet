@@ -1,9 +1,11 @@
 package com.gmail.ayteneve93.blueberryshertbettestapplication.test
 
+import android.os.Build
 import android.util.Log
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class TestDevice : BlueberryDevice<TestDeviceService>() {
 
@@ -24,6 +26,8 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
     override fun onDeviceConnected() {
         super.onDeviceConnected()
         Log.d("ayteneve93_test", "test device connected")
+
+        this.setConnectionPriority(BlueberryConnectionPriority.CONNECTION_PRIORITY_LOW_POWER)
     }
 
     override fun onDeviceDisconnecting() {
@@ -36,6 +40,13 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
         Log.d("ayteneve93_test", "test device disconnected")
     }
 
+    override fun onRssiValueChanged(rssiValue: Int) {
+        super.onRssiValueChanged(rssiValue)
+
+        Log.d("ayteneve93_test", "rssi : $rssiValue")
+
+    }
+
     override fun onServicesDiscovered() {
         super.onServicesDiscovered()
 
@@ -46,12 +57,14 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
 
         GlobalScope.launch { with(blueberryService) {
 
-            certificateWithReliableWrite(certificationInfo).call().byCoroutine()
-
             certificateWithNonReliableWrite(certificationInfo).call().byCoroutine()
 
-            val statusWithReliableWrite = certificateWithReliableWrite(certificationInfo).call()
-            Log.d("ayteneve93_test", "$statusWithReliableWrite")
+            testIndicate().call().enqueue { status, value ->
+                Log.d("ayteneve93_test", "$value")
+            }
+
+
+
 
         }}
 

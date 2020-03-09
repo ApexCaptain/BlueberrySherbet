@@ -1,5 +1,6 @@
-package com.gmail.ayteneve93.blueberrysherbetcore.request
+package com.gmail.ayteneve93.blueberrysherbetcore.request.info
 
+import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryAbstractRequest
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -12,13 +13,18 @@ class BlueberryRequestInfoWithNoResponse(
     requestType : Class<out Annotation>,
     internal val inputString : String?,
     val checkIsReliable: Boolean
-) : BlueberryAbstractRequestInfo(uuid, priority, awaitingMills, blueberryRequest, requestType) {
+) : BlueberryAbstractRequestInfo(
+    mUuid =  uuid,
+    mPriority = priority,
+    mAwaitingMills = awaitingMills,
+    mBlueberryRequest = blueberryRequest,
+    mRequestType = requestType) {
     override fun convertToSimpleHashMap(): HashMap<String, Any?> = super.convertToSimpleHashMap().apply {
         this["Input Data"] = inputString
         this["Use Reliable Write"] = checkIsReliable
     }
 
     fun enqueue() {
-        blueberryRequest.mBlueberryDevice.enqueueBlueberryRequestInfo(this)
+        mBlueberryRequest.mBlueberryDevice.enqueueBlueberryRequestInfo(this)
     }
 }

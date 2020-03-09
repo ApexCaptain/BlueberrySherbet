@@ -2,6 +2,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore.request
 
 import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE_WITHOUT_RESPONSE
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
+import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestInfoWithNoResponse
 import com.squareup.moshi.Moshi
 import java.util.HashMap
 
@@ -31,7 +32,14 @@ class BlueberryWriteRequestWithoutResponse(
         this["Use Reliable Write"] = checkIsReliable
     }
 
-    fun call(awaitingMills : Int = 29000) : BlueberryRequestInfoWithNoResponse
-        = BlueberryRequestInfoWithNoResponse(mUuid, mPriority, awaitingMills, this, WRITE_WITHOUT_RESPONSE::class.java, mInputString, checkIsReliable)
+    override fun call(awaitingMills : Int) : BlueberryRequestInfoWithNoResponse = BlueberryRequestInfoWithNoResponse(
+        uuid = mUuid,
+        priority = mPriority,
+        awaitingMills = awaitingMills,
+        blueberryRequest = this,
+        requestType = WRITE_WITHOUT_RESPONSE::class.java,
+        inputString = mInputString,
+        checkIsReliable = checkIsReliable
+    )
 
 }

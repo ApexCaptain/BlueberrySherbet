@@ -301,14 +301,10 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                     """.trimIndent()
                                 }
                                 NOTIFY::class.java, INDICATE::class.java -> {
-                                    var startString =
-                                        if(requestType == NOTIFY::class.java) eachMethod.getAnnotation(NOTIFY::class.java)!!.startString
-                                        else eachMethod.getAnnotation(INDICATE::class.java)!!.startString
-                                    var endString =
-                                        if(requestType == NOTIFY::class.java) eachMethod.getAnnotation(NOTIFY::class.java)!!.endString
-                                        else eachMethod.getAnnotation(INDICATE::class.java)!!.endString
-                                    if(startString.startsWith("\$")) startString = "\\$startString"
-                                    if(endString.startsWith("\$")) endString = "\\$endString"
+                                    var endSignal =
+                                        if(requestType == NOTIFY::class.java) eachMethod.getAnnotation(NOTIFY::class.java)!!.endSignal
+                                        else eachMethod.getAnnotation(INDICATE::class.java)!!.endSignal
+                                    if(endSignal.startsWith("\$")) endSignal = "\\$endSignal"
                                     """
                                         return ${returnTypeBlueberryRequestClass}(
                                             $originalReturnTypeArgumentTypeName::class.java,
@@ -317,8 +313,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString",
                                             ${requestType.asTypeName()}::class.java,
-                                            "$startString",
-                                            "$endString"
+                                            "$endSignal"
                                         )
                                     """.trimIndent()
                                 }

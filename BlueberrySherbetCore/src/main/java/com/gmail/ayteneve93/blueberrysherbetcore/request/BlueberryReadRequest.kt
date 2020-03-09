@@ -3,6 +3,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore.request
 import android.os.Build
 import com.gmail.ayteneve93.blueberrysherbetannotations.READ
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
+import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestInfoWithSimpleResult
 import com.squareup.moshi.Moshi
 import java.util.HashMap
 
@@ -25,6 +26,11 @@ class BlueberryReadRequest<ReturnType>(
                               else mReturnTypeClass.simpleName
     }
 
-    fun call(awaitingMills : Int = 29000) : BlueberryRequestInfoWithSimpleResult<ReturnType>
-        = BlueberryRequestInfoWithSimpleResult(mUuid, mPriority, awaitingMills, this, READ::class.java)
+    override fun call(awaitingMills : Int) : BlueberryRequestInfoWithSimpleResult<ReturnType> = BlueberryRequestInfoWithSimpleResult(
+        uuid = mUuid,
+        priority = mPriority,
+        awaitingMills = awaitingMills,
+        blueberryRequest = this,
+        requestType = READ::class.java
+    )
 }

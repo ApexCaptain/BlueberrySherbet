@@ -1,6 +1,7 @@
-package com.gmail.ayteneve93.blueberrysherbetcore.request
+package com.gmail.ayteneve93.blueberrysherbetcore.request.info
 
 import android.bluetooth.BluetoothGattCharacteristic
+import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryAbstractRequest
 import io.reactivex.Single
 import java.util.*
 import kotlin.collections.HashMap
@@ -16,7 +17,12 @@ class BlueberryRequestInfoWithoutResult(
     requestType : Class<out Annotation>,
     internal val inputString : String?,
     val checkIsReliable : Boolean
-) : BlueberryAbstractRequestInfo(uuid, priority, awaitingMills, blueberryRequest, requestType) {
+) : BlueberryAbstractRequestInfo(
+    mUuid = uuid,
+    mPriority = priority,
+    mAwaitingMills = awaitingMills,
+    mBlueberryRequest = blueberryRequest,
+    mRequestType = requestType) {
     private lateinit var callback : BlueberryCallbackWithoutResult
 
     override fun convertToSimpleHashMap(): HashMap<String, Any?> = super.convertToSimpleHashMap().apply {
@@ -26,8 +32,9 @@ class BlueberryRequestInfoWithoutResult(
 
     fun enqueue(callback : BlueberryCallbackWithoutResult) {
         this.callback = callback
-        blueberryRequest.mBlueberryDevice.enqueueBlueberryRequestInfo(this)
+        mBlueberryRequest.mBlueberryDevice.enqueueBlueberryRequestInfo(this)
     }
+
     fun byRx2() : Single<Int> = Single.create { emitter -> enqueue { emitter.onSuccess(it) } }
     suspend fun byCoroutine() : Int = suspendCoroutine { continuation -> enqueue { continuation.resume(it) } }
     override fun onResponse(status: Int?, characteristic: BluetoothGattCharacteristic?) {

@@ -7,6 +7,7 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
+import android.util.Log
 import androidx.databinding.ObservableField
 import com.gmail.ayteneve93.blueberrysherbetcore.R
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger

@@ -1,4 +1,4 @@
-package com.gmail.ayteneve93.blueberrysherbetcore.request
+package com.gmail.ayteneve93.blueberrysherbetcore.request.info
 
 typealias BlueberryCallbackWithResult<ReturnType> = (status : Int, value : ReturnType?) -> Unit
 
