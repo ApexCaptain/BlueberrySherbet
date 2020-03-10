@@ -4,6 +4,7 @@ import com.squareup.moshi.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+@Suppress("SpellCheckingInspection")
 class TestDeviceMoshiDateAdapter : JsonAdapter<Date>() {
     private val mDateFormat = SimpleDateFormat(TEST_DEVICE_LOG_DATE_FORMAT, Locale.getDefault())
 

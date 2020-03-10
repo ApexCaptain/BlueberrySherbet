@@ -2,6 +2,7 @@ package com.gmail.ayteneve93.blueberryshertbettestapplication.test
 
 import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -47,6 +48,15 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
 
     }
 
+    override fun onPhyValueChanged(txPhy: Int, rxPhy: Int) {
+        super.onPhyValueChanged(txPhy, rxPhy)
+    }
+
+    override fun onMtuValueChanged(mtu: Int) {
+        super.onMtuValueChanged(mtu)
+        Log.d("ayteneve93_test", "$mtu")
+    }
+
     override fun onServicesDiscovered() {
         super.onServicesDiscovered()
 
@@ -57,14 +67,15 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
 
         GlobalScope.launch { with(blueberryService) {
 
-            certificateWithNonReliableWrite(certificationInfo).call().byCoroutine()
+            val a = certificateWithNonReliableWrite(certificationInfo).call().byCoroutine()
 
+            Log.d("ayteneve93_test", "$a")
+
+            /*
             testIndicate().call().enqueue { status, value ->
                 Log.d("ayteneve93_test", "$value")
             }
-
-
-
+             */
 
         }}
 

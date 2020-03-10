@@ -5,19 +5,17 @@ import com.gmail.ayteneve93.blueberrysherbetcore.request.*
 import kotlin.String
 
 @BlueberryService
+@Suppress("SpellCheckingInspection")
 interface TestDeviceService {
 
     @WRITE("aaaaaaaabbbbccccddddeeeeeeee0101", true)
     fun certificateWithReliableWrite(certificationInfo: CertificationInfo) :  BlueberryWriteRequest
 
-    @WRITE("aaaaaaaabbbbccccddddeeeeeeee0101", false)
+    @WRITE("aaaaaaaabbbbccccddddeeeeeeee0101")
     fun certificateWithNonReliableWrite(certificationInfo: CertificationInfo) : BlueberryWriteRequest
 
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0503")
     fun readSysconfInfo() : BlueberryReadRequest<SysconfInfo>
-
-    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0201","\$EoD")
-    fun notifyLog() : BlueberryNotifyOrIndicateRequest<LogData>
 
     @WRITE_WITHOUT_RESPONSE("aaaaaaaabbbbccccddddeeeeeeee0801")
     fun testWriteWithNoResponse(string: String) : BlueberryWriteRequestWithoutResponse
