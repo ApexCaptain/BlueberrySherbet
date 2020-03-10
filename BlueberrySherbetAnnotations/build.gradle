@@ -2,7 +2,7 @@ apply plugin: 'java-library'
 apply plugin: 'kotlin'
 
 apply plugin: 'maven'
-group='com.github.ApexCaptain.BlueberrySherbetAnnotations'
+group='com.github.ApexCaptain'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
