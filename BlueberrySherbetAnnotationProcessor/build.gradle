@@ -3,7 +3,7 @@ apply plugin: 'kotlin'
 apply plugin: 'kotlin-kapt'
 
 apply plugin: 'maven'
-group='com.github.ApexCaptain.BlueberrySherbet'
+group='com.github.ApexCaptain.BlueberrySherbetAnnotationProcessor'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
