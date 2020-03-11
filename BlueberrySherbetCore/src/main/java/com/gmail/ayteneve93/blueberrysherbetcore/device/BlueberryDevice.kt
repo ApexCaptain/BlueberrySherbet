@@ -19,6 +19,9 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
+/**
+ * @author ayteneve93@gmail.com
+ */
 @Suppress("spellCheckingInspection")
 abstract class BlueberryDevice<BlueberryService> {
 

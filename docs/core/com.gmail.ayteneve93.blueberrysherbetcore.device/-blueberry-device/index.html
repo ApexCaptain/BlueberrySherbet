@@ -1,0 +1,286 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>BlueberryDevice - core</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">core</a>&nbsp;/&nbsp;<a href="../index.html">com.gmail.ayteneve93.blueberrysherbetcore.device</a>&nbsp;/&nbsp;<a href="./index.html">BlueberryDevice</a><br/>
+<br/>
+<h1>BlueberryDevice</h1>
+(JVM) <code><span class="keyword">abstract</span> <span class="keyword">class </span><span class="identifier">BlueberryDevice</span><span class="symbol">&lt;</span><span class="identifier">BlueberryService</span><span class="symbol">&gt;</span></code>
+<p><strong>Author</strong><br/>
+ayteneve93@gmail.com</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+(JVM) 
+<h4><a href="-blueberry-connection-priority/index.html">BlueberryConnectionPriority</a></h4>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">BlueberryConnectionPriority</span></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="-bluetooth-state/index.html">BluetoothState</a></h4>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">BluetoothState</span></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="-mtu-request-info/index.html">MtuRequestInfo</a></h4>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MtuRequestInfo</span></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="-phy-option/index.html">PhyOption</a></h4>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">PhyOption</span></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="-phy-request-info/index.html">PhyRequestInfo</a></h4>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">PhyRequestInfo</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+(JVM) 
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<code><span class="identifier">BlueberryDevice</span><span class="symbol">(</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+(JVM) 
+<h4><a href="auto-connect.html">autoConnect</a></h4>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">autoConnect</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="blueberry-service.html">blueberryService</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">blueberryService</span><span class="symbol">: </span><span class="identifier">BlueberryService</span></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="bluetooth-state.html">bluetoothState</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">bluetoothState</span><span class="symbol">: </span><span class="identifier">ObservableField</span><span class="symbol">&lt;</span><span class="identifier">BluetoothState</span><span class="symbol">!</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="m-bluetooth-gatt.html">mBluetoothGatt</a></h4>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">mBluetoothGatt</span><span class="symbol">: </span><a href="https://developer.android.com/reference/android/bluetooth/BluetoothGatt.html"><span class="identifier">BluetoothGatt</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="mtu.html">mtu</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">mtu</span><span class="symbol">: </span><span class="identifier">ObservableField</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="rssi.html">rssi</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">rssi</span><span class="symbol">: </span><span class="identifier">ObservableField</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="rx-phy.html">rxPhy</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">rxPhy</span><span class="symbol">: </span><span class="identifier">ObservableField</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="tx-phy.html">txPhy</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">txPhy</span><span class="symbol">: </span><span class="identifier">ObservableField</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+(JVM) 
+<h4><a href="connect.html">connect</a></h4>
+</td>
+<td>
+<p>Basic Connection Controlling Operation</p>
+<code><span class="keyword">fun </span><span class="identifier">connect</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="disconnect.html">disconnect</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">disconnect</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="dismiss-rssi-update-interval.html">dismissRssiUpdateInterval</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">dismissRssiUpdateInterval</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="on-device-connected.html">onDeviceConnected</a></h4>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onDeviceConnected</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="on-device-connecting.html">onDeviceConnecting</a></h4>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onDeviceConnecting</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="on-device-disconnected.html">onDeviceDisconnected</a></h4>
+</td>
+<td>
+<p>Device Life Cycle Callback</p>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onDeviceDisconnected</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="on-device-disconnecting.html">onDeviceDisconnecting</a></h4>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onDeviceDisconnecting</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="on-mtu-value-changed.html">onMtuValueChanged</a></h4>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onMtuValueChanged</span><span class="symbol">(</span><span class="identifier" id="com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice$onMtuValueChanged(kotlin.Int)/mtu">mtu</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="on-phy-value-changed.html">onPhyValueChanged</a></h4>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onPhyValueChanged</span><span class="symbol">(</span><span class="identifier" id="com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice$onPhyValueChanged(kotlin.Int, kotlin.Int)/txPhy">txPhy</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice$onPhyValueChanged(kotlin.Int, kotlin.Int)/rxPhy">rxPhy</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="on-rssi-value-changed.html">onRssiValueChanged</a></h4>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onRssiValueChanged</span><span class="symbol">(</span><span class="identifier" id="com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice$onRssiValueChanged(kotlin.Int)/rssiValue">rssiValue</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="on-services-discovered.html">onServicesDiscovered</a></h4>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onServicesDiscovered</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="read-phy.html">readPhy</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">readPhy</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="request-mtu.html">requestMtu</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">requestMtu</span><span class="symbol">(</span><span class="identifier" id="com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice$requestMtu(kotlin.Int)/mtu">mtu</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="set-connection-priority.html">setConnectionPriority</a></h4>
+</td>
+<td>
+<p>Change Connection Priority</p>
+<code><span class="keyword">fun </span><span class="identifier">setConnectionPriority</span><span class="symbol">(</span><span class="identifier" id="com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice$setConnectionPriority(com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice.BlueberryConnectionPriority)/connectionPriority">connectionPriority</span><span class="symbol">:</span>&nbsp;<span class="identifier">BlueberryConnectionPriority</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="set-preferred-phy.html">setPreferredPhy</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">setPreferredPhy</span><span class="symbol">(</span><span class="identifier" id="com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice$setPreferredPhy(kotlin.Int, kotlin.Int)/txPhy">txPhy</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice$setPreferredPhy(kotlin.Int, kotlin.Int)/rxPhy">rxPhy</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="set-rssi-update-interval.html">setRssiUpdateInterval</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">setRssiUpdateInterval</span><span class="symbol">(</span><span class="identifier" id="com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice$setRssiUpdateInterval(kotlin.Long, java.util.concurrent.TimeUnit)/intervalTime">intervalTime</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice$setRssiUpdateInterval(kotlin.Long, java.util.concurrent.TimeUnit)/intervalTimeUnit">intervalTimeUnit</span><span class="symbol">:</span>&nbsp;<a href="https://docs.oracle.com/javase/6/docs/api/java/util/concurrent/TimeUnit.html"><span class="identifier">TimeUnit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+(JVM) 
+<h4><a href="set-service-impl.html">setServiceImpl</a></h4>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">setServiceImpl</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">BlueberryService</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

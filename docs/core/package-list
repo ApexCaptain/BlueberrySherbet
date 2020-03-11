@@ -1,0 +1,8 @@
+$dokka.format:html
+$dokka.linkExtension:html
+
+com.gmail.ayteneve93.blueberrysherbetcore.device
+com.gmail.ayteneve93.blueberrysherbetcore.request
+com.gmail.ayteneve93.blueberrysherbetcore.request.info
+com.gmail.ayteneve93.blueberrysherbetcore.scanner
+com.gmail.ayteneve93.blueberrysherbetcore.utility

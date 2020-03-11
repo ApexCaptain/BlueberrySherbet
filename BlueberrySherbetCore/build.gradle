@@ -3,13 +3,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+apply plugin: 'org.jetbrains.dokka'
+
 apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.ApexCaptain'
 
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
-
 
     defaultConfig {
         minSdkVersion 24
@@ -20,6 +21,25 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
     }
+
+    dokka {
+        outputFormat = "html"
+        outputDirectory = "$rootDir/docs"
+        disableAutoconfiguration = false
+        cacheRoot = "default"
+        configuration {
+            moduleName = "core"
+            includeNonPublic = false
+            skipDeprecated = false
+            reportUndocumented = true
+            skipEmptyPackages = true
+            targets = ["JVM"]
+            platform = "JVM"
+        }
+
+    }
+
+    // ToDO : 전체 모듈에서 디버그시 최적화&난독화 적용하고 테스트하기
 
     buildTypes {
         release {
