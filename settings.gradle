@@ -1,2 +1,2 @@
-include ':BlueberrySherbetTestApplication', ':BlueberrySherbetAnnotations', ':BlueberrySherbetAnnotationProcessor', ':BlueberrySherbetCore'
+include ':app', ':annotations', ':apt', ':core'
 rootProject.name='BlueberrySherbet'

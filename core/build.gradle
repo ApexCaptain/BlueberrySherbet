@@ -61,6 +61,6 @@ dependencies {
     implementation "com.squareup.moshi:moshi:$moshi_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$corutine_version"
 
-    implementation project(':BlueberrySherbetAnnotations')
+    implementation project(':annotations')
 
 }
