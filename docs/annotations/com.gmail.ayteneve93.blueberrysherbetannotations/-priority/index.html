@@ -1,0 +1,71 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Priority - annotations</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">annotations</a>&nbsp;/&nbsp;<a href="../index.html">com.gmail.ayteneve93.blueberrysherbetannotations</a>&nbsp;/&nbsp;<a href="./index.html">Priority</a><br/>
+<br/>
+<h1>Priority</h1>
+(JVM) <code><span class="identifier">@Target</span><span class="symbol">(</span>[AnnotationTarget.FUNCTION]<span class="symbol">)</span> <span class="keyword">annotation</span> <span class="keyword">class </span><span class="identifier">Priority</span></code>
+<p>Optional annotation indicating execution priority of BLE function.</p>
+<p>You can specify execution priority of each BLE function in form of integer.</p>
+<p>Basically, the lower its value, it'd have higher priority.</p>
+<p>And the higher priority it has, the sooner it'd be executed.</p>
+<p>For instance, when you set 2 different BLE functions; 'funcA', 'funcB',</p>
+<p>and let's say that 'funcA' is much more important than the other one, so it</p>
+<p>should be executed before 'funcB', then you can declare them as example code below</p>
+<p>Example Code</p>
+<pre><code>    @BlueberryService
+    interface YourBleService {
+        @Priority(1) // ← It'll be executed sooner though it's requested lately.
+        fun funcA()
+        @Priority(2)
+        fun funcB()
+    }</code></pre>
+<p>If it's not set, the priority of each function would be set as default.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+(JVM) 
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p>Optional annotation indicating execution priority of BLE function.</p>
+<code><span class="identifier">Priority</span><span class="symbol">(</span><span class="identifier" id="com.gmail.ayteneve93.blueberrysherbetannotations.Priority$<init>(kotlin.Int)/priority">priority</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+(JVM) 
+<h4><a href="priority.html">priority</a></h4>
+</td>
+<td>
+<p>Priority value</p>
+<code><span class="keyword">val </span><span class="identifier">priority</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Companion Object Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+(JVM) 
+<h4><a href="default-priority.html">defaultPriority</a></h4>
+</td>
+<td>
+<p>Static default priority value. Normally, it is set 10.</p>
+<code><span class="keyword">var </span><span class="identifier">defaultPriority</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

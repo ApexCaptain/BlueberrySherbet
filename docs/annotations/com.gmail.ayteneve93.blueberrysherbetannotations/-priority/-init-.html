@@ -1,0 +1,30 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Priority.<init> - annotations</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">annotations</a>&nbsp;/&nbsp;<a href="../index.html">com.gmail.ayteneve93.blueberrysherbetannotations</a>&nbsp;/&nbsp;<a href="index.html">Priority</a>&nbsp;/&nbsp;<a href="./-init-.html">&lt;init&gt;</a><br/>
+<br/>
+<h1>&lt;init&gt;</h1>
+(JVM) <a name="com.gmail.ayteneve93.blueberrysherbetannotations.Priority$&lt;init&gt;(kotlin.Int)"></a>
+<code><span class="identifier">Priority</span><span class="symbol">(</span><span class="identifier" id="com.gmail.ayteneve93.blueberrysherbetannotations.Priority$<init>(kotlin.Int)/priority">priority</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span></code>
+<p>Optional annotation indicating execution priority of BLE function.</p>
+<p>You can specify execution priority of each BLE function in form of integer.</p>
+<p>Basically, the lower its value, it'd have higher priority.</p>
+<p>And the higher priority it has, the sooner it'd be executed.</p>
+<p>For instance, when you set 2 different BLE functions; 'funcA', 'funcB',</p>
+<p>and let's say that 'funcA' is much more important than the other one, so it</p>
+<p>should be executed before 'funcB', then you can declare them as example code below</p>
+<p>Example Code</p>
+<pre><code>    @BlueberryService
+    interface YourBleService {
+        @Priority(1) // ← It'll be executed sooner though it's requested lately.
+        fun funcA()
+        @Priority(2)
+        fun funcB()
+    }</code></pre>
+<p>If it's not set, the priority of each function would be set as default.</p>
+</BODY>
+</HTML>
