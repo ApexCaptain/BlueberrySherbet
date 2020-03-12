@@ -20,10 +20,13 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 /**
- * @author ayteneve93@gmail.com
+ * Abstract class of BLE device.
+ *
+ * You can configure specific options for each BLE device by inheriting this abstract class.
+ *
  */
 @Suppress("spellCheckingInspection")
-abstract class BlueberryDevice<BlueberryService> {
+abstract class BlueberryDevice<BlueberryService> private constructor() {
 
     var autoConnect: Boolean = true
     val bluetoothState = ObservableField(BluetoothState.STATE_DISCONNECTED)
