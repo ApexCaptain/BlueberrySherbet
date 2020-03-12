@@ -26,7 +26,7 @@ import kotlin.collections.ArrayList
  *
  */
 @Suppress("spellCheckingInspection")
-abstract class BlueberryDevice<BlueberryService> private constructor() {
+abstract class BlueberryDevice<BlueberryService> protected constructor() {
 
     var autoConnect: Boolean = true
     val bluetoothState = ObservableField(BluetoothState.STATE_DISCONNECTED)

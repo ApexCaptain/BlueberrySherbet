@@ -7,7 +7,6 @@ group='com.github.ApexCaptain'
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
-
 dokka {
     outputFormat = "html"
     outputDirectory = "$rootDir/docs"

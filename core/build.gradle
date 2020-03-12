@@ -41,6 +41,10 @@ android {
     // ToDO : 전체 모듈에서 디버그시 최적화&난독화 적용하고 테스트하기
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
