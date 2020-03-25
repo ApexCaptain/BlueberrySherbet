@@ -9,13 +9,13 @@ import com.squareup.moshi.Moshi
 import java.util.*
 import kotlin.collections.HashMap
 
-abstract class BlueberryAbstractRequestInfo(
+abstract class BlueberryAbstractRequestInfo (
     internal val mUuid : UUID,
     internal val mPriority : Int,
     internal var mAwaitingMills : Int,
     internal val mBlueberryRequest : BlueberryAbstractRequest<out Any>,
     internal val mRequestType : Class<out Annotation>
-) {
+) : Comparable<BlueberryAbstractRequestInfo> {
     internal val mRequestCode : Long = requestCount++
     internal var mIsOnProgress : Boolean = false
     internal val mRequestTimer = Handler(Looper.getMainLooper())
@@ -28,6 +28,8 @@ abstract class BlueberryAbstractRequestInfo(
         this["Request Code"] = mRequestCode
         this["Is On Progress"] = mIsOnProgress
     }
+
+    override fun compareTo(other: BlueberryAbstractRequestInfo): Int = this.mPriority.compareTo(other.mPriority)
 
     override fun toString(): String = this::class.java.simpleName + convertToSimpleHashMap().toList().joinToString(
         separator = "\n # ",

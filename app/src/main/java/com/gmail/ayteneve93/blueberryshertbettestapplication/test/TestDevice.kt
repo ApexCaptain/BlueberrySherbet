@@ -10,9 +10,8 @@ import java.util.concurrent.TimeUnit
 
 class TestDevice : BlueberryDevice<TestDeviceService>() {
 
-    //192.168.0.10
     companion object {
-        val name = "NYSLP19020037P"
+        val name = "NYSLP19020030P"
     }
 
     override fun setServiceImpl(): TestDeviceService = BlueberryTestDeviceServiceImpl(this).apply {
@@ -27,8 +26,6 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
     override fun onDeviceConnected() {
         super.onDeviceConnected()
         Log.d("ayteneve93_test", "test device connected")
-
-        this.setConnectionPriority(BlueberryConnectionPriority.CONNECTION_PRIORITY_LOW_POWER)
     }
 
     override fun onDeviceDisconnecting() {
@@ -43,9 +40,6 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
 
     override fun onRssiValueChanged(rssiValue: Int) {
         super.onRssiValueChanged(rssiValue)
-
-        Log.d("ayteneve93_test", "rssi : $rssiValue")
-
     }
 
     override fun onPhyValueChanged(txPhy: Int, rxPhy: Int) {
@@ -54,29 +48,35 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
 
     override fun onMtuValueChanged(mtu: Int) {
         super.onMtuValueChanged(mtu)
-        Log.d("ayteneve93_test", "$mtu")
     }
 
     override fun onServicesDiscovered() {
         super.onServicesDiscovered()
 
         val certificationInfo = CertificationInfo(
-            "Uv4OywyiZZhlJDvtm8JCH48WIs03",
+            "xe6zBDYywHcs16CBTN1Gk2xHZtM2",
             2
         )
 
         GlobalScope.launch { with(blueberryService) {
 
-            val a = certificateWithNonReliableWrite(certificationInfo).call().byCoroutine()
+            certificateWithNonReliableWrite(certificationInfo).call().byCoroutine()
 
-            Log.d("ayteneve93_test", "$a")
-
-            /*
-            testIndicate().call().enqueue { status, value ->
-                Log.d("ayteneve93_test", "$value")
+            val rst = readCheckWifiStatus().call().byCoroutine()
+            rst.value?.let {
+                if(it.connectionState) Log.d("ayteneve93_test", it.ip_address)
+                else {
+                    this.connectWifi(
+                        WifiConnectionInfo(
+                        ssid = "nayuntech2G",
+                        psk = "nyt00630!",
+                        timeout = 29000
+                    )).call().byCoroutine()
+                    val rst2 = readCheckWifiStatus().call().byCoroutine()
+                    Log.d("ayteneve93_test", rst2.value?.ip_address?:"Error...")
+                }
             }
-             */
-
+            Log.d("ayteneve93_test", "Executed...")
         }}
 
     }

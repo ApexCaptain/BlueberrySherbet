@@ -36,7 +36,8 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
         return mutableSetOf(
-            BlueberryService::class.java.name
+            BlueberryService::class.java.name,
+            Priority::class.java.name
         ).apply { addAll(supportedAnnotationKotlinClasses.map { eachAnnotationKotlinClass -> eachAnnotationKotlinClass.java.name }) }
     }
 
@@ -107,7 +108,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
         val fileBuilder = FileSpec.builder(packageName,fileName)
         val classBuilder = TypeSpec.classBuilder(fileName)
 
-        val blueberryDeviceClass = ClassName("$BLUEBERRY_SHERBET_CORE_PACKAGE_NAME.device", "BlueberryDevice").parameterizedBy(blueberryElement.asType().asTypeName())
+        val blueberryDeviceClass = ClassName("${BLUEBERRY_SHERBET.CORE}.device", "BlueberryDevice").parameterizedBy(blueberryElement.asType().asTypeName())
 
         classBuilder.apply {
 
@@ -183,36 +184,36 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                 var originalReturnTypeArgumentTypeName : TypeName? = null
                 val returnTypeBlueberryRequestClass = when(requestType) {
 
-                    WRITE::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryWriteRequest")) {
-                        errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryWriteRequest")
+                    WRITE::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_WRITE_REQUEST}")) {
+                        errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_WRITE_REQUEST}")
                         return@generateDeviceServiceMethodImplements true
-                    } else ClassName("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request", "BlueberryWriteRequest")
+                    } else ClassName("${BLUEBERRY_SHERBET.CORE.REQUEST}", BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_WRITE_REQUEST.simpleName)
 
-                    WRITE_WITHOUT_RESPONSE::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryWriteRequestWithoutResponse")) {
-                        errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryWriteRequestWithoutResponse")
+                    WRITE_WITHOUT_RESPONSE::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_WRITE_REQUEST_WITHOUT_RESPONSE}")) {
+                        errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_WRITE_REQUEST_WITHOUT_RESPONSE}")
                         return@generateDeviceServiceMethodImplements true
-                    } else ClassName("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request", "BlueberryWriteRequestWithoutResponse")
+                    } else ClassName("${BLUEBERRY_SHERBET.CORE.REQUEST}", BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_WRITE_REQUEST_WITHOUT_RESPONSE.simpleName)
 
-                    READ::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryReadRequest")) {
-                        errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryReadRequest")
+                    READ::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_READ_REQUEST}")) {
+                        errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_READ_REQUEST}")
                         return@generateDeviceServiceMethodImplements true
                     } else {
                         originalReturnTypeArgumentTypeName = (eachMethod.returnType as DeclaredType).typeArguments[0].asTypeName().javaToKotlinType().let {
                             if(it.toString() == "*") Any::class.asTypeName()
                             else it
                         }
-                        ClassName("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request", "BlueberryReadRequest").parameterizedBy(originalReturnTypeArgumentTypeName!!)
+                        ClassName("${BLUEBERRY_SHERBET.CORE.REQUEST}", BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_READ_REQUEST.simpleName).parameterizedBy(originalReturnTypeArgumentTypeName!!)
                     }
 
-                    NOTIFY::class.java, INDICATE::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryNotifyOrIndicateRequest")) {
-                        errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request.BlueberryNotifyOrIndicateRequest")
+                    NOTIFY::class.java, INDICATE::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_NOTIFY_OR_INDICATE_REQUEST}")) {
+                        errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_NOTIFY_OR_INDICATE_REQUEST}")
                         return@generateDeviceServiceMethodImplements true
                     } else {
                         originalReturnTypeArgumentTypeName = (eachMethod.returnType as DeclaredType).typeArguments[0].asTypeName().javaToKotlinType().let {
                             if(it.toString() == "*") Any::class.java.asTypeName()
                             else it
                         }
-                        ClassName("${BLUEBERRY_SHERBET_CORE_PACKAGE_NAME}.request", "BlueberryNotifyOrIndicateRequest").parameterizedBy(originalReturnTypeArgumentTypeName!!)
+                        ClassName("${BLUEBERRY_SHERBET.CORE.REQUEST}", BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_NOTIFY_OR_INDICATE_REQUEST.simpleName).parameterizedBy(originalReturnTypeArgumentTypeName!!)
                     }
 
                     else -> return@generateDeviceServiceMethodImplements true
@@ -354,8 +355,18 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
 
     companion object {
         private const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
-        private const val BLUEBERRY_SHERBET_CORE_PACKAGE_NAME = "com.gmail.ayteneve93.blueberrysherbetcore"
-        private const val BLUEBERRY_SHERBET_ANNOTATIONS_PACKABE_NAME = "com.gmail.ayteneve93.blueberrysherbetannotations"
+
+        private object BLUEBERRY_SHERBET { override fun toString(): String = "com.gmail.ayteneve93"
+            object CORE { const val simpleName = "blueberrysherbetcore"; override fun toString(): String = "${BLUEBERRY_SHERBET}.$simpleName"
+                object DEVICE { const val simpleName = "device"; override fun toString(): String = "${CORE}.$simpleName" }
+                object REQUEST { const val simpleName = "request"; override fun toString(): String = "${CORE}.$simpleName"
+                    object BLUEBERRY_NOTIFY_OR_INDICATE_REQUEST { const val simpleName = "BlueberryNotifyOrIndicateRequest"; override fun toString(): String = "${REQUEST}.$simpleName"}
+                    object BLUEBERRY_READ_REQUEST { const val simpleName = "BlueberryReadRequest"; override fun toString(): String = "${REQUEST}.$simpleName"}
+                    object BLUEBERRY_WRITE_REQUEST { const val simpleName = "BlueberryWriteRequest"; override fun toString(): String = "${REQUEST}.$simpleName"}
+                    object BLUEBERRY_WRITE_REQUEST_WITHOUT_RESPONSE { const val simpleName = "BlueberryWriteRequestWithoutResponse"; override fun toString(): String = "${REQUEST}.$simpleName"}
+                }
+            }
+        }
     }
 
 }
