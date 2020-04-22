@@ -94,7 +94,6 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
         return doesProcessingErrorExists
     }
 
-    // Refer : https://github.com/square/kotlinpoet
     private val blueberryDeviceMemeberPropertyName = "mBlueberryDevice"
     private val moshiClass = ClassName("com.squareup.moshi", "Moshi")
     private val moshiMemberPropertyName = "mMoshi"
