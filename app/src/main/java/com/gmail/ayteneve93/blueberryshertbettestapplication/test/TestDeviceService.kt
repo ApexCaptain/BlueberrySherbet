@@ -8,6 +8,19 @@ import kotlin.String
 @Suppress("SpellCheckingInspection")
 interface TestDeviceService {
 
+    /*
+    @READ("beb5483e-36e1-4688-b7f5-ea07361b26a8")
+    fun testRead() : BlueberryReadRequest<String>
+
+    @WRITE("beb5483e-36e1-4688-b7f5-ea07361b26a8", true)
+    fun testWrtie(str : String) : BlueberryWriteRequest
+
+    @INDICATE("beb5483e-36e1-4688-b7f5-ea07361b26a8")
+    fun testIndicate() : BlueberryNotifyOrIndicateRequest<String>
+    */
+
+
+    /*
     @WRITE("aaaaaaaabbbbccccddddeeeeeeee0101", true)
     fun certificateWithReliableWrite(certificationInfo: CertificationInfo) :  BlueberryWriteRequest
 
@@ -34,5 +47,6 @@ interface TestDeviceService {
 
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601")
     fun readCheckWifiStatus() : BlueberryReadRequest<WifiStatus>
+    */
 
 }

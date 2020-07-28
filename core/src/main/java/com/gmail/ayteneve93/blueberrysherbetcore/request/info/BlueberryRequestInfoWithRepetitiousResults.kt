@@ -65,20 +65,33 @@ class BlueberryRequestInfoWithRepetitiousResults<ReturnType>(
     override fun onResponse(status: Int?, characteristic: BluetoothGattCharacteristic?) {
         if(status == 0) {
             characteristic?.value?.let { partialData ->
-                when(String(partialData)) {
-                    endSignal -> {
-                        try {
-                            callback.invoke(0, when(mRequestType) {
-                                NOTIFY::class.java, INDICATE::class.java -> convertStringToObject<ReturnType>(
-                                    mBlueberryRequest.mReturnTypeClass,
-                                    String(synthesizedByteArrayList.toTypedArray().toByteArray()),
-                                    mBlueberryRequest.mMoshi)
-                                else -> null
-                            })
-                            synthesizedByteArrayList.clear()
-                        } catch(exception : Exception) { BlueberryLogger.e("Exception Occured While Parsing Data String", exception) }
+                if(endSignal == 0x00.toChar().toString()) {
+                    try {
+                        callback.invoke(0, when(mRequestType) {
+                            NOTIFY::class.java, INDICATE::class.java -> convertStringToObject<ReturnType>(
+                                mBlueberryRequest.mReturnTypeClass,
+                                String(partialData),
+                                mBlueberryRequest.mMoshi
+                            )
+                            else -> null
+                        })
+                    } catch(exception : Exception) { BlueberryLogger.e("Exception Occured While Parsing Data String", exception)}
+                } else {
+                    when(String(partialData)) {
+                        endSignal -> {
+                            try {
+                                callback.invoke(0, when(mRequestType) {
+                                    NOTIFY::class.java, INDICATE::class.java -> convertStringToObject<ReturnType>(
+                                        mBlueberryRequest.mReturnTypeClass,
+                                        String(synthesizedByteArrayList.toTypedArray().toByteArray()),
+                                        mBlueberryRequest.mMoshi)
+                                    else -> null
+                                })
+                                synthesizedByteArrayList.clear()
+                            } catch(exception : Exception) { BlueberryLogger.e("Exception Occured While Parsing Data String", exception) }
+                        }
+                        else -> synthesizedByteArrayList.addAll(partialData.toList())
                     }
-                    else -> synthesizedByteArrayList.addAll(partialData.toList())
                 }
             }
         } else super.onResponse(status, characteristic)

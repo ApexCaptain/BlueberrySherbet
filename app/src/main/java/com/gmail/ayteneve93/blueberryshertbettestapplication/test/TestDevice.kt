@@ -1,12 +1,10 @@
 package com.gmail.ayteneve93.blueberryshertbettestapplication.test
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
+import androidx.databinding.Observable
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 class TestDevice : BlueberryDevice<TestDeviceService>() {
 
@@ -53,13 +51,43 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
     override fun onServicesDiscovered() {
         super.onServicesDiscovered()
 
+        /*
         val certificationInfo = CertificationInfo(
             "xe6zBDYywHcs16CBTN1Gk2xHZtM2",
             2
-        )
+        )*/
 
         GlobalScope.launch { with(blueberryService) {
 
+            /*
+            testRead().call().byCoroutine().value?.let {
+                Log.d("ayteneve93_test", "rst : $it")
+            }
+            testRead().call().byCoroutine().value?.let {
+                Log.d("ayteneve93_test", "rst : $it")
+            }
+           testWrtie("Data").call().byCoroutine()
+            */
+
+            /*
+            repeat(30) {
+                testRead().call().byCoroutine().value?.let {
+                    Log.d("ayteneve93_test", "rst : $it")
+                }
+                testWrtie("TestData").call().byCoroutine()
+            }
+            */
+            /*
+            val indObj = testIndicate().call().byDataBinding()
+            indObj.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                    Log.d("ayteneve93_test", "${indObj.get()}")
+                }
+            })
+            */
+
+
+            /*
             certificateWithNonReliableWrite(certificationInfo).call().byCoroutine()
 
             val rst = readCheckWifiStatus().call().byCoroutine()
@@ -77,6 +105,8 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
                 }
             }
             Log.d("ayteneve93_test", "Executed...")
+
+             */
         }}
 
     }

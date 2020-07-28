@@ -56,6 +56,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                     doesProcessingErrorExists = true
                     return@forEach
                 }
+
                 eachBlueberryElement.enclosedElements.also { enclosedElements ->
 
                     enclosedElements
@@ -101,6 +102,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
     private fun generateDeviceServiceImplements
                 (blueberryElement : Element,
                  blueberryMethods : List<ExecutableElement>) : Boolean {
+
         val className = blueberryElement.simpleName.toString()
         val packageName = processingEnv.elementUtils.getPackageOf(blueberryElement).toString()
         val fileName = "Blueberry${className}Impl"
@@ -330,6 +332,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
     }
 
     private fun errorLog(msg : String) = processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, msg)
+    private fun verboseLog(msg : String) = processingEnv.messager.printMessage(Diagnostic.Kind.NOTE, msg)
 
     private fun TypeName.javaToKotlinType() : TypeName {
         return when(this) {

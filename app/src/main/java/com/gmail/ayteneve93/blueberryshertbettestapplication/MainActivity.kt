@@ -2,6 +2,7 @@ package com.gmail.ayteneve93.blueberryshertbettestapplication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
 import io.reactivex.disposables.CompositeDisposable
 import com.gmail.ayteneve93.blueberryshertbettestapplication.test.TestDevice
@@ -18,14 +19,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
                 .subscribe {
+                    it.bluetoothDevice.name?.let { advertisingName ->
+                        if(advertisingName.startsWith("SleepCare")) {
+                            testDevice = it.connect(this, TestDevice::class.java, true)
+                            BlueberryScanner.stopScan()
+                        }
+                    }
+                    /*
                     if(it.bluetoothDevice.name == TestDevice.name) {
                         testDevice = it.connect(this, TestDevice::class.java, true)
                         BlueberryScanner.stopScan()
                     }
+                  
+                     */
                 }
         )
 

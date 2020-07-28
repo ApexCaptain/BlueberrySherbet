@@ -199,7 +199,7 @@ annotation class WRITE_WITHOUT_RESPONSE(val uuidString : String, val checkIsReli
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class NOTIFY(val uuidString : String, val endSignal : String)
+annotation class NOTIFY(val uuidString : String, val endSignal : String = 0x00.toChar().toString())
 
 
 
@@ -232,5 +232,5 @@ annotation class NOTIFY(val uuidString : String, val endSignal : String)
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class INDICATE(val uuidString : String,  val endSignal : String)
+annotation class INDICATE(val uuidString : String,  val endSignal : String = 0x00.toChar().toString())
 
