@@ -32,7 +32,8 @@ import java.util.*
 @Keep data class WifiStatus(
     val connectionState : Boolean,
     val ssid : String,
-    val ip_address : String
+    @Json(name = "ip_address")
+    val ipAddress : String
 )
 
 @Suppress("SpellCheckingInspection")
