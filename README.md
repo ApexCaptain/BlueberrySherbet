@@ -1,7 +1,7 @@
 BlueberrySherbet
 ================
 
-BlueberrySherbet is a fast and efficient open source BLE(Bluetooth Low Energy) master device module for Android that interfaces with various Bluetooth devices. For detailed instruction, please see [Blueberry Sherbet API Documents](https://apexcaptain.github.io/BlueberrySherbet/, "GitHub Pages").
+BlueberrySherbet is a fast and efficient open source BLE(Bluetooth Low Energy) master device module for Android that interfaces with various Bluetooth devices. For detailed instruction, please see [Blueberry Sherbet API Documents](https://apexcaptain.github.io/BlueberrySherbet/ "GitHub Pages").
 
 ![](ReadMeRes/logoWithText.png)
 
@@ -29,20 +29,20 @@ dependencies {
 ### Maven
 #### Step 1. Add the JitPack repository to your build file
 ```xml
-	<repositories>
-		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository>
-	</repositories>
+<repositories>
+	<repository>
+	    <id>jitpack.io</id>
+	    <url>https://jitpack.io</url>
+	</repository>
+</repositories>
 ```
 #### Step 2. Add the Dependency
 ```xml
-	<dependency>
-	    <groupId>com.github.ApexCaptain.BlueberrySherbet</groupId>
-	    <artifactId>annotations</artifactId>
-	    <version>0.1.1</version>
-	</dependency>
+<dependency>
+    <groupId>com.github.ApexCaptain.BlueberrySherbet</groupId>
+    <artifactId>annotations</artifactId>
+    <version>0.1.1</version>
+</dependency>
 ```
 
 How do I use BlueberrySherbet?
