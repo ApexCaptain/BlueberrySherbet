@@ -26,7 +26,6 @@ import kotlin.collections.ArrayList
  * You can configure specific options for each BLE device by inheriting this abstract class.
  *
  */
-@Keep
 @Suppress("spellCheckingInspection")
 abstract class BlueberryDevice<BlueberryService> protected constructor() {
 

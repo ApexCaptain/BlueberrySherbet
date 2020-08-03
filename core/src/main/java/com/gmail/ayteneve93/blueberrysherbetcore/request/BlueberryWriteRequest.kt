@@ -7,7 +7,6 @@ import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestIn
 import com.squareup.moshi.Moshi
 import java.util.HashMap
 
-@Keep
 @Suppress("SpellCheckingInspection")
 class BlueberryWriteRequest(
     moshi : Moshi,

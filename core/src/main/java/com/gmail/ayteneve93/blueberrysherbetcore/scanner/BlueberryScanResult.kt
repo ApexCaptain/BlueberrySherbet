@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.annotation.Keep
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
 
-@Keep
 class BlueberryScanResult internal constructor(bluetoothDevice: BluetoothDevice){
     init { updateDevice(bluetoothDevice) }
     lateinit var bluetoothDevice : BluetoothDevice

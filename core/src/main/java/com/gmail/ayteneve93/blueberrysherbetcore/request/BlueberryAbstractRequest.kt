@@ -7,7 +7,6 @@ import com.squareup.moshi.Moshi
 import java.util.*
 import kotlin.collections.HashMap
 
-@Keep
 @Suppress("SpellCheckingInspection")
 abstract class BlueberryAbstractRequest<ReturnType>
     constructor(
