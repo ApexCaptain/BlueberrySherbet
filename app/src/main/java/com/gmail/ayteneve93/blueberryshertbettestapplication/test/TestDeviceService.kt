@@ -8,7 +8,7 @@ import kotlin.String
 @Suppress("SpellCheckingInspection")
 interface TestDeviceService {
 
-    /*
+
     @READ("beb5483e-36e1-4688-b7f5-ea07361b26a8")
     fun testRead() : BlueberryReadRequest<String>
 
@@ -17,7 +17,7 @@ interface TestDeviceService {
 
     @INDICATE("beb5483e-36e1-4688-b7f5-ea07361b26a8")
     fun testIndicate() : BlueberryNotifyOrIndicateRequest<String>
-    */
+
 
 
     /*
