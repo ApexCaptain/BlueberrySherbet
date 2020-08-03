@@ -8,6 +8,7 @@ import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.util.Log
+import androidx.annotation.Keep
 import androidx.databinding.ObservableField
 import com.gmail.ayteneve93.blueberrysherbetcore.R
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
@@ -17,6 +18,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
+@Keep
 object BlueberryScanner {
 
     val isScanning = ObservableField(false)

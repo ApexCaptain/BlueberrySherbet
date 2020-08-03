@@ -1,11 +1,13 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.request
 
+import androidx.annotation.Keep
 import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE_WITHOUT_RESPONSE
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
 import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestInfoWithNoResponse
 import com.squareup.moshi.Moshi
 import java.util.HashMap
 
+@Keep
 @Suppress("SpellCheckingInspection")
 class BlueberryWriteRequestWithoutResponse(
     moshi : Moshi,

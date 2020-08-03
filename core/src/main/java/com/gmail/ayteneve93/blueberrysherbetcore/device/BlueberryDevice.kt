@@ -3,6 +3,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore.device
 import android.bluetooth.*
 import android.content.Context
 import android.os.Build
+import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
@@ -25,6 +26,7 @@ import kotlin.collections.ArrayList
  * You can configure specific options for each BLE device by inheriting this abstract class.
  *
  */
+@Keep
 @Suppress("spellCheckingInspection")
 abstract class BlueberryDevice<BlueberryService> protected constructor() {
 
