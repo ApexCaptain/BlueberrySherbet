@@ -51,6 +51,7 @@ dependencies {
     implementation "gun0912.ted:tedpermission-rx2:$tedpermission_rxjava2_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxjava2_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$corutine_version"
+    implementation "com.google.code.gson:gson:$gson_version"
     api "com.squareup.moshi:moshi:$moshi_version"
 
     implementation project(':annotations')
