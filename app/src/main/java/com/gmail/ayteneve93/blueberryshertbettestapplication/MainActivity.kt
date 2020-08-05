@@ -22,15 +22,12 @@ class MainActivity : AppCompatActivity() {
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
                 .subscribe {
-                    Log.d("ayteneve93_test", it.toString())
-                    /*
                     it.bluetoothDevice.name?.let { advertisingName ->
                         if(advertisingName.startsWith("SleepCare")) {
                             testDevice = it.connect(this, TestDevice::class.java, true)
                             BlueberryScanner.stopScan()
                         }
                     }
-                    */
 
                     /*
                     if(it.bluetoothDevice.name == TestDevice.name) {

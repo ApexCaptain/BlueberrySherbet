@@ -16,7 +16,10 @@ class BlueberryScanResult internal constructor(bluetoothDevice: BluetoothDevice)
         return blueberryDevice
     }
 
+    override fun hashCode(): Int = 31 * bluetoothDevice.address.hashCode()
+
     override fun equals(other: Any?): Boolean {
+        if(this === other) return true
         if(other is BlueberryScanResult) return this.bluetoothDevice.address == other.bluetoothDevice.address
         if(other is BluetoothDevice) return this.bluetoothDevice.address == other.address
         return false
