@@ -60,6 +60,57 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
             }
         }
 
+        // https://medium.com/@abrisad_it/ble-error-codes-a3c6675b29c1
+        enum class BleStatus(val statusCode : Short) {
+            BLE_HCI_STATUS_CODE_SUCCESS(0x00),
+            BLE_HCI_STATUS_CODE_UNKNWON_BTLE_COMMAND(0x01),
+            BLE_HCI_STATUS_CODE_UNKNOWN_CONNECTION_IDENTIFIER(0x02),
+            BLE_HCI_AUTHENTICATION_FAILURE(0x05),
+            BLE_HCI_STATUS_CODE_PIN_OR_KEY_MISSING(0x06),
+            BLE_HCI_MEMORY_CAPACITY_EXCEEDED(0x07),
+            BLE_HCI_CONNECTION_TIMEOUT(0x08),
+            BLE_HCI_STATUS_CODE_COMMAND_DISALLOWED(0x0C),
+            BLE_HCI_STATUS_CODE_INVALID_BTLE_COMMAND_PARAMETERS(0x12),
+            BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION(0x13),
+            BLE_HCI_REMOTE_DEV_TERMINATION_DUE_TO_LOW_RESOURCES(0x14),
+            BLE_HCI_REMOTE_DEV_TERMINATION_DUE_TO_POWER_OFF(0x15),
+            BLE_HCI_LOCAL_HOST_TERMINATED_CONNECTION(0x16),
+            BLE_HCI_UNSUPPORTED_REMOTE_FEATURE(0x1A),
+            BLE_HCI_STATUS_CODE_INVALID_LMP_PARAMETERS(0x1E),
+            BLE_HCI_STATUS_CODE_UNSPECIFIED_ERROR(0x1F),
+            BLE_HCI_STATUS_CODE_LMP_RESPONSE_TIMEOUT(0x22),
+            BLE_HCI_STATUS_CODE_LMP_PDU_NOT_ALLOWED(0x24),
+            BLE_HCI_INSTANT_PASSED(0x28),
+            BLE_HCI_PAIRING_WITH_UNIT_KEY_SUPPORTED(0x29),
+            BLE_HCI_DIFFERENT_TRANSATION_COLLISION(0x2A),
+            BLE_HCI_CONTROLLER_BUSY(0x3A),
+            BLE_HCI_CONN_INTERVAL_UNACCEPTABLE(0x3B),
+            BLE_HCI_DIRECTED_ADVERTISER_TIMEOUT(0x3C),
+            BLE_HCI_CONN_TERMINATED_DUE_TO_MIC_FAILURE(0x3D),
+            BLE_HCI_CONN_FAILED_TO_BE_ESTABLISHED(0x3E),
+            GATT_NO_RESOURCES(0x80),
+            GATT_INTERNAL_ERROR(0x81),
+            GATT_WRONG_STATE(0x82),
+            GATT_DB_FULL(0x83),
+            GATT_BUSY(0x84),
+            GATT_ERROR(0x85),
+            GATT_CMD_STARTED(0x86),
+            GATT_ILLEGAL_PARAMETER(0x87),
+            GATT_AUTH_FAIL(0x89),
+            GATT_MORE(0x8a),
+            GATT_INVALID_CFG(0x8b),
+            GATT_SERVICE_STARTED(0x8C),
+            GATT_ENCRYPTED_NO_MITM(0x8D),
+            GATT_NOT_ENCRYPTED(0x8E),
+            GATT_CONGESTED(0x8F),
+            GATT_CCC_CFG_ERR(0xFD),
+            GATT_PRC_IN_PROGRESS(0xFE),
+            GATT_OUT_OF_RANGE(0xFF);
+            companion object {
+                fun getStatusFromCode(statusCode : Short) : BleStatus? = values().find { it.statusCode == statusCode }
+            }
+        }
+
         @RequiresApi(Build.VERSION_CODES.O)
         enum class PhyOption(val value : Int) {
             PHY_OPTION_NO_PREFERRED(BluetoothDevice.PHY_OPTION_NO_PREFERRED),
@@ -272,6 +323,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
     private var mCurrentRequestInfo : BlueberryAbstractRequestInfo? = null
 
     internal fun enqueueBlueberryRequestInfo(blueberryRequestInfo: BlueberryAbstractRequestInfo) {
+
         if(mIsServiceDiscovered && mCharacteristicList.find { it.uuid == blueberryRequestInfo.mUuid } == null)
             BlueberryLogger.w("No Such Uuid Exists : '${blueberryRequestInfo.mUuid}'")
         else {
