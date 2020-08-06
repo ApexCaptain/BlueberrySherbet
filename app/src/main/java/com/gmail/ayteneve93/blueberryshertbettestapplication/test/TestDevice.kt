@@ -53,11 +53,6 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
         GlobalScope.launch { with(blueberryService) {
 
 
-            testRead().call().byCoroutine().value?.let {
-                Log.d("ayteneve93_test", "rst : $it")
-            }
-
-
         }}
 
     }

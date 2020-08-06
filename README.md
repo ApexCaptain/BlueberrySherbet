@@ -5,34 +5,45 @@ BlueberrySherbet is a fast and efficient open source BLE(Bluetooth Low Energy) m
 
 ![](ReadMeRes/logoWithText.png)
 
-BlueberrySherbet supports READ, WRITE, WRITE_WITHOUT_RESPONSE,
-NOTIFY and INDICATE methods. If you declare BLE API as Kotlin interface, BlueberrySherbet turns your interface into implemented service class file. Each API from the created service can make a asynchronous BLE request to the connected device. Every call can be converted as a form of RxJava2, Coroutine or just simple callback.
+BlueberrySherbet supports [READ], [WRITE], [WRITE_WITHOUT_RESPONSE], [NOTIFY]
+ and [INDICATE] methods. If you declare BLE API as Kotlin interface, BlueberrySherbet turns your interface into implemented service class file. Each API from the created service can make a asynchronous BLE request to the connected device. Every call can be converted as a form of RxJava2, Coroutine or just simple callback.
 
 Download
 ========
 
-#### Step 1. Add following in your root build.gradle at the end of repositories :
+#### Step 1. Set the versionf of BlueberrySherbet as external constant in root build.gradle
 ```gradle
-repositories {
-  maven { url 'https://jitpack.io' }
+buildscript {
+    ext {
+        blueberry_sherbet_version = '0.1.8' // ← The very name of version constant could be anyhing you want :)
+    }
 }
 ```
-#### Step 2. Add kapt plugin in your app.gradle :
+#### Step 2. Then, add following JitPack url in your root build.gradle at the end of repositories :
+```gradle
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+```
+#### Step 3. Apply kapt plugin in your app.gradle :
 ```gradle
 apply plugin: 'kotlin-kapt'
 ```
 
-#### Step 3. Add the following dependency of BlueberrySherbet :
+#### Step 4. Add the following dependency of BlueberrySherbet :
 ```gradle
 dependencies {
-  implementation "com.github.ApexCaptain.BlueberrySherbet:annotations:[releaseVersion]"
+    implementation "com.github.ApexCaptain.BlueberrySherbet:annotations:$blueberry_sherbet_version"
+    implementation "com.github.ApexCaptain.BlueberrySherbet:core:$blueberry_sherbet_version"
+    kapt "com.github.ApexCaptain.BlueberrySherbet:apt:$blueberry_sherbet_version"
 }
 ```
 
 How do I use BlueberrySherbet?
 ==============================
+#### Step 1. Define data classes :
 Imagine if you're making an IoT device with ESP32 or Raspberry Pi. In most cases, you would like to figure out its wireless network status.
-Then, the data class of your request would something like this:
+Then, the data class of your request would something like this
 ```kotlin
 @Keep data class WifiStatus(
     val connectionState : Boolean,
@@ -41,7 +52,7 @@ Then, the data class of your request would something like this:
     val ipAddress : String
 )
 ```
-To make BLE slave device connect to wifi network, you may need to pass exact information. It might look like this:
+To make BLE slave device connect to wifi network, you may need to pass exact information. It might look like this
 
 ```kotlin
 @Keep data class WifiConnectionInfo(
@@ -50,19 +61,65 @@ To make BLE slave device connect to wifi network, you may need to pass exact inf
     val timeout : Int
 )
 ```
-Now, you have to set BLE API interface file :
+#### Step 2. Declare BLE API :
+BLE API is quite similar to normal REST API
 ```kotlin
-@BlueberryService
+@BlueberryService // ← Annotation written to declare BLE API interface
 interface TestDeviceService {
+    /*
+        ↓ This annotation indicates following method uses BLE API,
+          of which characteristic uuid is 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601'
+          and the BLE method is WRITE
+    */
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601")
     fun connectWifi(wifiConnectionInfo: WifiConnectionInfo) : BlueberryWriteRequest
 
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601")
-    fun readCheckWifiStatus() : BlueberryReadRequest<WifiStatus>
+    fun checkWifiStatus() : BlueberryReadRequest<WifiStatus>
 }
 ```
-Following is the definition of actual BLE device class 
+##### <span style="color: CYAN"> Note </span> : [WRITE] method can only transfer data to target deivce and [READ] method can only receive'em
 
+#### Step 3. Build the project
+When you build the project, the annotation processor of BlueberrySherbet would automatically generate 
+implemnted BLE API class files as following.
+##### <span style="color: CYAN"> Note </span> : You do not have to make it on your own. Cosider it done!
+```kotlin
+class BlueberryTestDeviceServiceImpl(
+  mBlueberryDevice: BlueberryDevice<TestDeviceService>
+) : TestDeviceService {
+  private val mBlueberryDevice: BlueberryDevice<TestDeviceService>
+
+  private var mMoshi: Moshi
+  init {
+    this.mBlueberryDevice = mBlueberryDevice
+    this.mMoshi = com.squareup.moshi.Moshi.Builder().build()
+  }
+
+  fun addMoshiAdapters(vararg adapters: Any) {
+    this.mMoshi = this.mMoshi.newBuilder().apply {
+        adapters.forEach { add(it) }
+    }.build()
+  }
+
+  final override fun connectWifi(wifiConnectionInfo: WifiConnectionInfo): BlueberryWriteRequest =
+      com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryWriteRequest(
+      mMoshi,
+      mBlueberryDevice,
+      10,
+      "aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601",
+      wifiConnectionInfo,
+      false
+  )
+  final override fun checkWifiStatus(): BlueberryReadRequest<WifiStatus> =
+      com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryReadRequest<com.gmail.ayteneve93.blueberryshertbettestapplication.test.WifiStatus>(
+      com.gmail.ayteneve93.blueberryshertbettestapplication.test.WifiStatus::class.java,
+      mMoshi,
+      mBlueberryDevice,
+      10,
+      "aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601"
+  )}
+```
 License
 =======
 
@@ -78,4 +135,10 @@ License
     See the License for the specific language governing permissions and
     limitations under the License.
 
-[releaseVersion]: 0.1.8 
+[BlueberryService]: https://apexcaptain.github.io/BlueberrySherbet/annotations/com.gmail.ayteneve93.blueberrysherbetannotations/-blueberry-service/index.html
+[INDICATE]: https://apexcaptain.github.io/BlueberrySherbet/annotations/com.gmail.ayteneve93.blueberrysherbetannotations/-i-n-d-i-c-a-t-e/index.html
+[NOTIFY]: https://apexcaptain.github.io/BlueberrySherbet/annotations/com.gmail.ayteneve93.blueberrysherbetannotations/-n-o-t-i-f-y/index.html
+[Priority]: https://apexcaptain.github.io/BlueberrySherbet/annotations/com.gmail.ayteneve93.blueberrysherbetannotations/-priority/index.html
+[READ]: https://apexcaptain.github.io/BlueberrySherbet/annotations/com.gmail.ayteneve93.blueberrysherbetannotations/-r-e-a-d/index.html
+[WRITE]: https://apexcaptain.github.io/BlueberrySherbet/annotations/com.gmail.ayteneve93.blueberrysherbetannotations/-w-r-i-t-e/index.html
+[WRITE_WITHOUT_RESPONSE]: https://apexcaptain.github.io/BlueberrySherbet/annotations/com.gmail.ayteneve93.blueberrysherbetannotations/-w-r-i-t-e_-w-i-t-h-o-u-t_-r-e-s-p-o-n-s-e/index.html

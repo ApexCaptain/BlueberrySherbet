@@ -9,6 +9,13 @@ import kotlin.String
 interface TestDeviceService {
 
 
+    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601")
+    fun connectWifi(wifiConnectionInfo: WifiConnectionInfo) : BlueberryWriteRequest
+
+    @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601")
+    fun checkWifiStatus() : BlueberryReadRequest<WifiStatus>
+
+    /*
     @READ("beb5483e-36e1-4688-b7f5-ea07361b26a8")
     fun testRead() : BlueberryReadRequest<String>
 
@@ -18,6 +25,7 @@ interface TestDeviceService {
     @INDICATE("beb5483e-36e1-4688-b7f5-ea07361b26a8")
     fun testIndicate() : BlueberryNotifyOrIndicateRequest<String>
 
+     */
 
 
     /*
