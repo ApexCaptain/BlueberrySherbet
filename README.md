@@ -6,7 +6,7 @@ BlueberrySherbet is a fast and efficient open source BLE(Bluetooth Low Energy) m
 ![](ReadMeRes/logoWithText.png)
 
 BlueberrySherbet supports [READ], [WRITE], [WRITE_WITHOUT_RESPONSE], [NOTIFY]
- and [INDICATE] methods. If you declare BLE API as Kotlin interface, BlueberrySherbet turns your interface into implemented service class file. Each API from the created service can make a asynchronous BLE request to the connected device. Every call can be converted as a form of RxJava2, Coroutine or just simple callback.
+ and [INDICATE] methods. If you declare BLE API as Kotlin interface, BlueberrySherbet turns your interface into implemented service class file. Each API from the created service can make an asynchronous BLE request to the connected device. Every call can be converted as a form of RxJava2, Coroutine or just simple callback.
 
 Download
 ========
@@ -15,7 +15,8 @@ Download
 ```gradle
 buildscript {
     ext {
-        blueberry_sherbet_version = '0.1.8' // ← The very name of version constant could be anyhing you want :)
+        blueberry_sherbet_version = '0.1.8' 
+        // ↑ The very name of version constant could be anyhing you want :)
     }
 }
 ```
@@ -78,12 +79,12 @@ interface TestDeviceService {
     fun checkWifiStatus() : BlueberryReadRequest<WifiStatus>
 }
 ```
-##### <span style="color: CYAN"> Note </span> : [WRITE] method can only transfer data to target deivce and [READ] method can only receive'em
+##### Note : [WRITE] method can only transfer data to target deivce and [READ] method can only receive'em
 
 #### Step 3. Build the project
 When you build the project, the annotation processor of BlueberrySherbet would automatically generate 
-implemnted BLE API class files as following.
-##### <span style="color: CYAN"> Note </span> : You do not have to make it on your own. Cosider it done!
+implemented BLE API class files as following.
+##### Note : You do not have to make it on your own. Cosider it done!
 ```kotlin
 class BlueberryTestDeviceServiceImpl(
   mBlueberryDevice: BlueberryDevice<TestDeviceService>
