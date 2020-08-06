@@ -11,38 +11,22 @@ NOTIFY and INDICATE methods. If you declare BLE API as Kotlin interface, Blueber
 Download
 ========
 
-### Gradle
-
 #### Step 1. Add following in your root build.gradle at the end of repositories :
 ```gradle
 repositories {
   maven { url 'https://jitpack.io' }
 }
 ```
-#### Step 2. Add the dependency
+#### Step 2. Add kapt plugin in your app.gradle :
 ```gradle
-dependencies {
-  implementation "com.github.ApexCaptain.BlueberrySherbet:annotations:$blueberry_sherbet_version"
-}
+apply plugin: 'kotlin-kapt'
 ```
 
-### Maven
-#### Step 1. Add the JitPack repository to your build file
-```xml
-<repositories>
-	<repository>
-	    <id>jitpack.io</id>
-	    <url>https://jitpack.io</url>
-	</repository>
-</repositories>
-```
-#### Step 2. Add the Dependency
-```xml
-<dependency>
-    <groupId>com.github.ApexCaptain.BlueberrySherbet</groupId>
-    <artifactId>annotations</artifactId>
-    <version>0.1.1</version>
-</dependency>
+#### Step 3. Add the following dependency of BlueberrySherbet :
+```gradle
+dependencies {
+  implementation "com.github.ApexCaptain.BlueberrySherbet:annotations:[releaseVersion]"
+}
 ```
 
 How do I use BlueberrySherbet?
@@ -93,3 +77,5 @@ License
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
+[releaseVersion]: 0.1.8 
