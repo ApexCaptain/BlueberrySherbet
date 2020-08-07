@@ -8,7 +8,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dokka {
-    outputFormat = "html"
+    outputFormat = "gfm"
     outputDirectory = "$rootDir/docs"
     disableAutoconfiguration = false
     cacheRoot = "default"

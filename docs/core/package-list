@@ -1,5 +1,5 @@
-$dokka.format:html
-$dokka.linkExtension:html
+$dokka.format:gfm
+$dokka.linkExtension:md
 
 com.gmail.ayteneve93.blueberrysherbetcore.device
 com.gmail.ayteneve93.blueberrysherbetcore.request

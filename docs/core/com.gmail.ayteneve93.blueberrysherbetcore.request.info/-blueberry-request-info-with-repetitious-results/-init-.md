@@ -1,0 +1,5 @@
+[core](../../index.md) / [com.gmail.ayteneve93.blueberrysherbetcore.request.info](../index.md) / [BlueberryRequestInfoWithRepetitiousResults](index.md) / [&lt;init&gt;](./-init-.md)
+
+# &lt;init&gt;
+
+(JVM) `BlueberryRequestInfoWithRepetitiousResults(uuid: `[`UUID`](https://docs.oracle.com/javase/6/docs/api/java/util/UUID.html)`, priority: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, awaitingMills: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, blueberryRequest: `[`BlueberryAbstractRequest`](../../com.gmail.ayteneve93.blueberrysherbetcore.request/-blueberry-abstract-request/index.md)`<ReturnType>, requestType: `[`Class`](https://docs.oracle.com/javase/6/docs/api/java/lang/Class.html)`<out `[`Annotation`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-annotation/index.html)`>, endSignal: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`)`

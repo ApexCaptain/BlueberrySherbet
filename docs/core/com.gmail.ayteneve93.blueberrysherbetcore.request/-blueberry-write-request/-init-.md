@@ -1,0 +1,5 @@
+[core](../../index.md) / [com.gmail.ayteneve93.blueberrysherbetcore.request](../index.md) / [BlueberryWriteRequest](index.md) / [&lt;init&gt;](./-init-.md)
+
+# &lt;init&gt;
+
+(JVM) `BlueberryWriteRequest(moshi: Moshi, blueberryDevice: `[`BlueberryDevice`](../../com.gmail.ayteneve93.blueberrysherbetcore.device/-blueberry-device/index.md)`<out `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`>, priority: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, uuidString: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, inputDataSource: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`?, checkIsReliable: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`)`
