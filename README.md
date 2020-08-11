@@ -1,3 +1,5 @@
+[![JitPack](https://img.shields.io/jitpack/v/github/ApexCaptain/BlueberrySherbet?color=GREEN&label=Blueberry%20Sherbet&style=flat-square&logo=Android%20Studio)](https://jitpack.io/#ApexCaptain/BlueberrySherbet)
+
 BlueberrySherbet
 ================
 
@@ -6,7 +8,7 @@ BlueberrySherbet is a fast and efficient open source BLE(Bluetooth Low Energy) m
 ![](ReadMeRes/logoWithText.png)
 
 BlueberrySherbet supports [READ], [WRITE], [WRITE_WITHOUT_RESPONSE], [NOTIFY]
- and [INDICATE] methods. If you declare BLE API as Kotlin interface, BlueberrySherbet turns your interface into implemented service class file. Each API from the created service can make an asynchronous BLE request to the connected device. Every call can be converted as a form of RxJava2, Coroutine or just simple callback.
+ and [INDICATE] methods. If you declare a BLE API as Kotlin interface, BlueberrySherbet turns it into an implemented service class file. Each API from the created service can make an asynchronous BLE request to the connected device. Every call can be converted as a form of RxJava2, Coroutine or just simple callback.
 
 Download
 ========
@@ -15,7 +17,7 @@ Download
 ```gradle
 buildscript {
     ext {
-        blueberry_sherbet_version = '0.1.8' 
+        blueberry_sherbet_version = '0.1.9' 
         // ↑ The very name of version constant could be anything you want :)
     }
 }
@@ -91,34 +93,20 @@ class BlueberryTestDeviceServiceImpl(
 ) : TestDeviceService {
   private val mBlueberryDevice: BlueberryDevice<TestDeviceService>
 
-  private var mMoshi: Moshi
-  init {
-    this.mBlueberryDevice = mBlueberryDevice
-    this.mMoshi = com.squareup.moshi.Moshi.Builder().build()
-  }
-
-  fun addMoshiAdapters(vararg adapters: Any) {
-    this.mMoshi = this.mMoshi.newBuilder().apply {
-        adapters.forEach { add(it) }
-    }.build()
-  }
-
   final override fun connectWifi(wifiConnectionInfo: WifiConnectionInfo): BlueberryWriteRequest =
-      com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryWriteRequest(
-      mMoshi,
-      mBlueberryDevice,
-      10,
-      "aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601",
-      wifiConnectionInfo,
-      false
+      BlueberryWriteRequest(
+        mBlueberryDevice,
+        10,
+        "aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601",
+        wifiConnectionInfo,
+        false
   )
   final override fun checkWifiStatus(): BlueberryReadRequest<WifiStatus> =
-      com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryReadRequest<com.gmail.ayteneve93.blueberryshertbettestapplication.test.WifiStatus>(
-      com.gmail.ayteneve93.blueberryshertbettestapplication.test.WifiStatus::class.java,
-      mMoshi,
-      mBlueberryDevice,
-      10,
-      "aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601"
+      BlueberryReadRequest<WifiStatus>(
+        WifiStatus::class.java,
+        mBlueberryDevice,
+        10,
+        "aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601"
   )}
 ```
 License
