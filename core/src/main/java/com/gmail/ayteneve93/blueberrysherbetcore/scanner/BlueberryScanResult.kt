@@ -3,6 +3,8 @@ package com.gmail.ayteneve93.blueberrysherbetcore.scanner
 import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
 import com.google.gson.Gson
 
@@ -30,7 +32,7 @@ class BlueberryScanResult internal constructor(bluetoothDevice: BluetoothDevice)
             .apply {
                 this@BlueberryScanResult.bluetoothDevice.let {
                     put("address", it.address)
-                    put("alias", it.alias)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) put("alias", it.alias)
                     put("name", it.name)
                     put("type", when(it.type) {
                         BluetoothDevice.DEVICE_TYPE_CLASSIC -> "Classic - BR/EDR devices"

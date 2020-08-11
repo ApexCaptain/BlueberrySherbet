@@ -11,12 +11,12 @@ BlueberrySherbet supports [READ], [WRITE], [WRITE_WITHOUT_RESPONSE], [NOTIFY]
 Download
 ========
 
-#### Step 1. Set the versionf of BlueberrySherbet as external constant in root build.gradle
+#### Step 1. Set the version of BlueberrySherbet as external constant in root build.gradle
 ```gradle
 buildscript {
     ext {
         blueberry_sherbet_version = '0.1.8' 
-        // ↑ The very name of version constant could be anyhing you want :)
+        // ↑ The very name of version constant could be anything you want :)
     }
 }
 ```
@@ -137,6 +137,7 @@ License
     limitations under the License.
 
 [BlueberryService]: https://apexcaptain.github.io/BlueberrySherbet/annotations/com.gmail.ayteneve93.blueberrysherbetannotations/-blueberry-service/index.html
+
 [INDICATE]: https://apexcaptain.github.io/BlueberrySherbet/annotations/com.gmail.ayteneve93.blueberrysherbetannotations/-i-n-d-i-c-a-t-e/index.html
 [NOTIFY]: https://apexcaptain.github.io/BlueberrySherbet/annotations/com.gmail.ayteneve93.blueberrysherbetannotations/-n-o-t-i-f-y/index.html
 [Priority]: https://apexcaptain.github.io/BlueberrySherbet/annotations/com.gmail.ayteneve93.blueberrysherbetannotations/-priority/index.html
