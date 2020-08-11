@@ -1,0 +1,13 @@
+#mainLogo {
+
+    margin: 50px;
+    margin-bottom: 30px;
+
+    text-align: center;
+
+    display: block;
+    max-width:70%;
+    max-height:40%;
+    width: auto;
+    height: auto;
+}

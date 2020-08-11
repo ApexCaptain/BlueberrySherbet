@@ -1,0 +1,210 @@
+body{
+ padding:0;
+ margin:0;
+ background:linear-gradient(to right, #6E1FDA, #27006A);
+}
+.main-container{
+ width:100%;
+ height:500px;
+}
+.sub-container{
+ margin:55px auto;
+ height:500px;
+ width:820px;
+ background-color:#170058;
+ border-radius:12px;
+ box-shadow: 1px -3px 12px 7px #36007E;
+ 
+}
+
+.logo{
+ padding:9px 7px 8px 0px;
+ margin:0px 0px 0px 30px;
+ width:40px;
+ height:40px;
+ border-radius:50%;
+ background-color:#2ADCFF;
+}
+.logo-text{
+ text-align:center;
+ color:#2ADCFF;
+ font-family:lato;
+}
+.logo, .logo-text{
+ display:inline;
+ 
+}
+.logo-container{
+ padding-top:30px;
+}
+.wel{
+ margin-top:85px;
+ text-align:center;
+ color:#2ADCFF;
+ font-family:lato;
+ font-weight:900;
+ font-weight:bold;
+ font-size:50px;
+}
+@font-face{
+ font-family:"lato";
+ src:"Lato-Regular.ttf";
+}
+.ready{
+ margin-top:-20px;
+ text-align:center;
+ color:white;
+ font-family:lato;
+ font-weight:100;
+ font-size:20px;
+ font-style:italic;
+}
+.btn-left{
+ padding:13px 20px 13px 20px;
+ border-radius:38px;
+ border-style:none;
+ font-weight:900;
+ font-size:15px;
+ font-family:lato;
+ outline:none;
+ background-color:#2ADCFF;
+ color:white;
+ margin-left:275px;
+}
+.btn-right{
+ margin-left:20px;
+ padding:13px 28px 13px 20px;
+ border-radius:38px;
+ border-style:none;
+ font-weight:900;
+ font-size:15px;
+ font-family:lato;
+ outline:none;
+ background-color:#2ADCFF;
+ color:white;
+ 
+}
+.btn-left:hover{
+ background-color:white;
+ color:#2ADCFF;
+ 
+}
+.btn-right:hover{
+ background-color:white;
+ color:#2ADCFF;
+}
+.right-sign-in{
+ margin:0px 0px 0px 0px;
+ width:50%;
+ height:100%;
+ float:right;
+ background-color:white;
+ box-shadow: 1px -3px 12px 3px #f1e6ff;
+ border-radius:5px;
+ position:relative;
+ right:-100px;
+ 
+}
+.sign-up-heading{
+ padding-top:10px;
+ text-align:center;
+ font-family:lato;
+ color:#230162;
+}
+.left-sign-in{
+ margin:0px 0px 0px 0px;
+ width:49%;
+ height:100%;
+ float:left;
+ background-color:white;
+ box-shadow: 1px -3px 12px 3px #f1e6ff;
+ border-radius:5px;
+ position:relative;
+ left:-100px;
+ 
+}
+.sign-in{
+ height:100%;
+ width:100%;
+ 
+}
+.dots{
+ margin-top:-30px;
+ text-align:center;
+ font-size:30px;
+ color:#230162;
+}
+.txt{
+ font-family:lato;
+ display:flex;
+ margin-top:10px;
+ padding:15px 130px 15px 20px;
+    backgroun:none; 
+ background-color:rgba(35, 1, 98, 0.4);
+ color:#230162;
+ border-style:solid;
+ border-radius:30px;
+ outline:none;
+ border-color:#230162;
+}
+.txt:hover{
+ 
+ padding:15px 150px 15px 20px;
+ transition:10;
+ background-color:white;
+}
+.text:focus{
+ padding:15px 150px 15px 20px;
+ transition:10;
+ background-color:white;
+ color:#230162;
+}
+::placeholder{
+ color:#230162;
+ font-weight:500;
+}
+.sign-up-input{
+ margin-left:48px;
+
+}
+.btn{
+ display:flex;
+ margin-top:15px;
+ margin-left:60px;
+ padding:15px 50px 15px 50px;
+    backgroun:none; 
+ background-color:rgba(35, 1, 98, 0.4);
+ color:white;
+ border-style:solid;
+ border-radius:30px;
+ outline:none;
+ border-color:#230162;
+ text-align:center;
+ font-family:lato;
+ color:#230162;
+ font-size:15px;
+ font-weight:900;
+}
+.btn:hover{
+ background-color:white;
+}
+.log-in{
+  height:100%;
+ width:100%;
+}
+.copyright{
+ position:absolute;
+ top:450px;
+ font-family:lato;
+ font-weight:100;
+ font-size:14px;
+ margin-top:10px;
+ margin-left:35px;
+ color:#230162;
+}
+.img{
+ margin:40px 0px 0px 50px;
+}
+.cont{
+ margin:20px 0px 0px 140px;
+}
