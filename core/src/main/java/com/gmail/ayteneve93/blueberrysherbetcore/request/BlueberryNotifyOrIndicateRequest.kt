@@ -10,7 +10,6 @@ import java.util.HashMap
 @Suppress("SpellCheckingInspection")
 class BlueberryNotifyOrIndicateRequest<ReturnType>(
     returnTypeClass : Class<ReturnType>,
-    moshi : Moshi,
     blueberryDevice : BlueberryDevice<out Any>,
     priority : Int,
     uuidString : String,
@@ -18,7 +17,6 @@ class BlueberryNotifyOrIndicateRequest<ReturnType>(
     private val endSignal : String
 ) : BlueberryAbstractRequest<ReturnType>(
     mReturnTypeClass = returnTypeClass,
-    mMoshi = moshi,
     mBlueberryDevice = blueberryDevice,
     mPriority = priority,
     uuidString = uuidString) {

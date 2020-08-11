@@ -2,18 +2,24 @@ package com.gmail.ayteneve93.blueberryshertbettestapplication.test
 
 import com.gmail.ayteneve93.blueberrysherbetannotations.*
 import com.gmail.ayteneve93.blueberrysherbetcore.request.*
+import com.gmail.ayteneve93.blueberryshertbettestapplication.temp.MyDataClassAsGson
+import com.gmail.ayteneve93.blueberryshertbettestapplication.temp.MyEnum
 import kotlin.String
 
 @BlueberryService
 @Suppress("SpellCheckingInspection")
 interface TestDeviceService {
 
+    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
+    fun registerUserWrite(data : MyDataClassAsGson<MyEnum>) : BlueberryWriteRequest
 
+    /*
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601")
     fun connectWifi(wifiConnectionInfo: WifiConnectionInfo) : BlueberryWriteRequest
 
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601")
     fun checkWifiStatus() : BlueberryReadRequest<WifiStatus>
+     */
 
     /*
     @READ("beb5483e-36e1-4688-b7f5-ea07361b26a8")

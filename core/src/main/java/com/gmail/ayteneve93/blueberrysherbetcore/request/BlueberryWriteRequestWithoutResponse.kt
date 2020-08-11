@@ -9,7 +9,6 @@ import java.util.HashMap
 
 @Suppress("SpellCheckingInspection")
 class BlueberryWriteRequestWithoutResponse(
-    moshi : Moshi,
     blueberryDevice : BlueberryDevice<out Any>,
     priority : Int,
     uuidString : String,
@@ -17,7 +16,6 @@ class BlueberryWriteRequestWithoutResponse(
     private val checkIsReliable : Boolean
     ) : BlueberryAbstractRequest<Any>(
     Any::class.java,
-    moshi,
     blueberryDevice,
     priority,
     uuidString
@@ -25,7 +23,8 @@ class BlueberryWriteRequestWithoutResponse(
     internal val mInputString : String? by lazy {
         if(inputDataSource == null) null
         else if(inputDataSource::class == String::class || inputDataSource::class.java.isPrimitive) inputDataSource.toString()
-        else mMoshi.adapter<Any>(inputDataSource::class.java).toJson(inputDataSource)
+        else blueberryConverter.convertObjectToString(inputDataSource)
+        //else mMoshi.adapter<Any>(inputDataSource::class.java).toJson(inputDataSource)
     }
 
     override fun convertToSimpleHashMap(): HashMap<String, Any?> = super.convertToSimpleHashMap().apply {

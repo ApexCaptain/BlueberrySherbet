@@ -13,6 +13,7 @@ import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestIn
 import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestInfoWithRepetitiousResults
 import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestInfoWithoutResult
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
+import com.google.gson.Gson
 import io.reactivex.disposables.Disposable
 import java.lang.ClassCastException
 import java.lang.Exception
@@ -313,6 +314,10 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
     open fun onDeviceDisconnecting() = BlueberryLogger.d("Disconnecting from ${mBluetoothDevice.address}")
     open fun onServicesDiscovered()  = BlueberryLogger.d("Services of ${mBluetoothDevice.address} are Discovered")
 
+    /** Data Converter */
+    val blueberryConverter : BlueberryConverter = BlueberryConverter()
+
+
     /** Service Setting */
     private val mCharacteristicList = ArrayList<BluetoothGattCharacteristic>()
     private var mIsServiceDiscovered = false
@@ -451,6 +456,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
 
         }
     }
+
     /** Phy Value Change Delegate */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setDefaultPhyValueChangeDelegate() {
@@ -464,7 +470,6 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
             })
         }
     }
-
     open fun onPhyValueChanged(txPhy: Int, rxPhy: Int) = BlueberryLogger.d("Phy Value Changed. txPhy : $txPhy, rxPhy : $rxPhy at ${mBluetoothDevice.address}")
     private data class PhyRequestInfo(
         val useReadOperationOnly : Boolean = true,
@@ -556,10 +561,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
         }
         else -> false
     }
-
-
     override fun hashCode(): Int = (31 + blueberryService.hashCode()) * 31 + mBluetoothDevice.hashCode()
-
     override fun toString(): String {
         return super.toString()
     }

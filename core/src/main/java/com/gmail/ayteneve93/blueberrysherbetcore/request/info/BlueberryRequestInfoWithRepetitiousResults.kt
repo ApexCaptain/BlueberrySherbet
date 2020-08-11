@@ -68,10 +68,9 @@ class BlueberryRequestInfoWithRepetitiousResults<ReturnType>(
                 if(endSignal == 0x00.toChar().toString()) {
                     try {
                         callback.invoke(0, when(mRequestType) {
-                            NOTIFY::class.java, INDICATE::class.java -> convertStringToObject<ReturnType>(
-                                mBlueberryRequest.mReturnTypeClass,
-                                String(partialData),
-                                mBlueberryRequest.mMoshi
+                            NOTIFY::class.java, INDICATE::class.java -> mBlueberryRequest.blueberryConverter.convertStringToObject(
+                                mBlueberryRequest.mReturnTypeClass as Class<ReturnType>,
+                                String(partialData)
                             )
                             else -> null
                         })
@@ -81,10 +80,10 @@ class BlueberryRequestInfoWithRepetitiousResults<ReturnType>(
                         endSignal -> {
                             try {
                                 callback.invoke(0, when(mRequestType) {
-                                    NOTIFY::class.java, INDICATE::class.java -> convertStringToObject<ReturnType>(
-                                        mBlueberryRequest.mReturnTypeClass,
-                                        String(synthesizedByteArrayList.toTypedArray().toByteArray()),
-                                        mBlueberryRequest.mMoshi)
+                                    NOTIFY::class.java, INDICATE::class.java -> mBlueberryRequest.blueberryConverter.convertStringToObject(
+                                        mBlueberryRequest.mReturnTypeClass as Class<ReturnType>,
+                                        String(synthesizedByteArrayList.toTypedArray().toByteArray())
+                                    )
                                     else -> null
                                 })
                                 synthesizedByteArrayList.clear()

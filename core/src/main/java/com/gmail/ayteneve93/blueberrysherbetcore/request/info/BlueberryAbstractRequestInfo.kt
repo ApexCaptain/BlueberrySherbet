@@ -52,19 +52,7 @@ abstract class BlueberryAbstractRequestInfo (
 
     companion object {
         private var requestCount : Long = 0L
-        @Suppress("UNCHECKED_CAST")
-        internal fun <ReturnType>convertStringToObject(returnType : Class<out Any>, dataString : String, moshi : Moshi) : ReturnType? = when(returnType) {
-            String::class.java -> dataString as? ReturnType
-            Long::class.java -> dataString.toLong() as? ReturnType
-            Int::class.java -> dataString.toInt() as? ReturnType
-            Short::class.java -> dataString.toShort() as? ReturnType
-            Byte::class.java -> dataString.toByte() as? ReturnType
-            Char::class.java -> dataString[0] as? ReturnType
-            Double::class.java -> dataString.toDouble() as? ReturnType
-            Float::class.java -> dataString.toFloat() as? ReturnType
-            Boolean::class.java -> dataString.toBoolean() as? ReturnType
-            else -> moshi.adapter<ReturnType>(returnType).fromJson(dataString)
-        }
     }
+
 
 }

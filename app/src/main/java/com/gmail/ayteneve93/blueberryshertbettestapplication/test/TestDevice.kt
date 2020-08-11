@@ -2,19 +2,16 @@ package com.gmail.ayteneve93.blueberryshertbettestapplication.test
 
 import android.util.Log
 import androidx.databinding.Observable
+import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryConverter
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
+import com.gmail.ayteneve93.blueberryshertbettestapplication.temp.MyDataClassAsGson
+import com.gmail.ayteneve93.blueberryshertbettestapplication.temp.MyEnum
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class TestDevice : BlueberryDevice<TestDeviceService>() {
 
-    companion object {
-        val name = "NYSLP19020030P"
-    }
-
-    override fun setServiceImpl(): TestDeviceService = BlueberryTestDeviceServiceImpl(this).apply {
-        addMoshiAdapters(TestDeviceMoshiDateAdapter())
-    }
+    override fun setServiceImpl(): TestDeviceService = BlueberryTestDeviceServiceImpl(this)
 
     override fun onDeviceConnecting() {
         super.onDeviceConnecting()
@@ -52,7 +49,12 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
         super.onServicesDiscovered()
         GlobalScope.launch { with(blueberryService) {
 
-
+            val request = registerUserWrite(MyDataClassAsGson("name", MyEnum.A)).apply {
+                blueberryConverter.addGsonAdapter(MyEnum::class.java, BlueberryConverter.GsonAdapter<MyEnum>()
+                    .setSerializer { src, _, context -> context!!.serialize(src!!.name) }
+                    .setDeserializer { json, _, _ -> MyEnum.fromString(json.toString()) })
+            }
+            request.call().byCoroutine()
         }}
 
     }

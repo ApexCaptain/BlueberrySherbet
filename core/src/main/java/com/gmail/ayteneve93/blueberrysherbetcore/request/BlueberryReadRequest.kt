@@ -11,13 +11,11 @@ import java.util.HashMap
 @Suppress("SpellCheckingInspection")
 class BlueberryReadRequest<ReturnType>(
     returnTypeClass : Class<ReturnType>,
-    moshi : Moshi,
     blueberryDevice : BlueberryDevice<out Any>,
     priority : Int,
     uuidString : String
     ) : BlueberryAbstractRequest<ReturnType>(
     returnTypeClass,
-    moshi,
     blueberryDevice,
     priority,
     uuidString){

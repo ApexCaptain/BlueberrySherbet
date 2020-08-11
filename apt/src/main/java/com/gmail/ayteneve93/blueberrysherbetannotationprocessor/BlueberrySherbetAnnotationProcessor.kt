@@ -96,8 +96,8 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
     }
 
     private val blueberryDeviceMemeberPropertyName = "mBlueberryDevice"
-    private val moshiClass = ClassName("com.squareup.moshi", "Moshi")
-    private val moshiMemberPropertyName = "mMoshi"
+    //private val moshiClass = ClassName("com.squareup.moshi", "Moshi")
+    //private val moshiMemberPropertyName = "mMoshi"
 
     private fun generateDeviceServiceImplements
                 (blueberryElement : Element,
@@ -124,23 +124,26 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
             )
 
             // Moshi Member
+            /*
             addProperty(
                 PropertySpec.builder(moshiMemberPropertyName, moshiClass)
                     .mutable()
                     .addModifiers(KModifier.PRIVATE)
                     .build()
             )
+             */
 
             // Construcotr
             primaryConstructor(
                 FunSpec.constructorBuilder()
                     .addParameter(blueberryDeviceMemeberPropertyName, blueberryDeviceClass)
                     .addStatement("this.$blueberryDeviceMemeberPropertyName = $blueberryDeviceMemeberPropertyName")
-                    .addStatement("this.$moshiMemberPropertyName = ${moshiClass}.Builder().build()")
+                    //.addStatement("this.$moshiMemberPropertyName = ${moshiClass}.Builder().build()")
                     .build()
             )
 
             // Add Moshi Adapters Function
+            /*
             addFunction(
                 FunSpec.builder("addMoshiAdapters")
                     .addParameter(ParameterSpec.builder("adapters", Any::class, KModifier.VARARG).build())
@@ -151,6 +154,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                     """.trimIndent())
                     .build()
             )
+            */
             if(generateDeviceServiceMethodImplements(this, blueberryMethods)) return true
         }
 
@@ -270,7 +274,6 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                 WRITE::class.java -> {
                                     """
                                         return ${returnTypeBlueberryRequestClass}(
-                                            $moshiMemberPropertyName,
                                             $blueberryDeviceMemeberPropertyName,
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString",
@@ -282,7 +285,6 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                 WRITE_WITHOUT_RESPONSE::class.java -> {
                                     """
                                         return ${returnTypeBlueberryRequestClass}(
-                                            $moshiMemberPropertyName,
                                             $blueberryDeviceMemeberPropertyName,
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString",
@@ -295,7 +297,6 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                     """
                                         return ${returnTypeBlueberryRequestClass}(
                                             $originalReturnTypeArgumentTypeName::class.java,
-                                            $moshiMemberPropertyName,
                                             $blueberryDeviceMemeberPropertyName,
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString"
@@ -310,7 +311,6 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                     """
                                         return ${returnTypeBlueberryRequestClass}(
                                             $originalReturnTypeArgumentTypeName::class.java,
-                                            $moshiMemberPropertyName,
                                             $blueberryDeviceMemeberPropertyName,
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString",
