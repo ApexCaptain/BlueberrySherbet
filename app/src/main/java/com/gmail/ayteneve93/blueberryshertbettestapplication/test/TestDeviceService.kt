@@ -13,6 +13,9 @@ interface TestDeviceService {
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
     fun registerUserWrite(data : MyDataClassAsGson<MyEnum>) : BlueberryWriteRequest
 
+    @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
+    fun registerUserRead() : BlueberryReadRequest<String>
+
     /*
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601")
     fun connectWifi(wifiConnectionInfo: WifiConnectionInfo) : BlueberryWriteRequest

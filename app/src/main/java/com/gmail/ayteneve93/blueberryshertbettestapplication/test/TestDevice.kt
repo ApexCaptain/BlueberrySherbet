@@ -13,6 +13,12 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
 
     override fun setServiceImpl(): TestDeviceService = BlueberryTestDeviceServiceImpl(this)
 
+    init {
+        blueberryConverter.addGsonAdapter(MyEnum::class.java, BlueberryConverter.GsonAdapter<MyEnum>()
+            .setSerializer { src, _, context -> context!!.serialize(src!!.name) }
+            .setDeserializer { json, _, _ -> MyEnum.fromString(json.toString()) })
+    }
+
     override fun onDeviceConnecting() {
         super.onDeviceConnecting()
         Log.d("ayteneve93_test", "test device connecting")
@@ -47,15 +53,9 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
 
     override fun onServicesDiscovered() {
         super.onServicesDiscovered()
-        GlobalScope.launch { with(blueberryService) {
-
-            val request = registerUserWrite(MyDataClassAsGson("name", MyEnum.A)).apply {
-                blueberryConverter.addGsonAdapter(MyEnum::class.java, BlueberryConverter.GsonAdapter<MyEnum>()
-                    .setSerializer { src, _, context -> context!!.serialize(src!!.name) }
-                    .setDeserializer { json, _, _ -> MyEnum.fromString(json.toString()) })
-            }
-            request.call().byCoroutine()
-        }}
+        blueberryService.registerUserWrite(MyDataClassAsGson("SangHun", MyEnum.A)).call().enqueue {
+            //Log.d("ayteneve93_test", "$it")
+        }
 
     }
 }

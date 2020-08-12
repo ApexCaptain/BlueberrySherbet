@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.annotation.Keep
 import com.gmail.ayteneve93.blueberrysherbetcore.BuildConfig
 
+@Keep
 object BlueberryLogger {
 
     var isReleaseBuildOutLoggingEnabled = false

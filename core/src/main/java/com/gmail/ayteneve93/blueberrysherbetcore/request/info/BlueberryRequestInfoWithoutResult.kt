@@ -1,6 +1,7 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.request.info
 
 import android.bluetooth.BluetoothGattCharacteristic
+import android.util.Log
 import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryAbstractRequest
 import io.reactivex.Single
 import java.util.*

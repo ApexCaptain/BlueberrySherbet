@@ -2,13 +2,19 @@ package com.gmail.ayteneve93.blueberryshertbettestapplication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryConverter
 import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
+import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
 import com.gmail.ayteneve93.blueberryshertbettestapplication.temp.MyDataClassAsGson
 import com.gmail.ayteneve93.blueberryshertbettestapplication.temp.MyEnum
 import io.reactivex.disposables.CompositeDisposable
 import com.gmail.ayteneve93.blueberryshertbettestapplication.test.TestDevice
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * @author ayteneve93@gmail.com
@@ -21,8 +27,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //test()
-
 
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
@@ -31,6 +35,7 @@ class MainActivity : AppCompatActivity() {
                         if(advertisingName.startsWith("SleepCare")) {
                             testDevice = it.connect(this, TestDevice::class.java, true)
                             BlueberryScanner.stopScan()
+                            //test()
                         }
                     }
                 }
@@ -38,22 +43,27 @@ class MainActivity : AppCompatActivity() {
 
 
 
+        button.setOnClickListener {
+            test()
+        }
+
+
+
     }
 
     private fun test() {
-        /*
-        val tmp = MyDataClassAsGson("SangHun", MyEnum.A)
-        val tmp = MyDataClassAsGson("SangHun", "Lee")
-        val converter = BlueberryConverter()
-            .addGsonAdapter(MyEnum::class.java, BlueberryConverter.GsonAdapter<MyEnum>()
-                .setSerializer { src, typeOfSrc, context -> context!!.serialize(src!!.name) }
-                .setDeserializer { json, typeOfConversion, context -> MyEnum.fromString(json.toString()) }
-            )
 
-        var str = converter.convertObjectToString(tmp)
-        Log.d("ayteneve93_test", str)
-        */
 
+        testDevice.blueberryService.registerUserWrite(MyDataClassAsGson("SangHun", MyEnum.A)).call().enqueue {
+            //Log.d("ayteneve93_test", "$it")
+        }
+
+         /*
+        testDevice.blueberryService.registerUserRead().call().enqueue { status, value ->
+            Log.d("ayteneve93_test", value?:"no")
+        }
+
+         */
     }
 
 

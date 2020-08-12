@@ -3,6 +3,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore.device
 import android.bluetooth.*
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
 import androidx.databinding.Observable
@@ -134,6 +135,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
 
     protected lateinit var mBluetoothGatt : BluetoothGatt
 
+
     private var mBluetoothGattCallback = object : BluetoothGattCallback() {
 
         override fun onReadRemoteRssi(gatt: BluetoothGatt?, rssi: Int, status: Int) {
@@ -153,6 +155,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                 bluetoothGatt.services.forEach { eachGattService -> mCharacteristicList.addAll(eachGattService.characteristics) }
             }
             mIsServiceDiscovered = true
+
             executeRequest()
             onServicesDiscovered()
         }
@@ -328,12 +331,15 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
     private var mCurrentRequestInfo : BlueberryAbstractRequestInfo? = null
 
     internal fun enqueueBlueberryRequestInfo(blueberryRequestInfo: BlueberryAbstractRequestInfo) {
-
         if(mIsServiceDiscovered && mCharacteristicList.find { it.uuid == blueberryRequestInfo.mUuid } == null)
             BlueberryLogger.w("No Such Uuid Exists : '${blueberryRequestInfo.mUuid}'")
         else {
             mBlueberryRequestInfoQueue.offer(blueberryRequestInfo)
-            if(mBlueberryRequestInfoQueue.size == 1) executeRequest()
+            if(mBlueberryRequestInfoQueue.size == 1) {
+                Thread().run {
+                    Log.d("ayteneve93_test", Thread.currentThread().name)
+                }
+            }
         }
     }
 
@@ -350,6 +356,8 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
     @Synchronized
     @Suppress("UNCHECKED_CAST")
     private fun executeRequest() {
+
+
         if(::mBluetoothGatt.isInitialized
             && mIsServiceDiscovered
             && bluetoothState.get() == BluetoothState.STATE_CONNECTED
@@ -369,8 +377,8 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
 
                                 when(currentRequestInfo.mRequestType) {
 
-
                                     WRITE::class.java -> (currentRequestInfo as BlueberryRequestInfoWithoutResult).let { blueberryWriteRequestInfoWithoutResult ->
+
                                         characteristic.setValue(blueberryWriteRequestInfoWithoutResult.inputString)
                                         if(currentRequestInfo.mRequestType == WRITE::class.java)
                                             characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
@@ -382,6 +390,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                                         mBluetoothGatt.writeCharacteristic(characteristic)
                                         blueberryWriteRequestInfoWithoutResult.mIsOnProgress = true
                                         mIsBluetoothOnProgress = true
+                                        BlueberryLogger.v("WRITE method is called. Sent data : ${blueberryWriteRequestInfoWithoutResult.inputString}")
                                     }
 
                                     WRITE_WITHOUT_RESPONSE::class.java -> (currentRequestInfo as BlueberryRequestInfoWithNoResponse).let { blueberryWriteRequestInfoWithNoResponse ->
@@ -455,6 +464,8 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
             }
 
         }
+
+
     }
 
     /** Phy Value Change Delegate */
