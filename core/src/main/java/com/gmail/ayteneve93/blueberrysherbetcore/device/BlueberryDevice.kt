@@ -3,6 +3,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore.device
 import android.bluetooth.*
 import android.content.Context
 import android.os.Build
+import android.os.Looper
 import android.util.Log
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
@@ -15,7 +16,9 @@ import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestIn
 import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestInfoWithoutResult
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
 import com.google.gson.Gson
+import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import java.lang.ClassCastException
 import java.lang.Exception
 import java.util.*
@@ -43,9 +46,6 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
         private val RX_CHAR_UUID = UUID.fromString("0000fff2-0000-1000-8000-00805f9b34fb")
         private val TX_CHAR_UUID = UUID.fromString("0000fff1-0000-1000-8000-00805f9b34fb")
 
-        /**
-         * B
-         */
         enum class BlueberryConnectionPriority(val value : Int) {
             CONNECTION_PRIORITY_BALANCED(BluetoothGatt.CONNECTION_PRIORITY_BALANCED),
             CONNECTION_PRIORITY_HIGH(BluetoothGatt.CONNECTION_PRIORITY_HIGH),
@@ -135,7 +135,6 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
 
     protected lateinit var mBluetoothGatt : BluetoothGatt
 
-
     private var mBluetoothGattCallback = object : BluetoothGattCallback() {
 
         override fun onReadRemoteRssi(gatt: BluetoothGatt?, rssi: Int, status: Int) {
@@ -179,6 +178,9 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
         override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
             super.onMtuChanged(gatt, mtu, status)
             this@BlueberryDevice.mtuBinding.set(mtu)
+
+            Log.d("ayteneve93_test", "$mtu")
+
             mIsBluetoothOnProgress = false
             executeRequest()
         }
@@ -282,7 +284,8 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                         mBluetoothGatt.discoverServices()
                         mBluetoothGatt.readRemoteRssi()
                         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) this@BlueberryDevice.readPhy()
-                        requestMtu(513)
+                        // ToDo : MTU 값 변경 Method 호출시 WRITE -> RESPONSE 메소드 먹통 되는 Issue 추후 해결...
+                        // requestMtu(255)
                         onDeviceConnected()
                     }
 
@@ -336,9 +339,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
         else {
             mBlueberryRequestInfoQueue.offer(blueberryRequestInfo)
             if(mBlueberryRequestInfoQueue.size == 1) {
-                Thread().run {
-                    Log.d("ayteneve93_test", Thread.currentThread().name)
-                }
+                executeRequest()
             }
         }
     }
@@ -353,23 +354,27 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
         }
     }
 
+
     @Synchronized
     @Suppress("UNCHECKED_CAST")
     private fun executeRequest() {
-
 
         if(::mBluetoothGatt.isInitialized
             && mIsServiceDiscovered
             && bluetoothState.get() == BluetoothState.STATE_CONNECTED
             && !mIsBluetoothOnProgress) {
             when {
+
+
                 mMtuRequestInfoQueue.isNotEmpty() -> {
                     mMtuRequestInfoQueue.poll()?.let { mtuRequestInfo ->
                         mBluetoothGatt.requestMtu(mtuRequestInfo.mtu)
                         mIsBluetoothOnProgress = true
                     }
                 }
+
                 mBlueberryRequestInfoQueue.isNotEmpty() -> {
+                    Log.d("ayteneve93_test", "blueberryRequest")
                     mCurrentRequestInfo = mBlueberryRequestInfoQueue.poll()
                     mCurrentRequestInfo?.let { currentRequestInfo ->
                         mCharacteristicList.find { it.uuid == currentRequestInfo.mUuid }
@@ -447,6 +452,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                             }
                     }
                 }
+
                 mPhyRequestInfoQueue.isNotEmpty() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
                     mPhyRequestInfoQueue.poll()?.let { phyRequestInfo ->
                         if(phyRequestInfo.useReadOperationOnly) mBluetoothGatt.readPhy()
@@ -464,6 +470,9 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
             }
 
         }
+
+
+
 
 
     }
@@ -536,7 +545,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
     open fun onMtuValueChanged(mtu : Int) = BlueberryLogger.d("Mtu Value Changed to $mtu at ${mBluetoothDevice.address}")
     private data class MtuRequestInfo(val mtu : Int)
     private val mMtuRequestInfoQueue : Queue<MtuRequestInfo> = LinkedList()
-    protected fun requestMtu(mtu : Int) {
+    /*protected*/ private fun requestMtu(mtu : Int) {
         mMtuRequestInfoQueue.offer(MtuRequestInfo(mtu))
         executeRequest()
     }

@@ -53,9 +53,12 @@ class TestDevice : BlueberryDevice<TestDeviceService>() {
 
     override fun onServicesDiscovered() {
         super.onServicesDiscovered()
+
+        /*
         blueberryService.registerUserWrite(MyDataClassAsGson("SangHun", MyEnum.A)).call().enqueue {
-            //Log.d("ayteneve93_test", "$it")
-        }
+            Log.d("ayteneve93_test", "$it")
+        }*/
+
 
     }
 }
