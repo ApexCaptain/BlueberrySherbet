@@ -178,9 +178,6 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
         override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
             super.onMtuChanged(gatt, mtu, status)
             this@BlueberryDevice.mtuBinding.set(mtu)
-
-            Log.d("ayteneve93_test", "$mtu")
-
             mIsBluetoothOnProgress = false
             executeRequest()
         }
@@ -365,7 +362,6 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
             && !mIsBluetoothOnProgress) {
             when {
 
-
                 mMtuRequestInfoQueue.isNotEmpty() -> {
                     mMtuRequestInfoQueue.poll()?.let { mtuRequestInfo ->
                         mBluetoothGatt.requestMtu(mtuRequestInfo.mtu)
@@ -374,7 +370,6 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                 }
 
                 mBlueberryRequestInfoQueue.isNotEmpty() -> {
-                    Log.d("ayteneve93_test", "blueberryRequest")
                     mCurrentRequestInfo = mBlueberryRequestInfoQueue.poll()
                     mCurrentRequestInfo?.let { currentRequestInfo ->
                         mCharacteristicList.find { it.uuid == currentRequestInfo.mUuid }
