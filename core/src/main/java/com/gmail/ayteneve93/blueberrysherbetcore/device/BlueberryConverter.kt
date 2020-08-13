@@ -1,5 +1,6 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.device
 
+import android.util.Log
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
 import com.google.gson.*
 import com.squareup.moshi.JsonAdapter
@@ -59,7 +60,9 @@ class BlueberryConverter internal constructor() {
         return this
     }
 
+    @Suppress("UNCHECKED_CAST")
     internal fun <ConversionType>convertStringToObject(conversionType : Class<ConversionType>, stringToConvert : String) : ConversionType? {
+        if(conversionType == String::class.java) return stringToConvert as ConversionType
         return mGson.fromJson(stringToConvert, conversionType)
     }
     internal fun convertObjectToString(objectToConvert : Any) : String {

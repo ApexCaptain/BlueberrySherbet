@@ -10,6 +10,7 @@ import androidx.databinding.ObservableField
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryConverter
 import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
+import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.ExampleDevice
 import com.gmail.ayteneve93.blueberryshertbettestapplication.temp.MyDataClassAsGson
 import com.gmail.ayteneve93.blueberryshertbettestapplication.temp.MyEnum
 import io.reactivex.disposables.CompositeDisposable
@@ -28,7 +29,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private val mCompositeDisposable = CompositeDisposable()
-    private lateinit var testDevice : TestDevice
+    private lateinit var exampleDevice : ExampleDevice
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,40 +40,23 @@ class MainActivity : AppCompatActivity() {
             BlueberryScanner.rxStartScan(this)
                 .subscribe {
                     it.bluetoothDevice.name?.let { advertisingName ->
-                        if(advertisingName.startsWith("SleepCare")) {
-                            testDevice = it.connect(this, TestDevice::class.java, true)
+                        if(advertisingName == "MyDevice") {
+                            exampleDevice = it.connect(this, ExampleDevice::class.java)
+                            exampleDevice.addOnServiceDiscoveredListener {
+                                Log.d("ayteneve93_test", "discovered")
+                                GlobalScope.launch {
+                                    val s = exampleDevice.blueberryService.beGreetedFromDevice().call().byCoroutine()
+                                    Log.d("ayteneve93_test", s.value?:"no Result")
+                                }
+                            }
                             BlueberryScanner.stopScan()
-
-                            test()
-                            //button.callOnClick()
-                            //button.callOnClick()
-
                         }
                     }
                 }
         )
 
-        button.setOnClickListener {
-            //testDevice.test()
-            test()
-        }
 
 
-    }
-
-    private fun test() {
-
-
-        testDevice.blueberryService.registerUserWrite(MyDataClassAsGson("SangHun", MyEnum.A)).call().enqueue {
-            //Log.d("ayteneve93_test", "$it")
-        }
-
-         /*
-        testDevice.blueberryService.registerUserRead().call().enqueue { status, value ->
-            Log.d("ayteneve93_test", value?:"no")
-        }
-
-         */
     }
 
 
