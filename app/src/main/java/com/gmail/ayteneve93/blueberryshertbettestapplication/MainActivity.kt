@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity() {
             BlueberryScanner.rxStartScan(this)
                 .subscribe {
                     it.bluetoothDevice.name?.let { advertisingName ->
+
+                        /*
                         if(advertisingName == "MyDevice") {
 
                             /*
@@ -37,6 +39,21 @@ class MainActivity : AppCompatActivity() {
                             BlueberryScanner.stopScan()
                             */
                         }
+                        */
+
+                        if(advertisingName.startsWith("SleepCare")) {
+                            exampleDevice = it.interlock(this, ExampleDevice::class.java)
+                            exampleDevice.connect()
+                            GlobalScope.launch {
+
+
+                                exampleDevice.blueberryService.sayHelloToDevice("Something").call().byCoroutine()
+
+
+                            }
+                        }
+
+
                     }
                 }
         )

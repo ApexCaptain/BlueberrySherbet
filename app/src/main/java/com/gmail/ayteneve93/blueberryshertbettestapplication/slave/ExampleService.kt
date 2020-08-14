@@ -15,4 +15,7 @@ interface ExampleService {
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
     fun beGreetedFromDevice() : BlueberryReadRequest<Int>
 
+    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0102")
+    fun sayHelloToDevice2(data : String) : BlueberryWriteRequest
+
 }
