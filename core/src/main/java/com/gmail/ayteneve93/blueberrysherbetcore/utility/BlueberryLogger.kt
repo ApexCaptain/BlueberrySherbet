@@ -9,10 +9,12 @@ object BlueberryLogger {
 
     var isReleaseBuildOutLoggingEnabled = false
     var isStackTraceOutLoggingEnabled = true
-    var stackTraceDepth = 2
+    var stackTraceDepth = 5
     var isThreadNameOutLoggingEnabled = true
 
     private val TAG = this::class.java.simpleName
+
+
 
     private fun getStackTrace() : String =
         Exception().stackTrace.let { stackTrace ->

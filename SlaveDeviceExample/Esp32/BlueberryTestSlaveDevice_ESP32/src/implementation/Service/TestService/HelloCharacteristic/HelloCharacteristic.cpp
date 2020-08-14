@@ -22,7 +22,7 @@ HelloCharacteristic::HelloCharacteristic(BLEService *bleService) {
                 Serial.println(bleCharacteristic ->getValue().c_str());
             })
             -> setOnRead([this](){
-                bleCharacteristic -> setValue("Hello! Nice to meet you too!");
+                bleCharacteristic -> setValue("3");
             })
     );
     

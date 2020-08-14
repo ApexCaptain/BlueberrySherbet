@@ -7,6 +7,7 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import androidx.annotation.Keep
 import androidx.databinding.ObservableField
@@ -56,14 +57,19 @@ object BlueberryScanner {
                             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                                 super.onScanResult(callbackType, result)
                                 result?.device?.let { bluetoothDevice ->
+                                    val deviceInfoString = "\nMac Address : ${bluetoothDevice.address} ${if(bluetoothDevice.name != null) "\nAdvertising Name : ${bluetoothDevice.name}" else ""}\nRssi Signal Value : ${result.rssi}"
                                     val prevResult = blueberryScanResults.find { blueberryScanResult -> blueberryScanResult.bluetoothDevice.address == bluetoothDevice.address }
                                     if(prevResult == null) {
                                         val newBlueberryScanResult = BlueberryScanResult(bluetoothDevice)
-                                        BlueberryLogger.i("New Ble Device is Found. Mac Address : ${bluetoothDevice.address}")
-                                        blueberryScanResults.add(newBlueberryScanResult)
-                                        observableEmitter.onNext(newBlueberryScanResult)
+                                        val isConnectable : Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) result.isConnectable
+                                        else result.scanRecord?.advertiseFlags.let { advertisingFlag -> advertisingFlag != null && advertisingFlag.and(2) == 2 }
+                                        if(isConnectable) {
+                                            BlueberryLogger.i("New Ble Device is Found. $deviceInfoString")
+                                            blueberryScanResults.add(newBlueberryScanResult)
+                                            observableEmitter.onNext(newBlueberryScanResult)
+                                        }
                                     } else {
-                                        BlueberryLogger.v("Ble Device Info is Updated. Mac Address : ${bluetoothDevice.address}")
+                                        BlueberryLogger.v("Ble Device Info is Updated. $deviceInfoString")
                                         prevResult.updateDevice(bluetoothDevice)
                                     }
                                 }

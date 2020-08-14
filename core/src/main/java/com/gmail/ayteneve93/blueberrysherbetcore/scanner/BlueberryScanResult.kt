@@ -12,7 +12,7 @@ class BlueberryScanResult internal constructor(bluetoothDevice: BluetoothDevice)
     init { updateDevice(bluetoothDevice) }
     lateinit var bluetoothDevice : BluetoothDevice
     internal fun updateDevice(bluetoothDevice: BluetoothDevice) { this.bluetoothDevice = bluetoothDevice }
-    fun <BlueberryDeviceType : BlueberryDevice<out Any>> connect(context : Context, blueberryDeviceType : Class<BlueberryDeviceType>, autoConnect : Boolean = true) : BlueberryDeviceType  {
+    fun <BlueberryDeviceType : BlueberryDevice<out Any>> interlock(context : Context, blueberryDeviceType : Class<BlueberryDeviceType>, autoConnect : Boolean = true) : BlueberryDeviceType  {
         val blueberryDevice = blueberryDeviceType.newInstance()
         blueberryDevice.initialize(bluetoothDevice, context, autoConnect)
         return blueberryDevice

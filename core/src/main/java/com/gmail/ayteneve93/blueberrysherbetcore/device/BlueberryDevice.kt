@@ -154,7 +154,6 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                 bluetoothGatt.services.forEach { eachGattService -> mCharacteristicList.addAll(eachGattService.characteristics) }
             }
             mIsServiceDiscovered = true
-
             executeRequest()
             onServicesDiscovered()
         }
@@ -264,7 +263,6 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
         setDefaultRssiValueChangeDelegate()
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) setDefaultPhyValueChangeDelegate()
         setDefaultMtuValueChangeDelegate()
-        connect()
     }
 
     /** Connection State Change Delegate */
@@ -311,54 +309,25 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
     }
 
     /** Device Life Cycle Callback */
-    private val onDeviceDisconnectedListeners = ArrayList<() -> Unit>()
     open fun onDeviceDisconnected() {
         BlueberryLogger.d("Disconnected from ${mBluetoothDevice.address}")
-        onDeviceDisconnectedListeners.forEach { it() }
-    }
-    fun addOnDeviceDisconnectedListener(listener : () -> Unit) : BlueberryDevice<BlueberryService> {
-        onDeviceDisconnectedListeners.add(listener)
-        return this
     }
 
-    private val onDeviceConnectingListeners = ArrayList<() -> Unit>()
+
     open fun onDeviceConnecting() {
         BlueberryLogger.d("Connecting to ${mBluetoothDevice.address}")
-        onDeviceConnectingListeners.forEach { it() }
-    }
-    fun addOnDeviceConnectingListener(listener : () -> Unit) : BlueberryDevice<BlueberryService> {
-        onDeviceConnectingListeners.add(listener)
-        return this
     }
 
-    private val onDeviceConnectedListeners = ArrayList<() -> Unit>()
     open fun onDeviceConnected() {
         BlueberryLogger.d("Connected to ${mBluetoothDevice.address}")
-        onDeviceConnectedListeners.forEach { it() }
-    }
-    fun addOnDeviceConnectedListener(listener: () -> Unit) : BlueberryDevice<BlueberryService> {
-        onDeviceConnectedListeners.add(listener)
-        return this
     }
 
-    private val onDeviceDisconnectingListeners = ArrayList<() -> Unit>()
     open fun onDeviceDisconnecting() {
         BlueberryLogger.d("Disconnecting from ${mBluetoothDevice.address}")
-        onDeviceDisconnectingListeners.forEach { it() }
-    }
-    fun addOnDeviceDisconnectingListener(listener: () -> Unit) : BlueberryDevice<BlueberryService> {
-        onDeviceDisconnectingListeners.add(listener)
-        return this
     }
 
-    private val onServiceDiscoveredListeners = ArrayList<() -> Unit>()
     open fun onServicesDiscovered() {
         BlueberryLogger.d("Services of ${mBluetoothDevice.address} are Discovered")
-        onServiceDiscoveredListeners.forEach { it() }
-    }
-    fun addOnServiceDiscoveredListener(listener: () -> Unit) : BlueberryDevice<BlueberryService> {
-        onServiceDiscoveredListeners.add(listener)
-        return this
     }
 
 
