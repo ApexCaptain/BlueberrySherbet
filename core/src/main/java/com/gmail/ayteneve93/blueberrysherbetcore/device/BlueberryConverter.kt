@@ -61,11 +61,11 @@ class BlueberryConverter internal constructor() {
     }
 
     @Suppress("UNCHECKED_CAST")
-    internal fun <ConversionType>convertStringToObject(conversionType : Class<ConversionType>, stringToConvert : String) : ConversionType? {
+    fun <ConversionType>convertStringToObject(conversionType : Class<ConversionType>, stringToConvert : String) : ConversionType? {
         if(conversionType == String::class.java) return stringToConvert as ConversionType
         return mGson.fromJson(stringToConvert, conversionType)
     }
-    internal fun convertObjectToString(objectToConvert : Any) : String {
+    fun convertObjectToString(objectToConvert : Any) : String {
         val exceptions = ArrayList<Exception>()
 
         try { return mGson.toJson(objectToConvert) }
