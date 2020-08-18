@@ -17,7 +17,7 @@ Download
 ```gradle
 buildscript {
     ext {
-        blueberry_sherbet_version = '0.1.9' 
+        blueberry_sherbet_version = '0.2.4-alpha' 
         // ↑ The very name of version constant could be anything you want :)
     }
 }

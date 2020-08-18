@@ -3,10 +3,12 @@ package com.gmail.ayteneve93.blueberrysherbetcore.device
 import android.util.Log
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
 import com.google.gson.*
+import com.google.gson.reflect.TypeToken
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import java.lang.Exception
 import java.lang.reflect.Type
+import kotlin.reflect.typeOf
 
 @Suppress("SpellCheckingInspection")
 class BlueberryConverter internal constructor() {
@@ -63,6 +65,11 @@ class BlueberryConverter internal constructor() {
     @Suppress("UNCHECKED_CAST")
     fun <ConversionType>convertStringToObject(conversionType : Class<ConversionType>, stringToConvert : String) : ConversionType? {
         if(conversionType == String::class.java) return stringToConvert as ConversionType
+        return mGson.fromJson(stringToConvert, conversionType)
+    }
+    @Suppress("UNCHECKED_CAST")
+    fun <ConversionType>convertStringToObject(conversionType : Type, stringToConvert: String) : ConversionType? {
+        if(conversionType == object : TypeToken<String>(){}.type) return stringToConvert as ConversionType
         return mGson.fromJson(stringToConvert, conversionType)
     }
     fun convertObjectToString(objectToConvert : Any) : String {
