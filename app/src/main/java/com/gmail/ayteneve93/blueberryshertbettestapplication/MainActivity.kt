@@ -3,6 +3,7 @@ package com.gmail.ayteneve93.blueberryshertbettestapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryCallbackResultData
 import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.ExampleDevice
 import io.reactivex.disposables.CompositeDisposable
@@ -46,8 +47,18 @@ class MainActivity : AppCompatActivity() {
                             exampleDevice.connect()
                             GlobalScope.launch {
 
+                                var isFinished = false
+                                var result = ""
+                                while(!isFinished) {
+                                    val bleResult = exampleDevice.blueberryService.testRead().call().byCoroutine()
+                                    bleResult.value?.let { value ->
+                                        if(value.startsWith('E')) isFinished = true
+                                        result += value.substring(1)
+                                    }
+                                }
 
-                                exampleDevice.blueberryService.sayHelloToDevice("Something").call().byCoroutine()
+                                Log.d("ayteneve93_test", result)
+                                Log.d("ayteneve93_test", "${result.length}")
 
 
                             }

@@ -37,7 +37,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
     var autoConnect: Boolean = true
     val bluetoothState = ObservableField(BluetoothState.STATE_DISCONNECTED)
     val blueberryService : BlueberryService by lazy { setServiceImpl() }
-    abstract fun setServiceImpl() : BlueberryService
+    protected abstract fun setServiceImpl() : BlueberryService
 
     companion object {
         private val CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
@@ -309,24 +309,23 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
     }
 
     /** Device Life Cycle Callback */
-    open fun onDeviceDisconnected() {
+    protected open fun onDeviceDisconnected() {
         BlueberryLogger.d("Disconnected from ${mBluetoothDevice.address}")
     }
 
-
-    open fun onDeviceConnecting() {
+    protected open fun onDeviceConnecting() {
         BlueberryLogger.d("Connecting to ${mBluetoothDevice.address}")
     }
 
-    open fun onDeviceConnected() {
+    protected open fun onDeviceConnected() {
         BlueberryLogger.d("Connected to ${mBluetoothDevice.address}")
     }
 
-    open fun onDeviceDisconnecting() {
+    protected open fun onDeviceDisconnecting() {
         BlueberryLogger.d("Disconnecting from ${mBluetoothDevice.address}")
     }
 
-    open fun onServicesDiscovered() {
+    protected open fun onServicesDiscovered() {
         BlueberryLogger.d("Services of ${mBluetoothDevice.address} are Discovered")
     }
 
