@@ -3,12 +3,9 @@ package com.gmail.ayteneve93.blueberryshertbettestapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryCallbackResultData
-import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.ExampleDevice
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import javax.crypto.Cipher
 
 /**
  * @author ayteneve93@gmail.com
@@ -23,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
+        /*
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
                 .subscribe {
@@ -33,23 +31,6 @@ class MainActivity : AppCompatActivity() {
                             GlobalScope.launch {
 
 
-
-                                /*
-                                var isFinished = false
-                                var result = ""
-                                while(!isFinished) {
-                                    val bleResult = exampleDevice.blueberryService.testRead().call().byCoroutine()
-                                    bleResult.value?.let { value ->
-                                        if(value.startsWith('E')) isFinished = true
-                                        result += value.substring(1)
-                                    }
-                                }
-
-                                Log.d("ayteneve93_test", result)
-                                Log.d("ayteneve93_test", "${result.length}")
-                                */
-
-
                             }
                         }
 
@@ -57,6 +38,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
         )
+        */
 
 
 

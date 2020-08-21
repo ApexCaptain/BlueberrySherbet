@@ -1,20 +1,18 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.request
 
 import android.os.Build
-import androidx.annotation.Keep
 import com.gmail.ayteneve93.blueberrysherbetannotations.READ
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
-import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestInfoWithSimpleResult
-import com.squareup.moshi.Moshi
+import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestWithSimpleResult
 import java.util.HashMap
 
 @Suppress("SpellCheckingInspection")
-class BlueberryReadRequest<ReturnType>(
+class BlueberryReadRequestInfo<ReturnType>(
     returnTypeClass : Class<ReturnType>,
     blueberryDevice : BlueberryDevice<out Any>,
     priority : Int,
     uuidString : String
-    ) : BlueberryAbstractRequest<ReturnType>(
+    ) : BlueberryAbstractRequestInfo<ReturnType>(
     returnTypeClass,
     blueberryDevice,
     priority,
@@ -25,11 +23,11 @@ class BlueberryReadRequest<ReturnType>(
                               else mReturnTypeClass.simpleName
     }
 
-    override fun call(awaitingMills : Int) : BlueberryRequestInfoWithSimpleResult<ReturnType> = BlueberryRequestInfoWithSimpleResult(
+    override fun call(awaitingMills : Int) : BlueberryRequestWithSimpleResult<ReturnType> = BlueberryRequestWithSimpleResult(
         uuid = mUuid,
         priority = mPriority,
         awaitingMills = awaitingMills,
-        blueberryRequest = this,
+        blueberryRequestInfo = this,
         requestType = READ::class.java
     )
 }

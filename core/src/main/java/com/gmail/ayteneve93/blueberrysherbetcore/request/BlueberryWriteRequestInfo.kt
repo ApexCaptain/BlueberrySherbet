@@ -1,20 +1,18 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.request
 
-import androidx.annotation.Keep
-import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE_WITHOUT_RESPONSE
+import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
-import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestInfoWithNoResponse
-import com.squareup.moshi.Moshi
+import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestWithoutResult
 import java.util.HashMap
 
 @Suppress("SpellCheckingInspection")
-class BlueberryWriteRequestWithoutResponse(
+class BlueberryWriteRequestInfo(
     blueberryDevice : BlueberryDevice<out Any>,
     priority : Int,
     uuidString : String,
     inputDataSource : Any?,
     private val checkIsReliable : Boolean
-    ) : BlueberryAbstractRequest<Any>(
+    ) : BlueberryAbstractRequestInfo<Any>(
     Any::class.java,
     blueberryDevice,
     priority,
@@ -23,7 +21,7 @@ class BlueberryWriteRequestWithoutResponse(
     internal val mInputString : String? by lazy {
         if(inputDataSource == null) null
         else if(inputDataSource::class == String::class || inputDataSource::class.java.isPrimitive) inputDataSource.toString()
-        else blueberryConverter.convertObjectToString(inputDataSource)
+        else blueberryConverterPrev.convertObjectToString(inputDataSource)
         //else mMoshi.adapter<Any>(inputDataSource::class.java).toJson(inputDataSource)
     }
 
@@ -32,12 +30,12 @@ class BlueberryWriteRequestWithoutResponse(
         this["Use Reliable Write"] = checkIsReliable
     }
 
-    override fun call(awaitingMills : Int) : BlueberryRequestInfoWithNoResponse = BlueberryRequestInfoWithNoResponse(
+    override fun call(awaitingMills : Int) : BlueberryRequestWithoutResult = BlueberryRequestWithoutResult(
         uuid = mUuid,
         priority = mPriority,
         awaitingMills = awaitingMills,
-        blueberryRequest = this,
-        requestType = WRITE_WITHOUT_RESPONSE::class.java,
+        blueberryRequestInfo = this,
+        requestType = WRITE::class.java,
         inputString = mInputString,
         checkIsReliable = checkIsReliable
     )

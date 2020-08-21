@@ -3,7 +3,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore.request.info
 import android.bluetooth.BluetoothGattCharacteristic
 import android.os.Build
 import com.gmail.ayteneve93.blueberrysherbetannotations.READ
-import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryAbstractRequest
+import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryAbstractRequestInfo
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
 import io.reactivex.Single
 import java.util.*
@@ -12,28 +12,28 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @Suppress("SpellCheckingInspection", "UNCHECKED_CAST")
-class BlueberryRequestInfoWithSimpleResult<ReturnType>(
+class BlueberryRequestWithSimpleResult<ReturnType>(
     uuid : UUID,
     priority: Int,
     awaitingMills: Int,
-    blueberryRequest: BlueberryAbstractRequest<ReturnType>,
+    blueberryRequestInfo: BlueberryAbstractRequestInfo<ReturnType>,
     requestType : Class<out Annotation>
-) : BlueberryAbstractRequestInfo(
+) : BlueberryAbstractRequest(
     mUuid = uuid,
     mPriority = priority,
     mAwaitingMills = awaitingMills,
-    mBlueberryRequest = blueberryRequest as BlueberryAbstractRequest<out Any>,
+    mBlueberryRequestInfo = blueberryRequestInfo as BlueberryAbstractRequestInfo<out Any>,
     mRequestType = requestType) {
     private lateinit var callback : BlueberryCallbackWithResult<ReturnType>
 
     override fun convertToSimpleHashMap(): HashMap<String, Any?> = super.convertToSimpleHashMap().apply {
-        this["Return Type"] = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) mBlueberryRequest.mReturnTypeClass.typeName
-        else mBlueberryRequest.mReturnTypeClass.simpleName
+        this["Return Type"] = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) mBlueberryRequestInfo.mReturnTypeClass.typeName
+        else mBlueberryRequestInfo.mReturnTypeClass.simpleName
     }
 
     fun enqueue(callback : BlueberryCallbackWithResult<ReturnType>) {
         this.callback = callback
-        mBlueberryRequest.mBlueberryDevice.enqueueBlueberryRequestInfo(this)
+        mBlueberryRequestInfo.mBlueberryDevice.enqueueBlueberryRequestInfo(this)
     }
     fun byRx2() : Single<BlueberryCallbackResultData<ReturnType>> = Single.create { emitter -> enqueue { status, value -> emitter.onSuccess(
         BlueberryCallbackResultData(
@@ -53,8 +53,8 @@ class BlueberryRequestInfoWithSimpleResult<ReturnType>(
             callback.invoke(status!!, with(characteristic?.getStringValue(0)) {
                 if(this.isNullOrEmpty()) null
                 else when(mRequestType) {
-                    READ::class.java -> mBlueberryRequest.blueberryConverter.convertStringToObject<ReturnType>(
-                        mBlueberryRequest.mReturnTypeClass as Class<ReturnType>,
+                    READ::class.java -> mBlueberryRequestInfo.blueberryConverterPrev.convertStringToObject<ReturnType>(
+                        mBlueberryRequestInfo.mReturnTypeClass as Class<ReturnType>,
                         this
                     )
                     else -> null

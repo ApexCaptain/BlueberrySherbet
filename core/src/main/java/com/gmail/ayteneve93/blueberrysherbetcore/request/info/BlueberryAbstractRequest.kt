@@ -3,19 +3,17 @@ package com.gmail.ayteneve93.blueberrysherbetcore.request.info
 import android.bluetooth.BluetoothGattCharacteristic
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryAbstractRequest
-import com.squareup.moshi.Moshi
+import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryAbstractRequestInfo
 import java.util.*
 import kotlin.collections.HashMap
 
-abstract class BlueberryAbstractRequestInfo (
+abstract class BlueberryAbstractRequest (
     internal val mUuid : UUID,
     internal val mPriority : Int,
     internal var mAwaitingMills : Int,
-    internal val mBlueberryRequest : BlueberryAbstractRequest<out Any>,
+    internal val mBlueberryRequestInfo : BlueberryAbstractRequestInfo<out Any>,
     internal val mRequestType : Class<out Annotation>
-) : Comparable<BlueberryAbstractRequestInfo> {
+) : Comparable<BlueberryAbstractRequest> {
     internal val mRequestCode : Long = requestCount++
     internal var mIsOnProgress : Boolean = false
     internal val mRequestTimer = Handler(Looper.getMainLooper())
@@ -29,7 +27,7 @@ abstract class BlueberryAbstractRequestInfo (
         this["Is On Progress"] = mIsOnProgress
     }
 
-    override fun compareTo(other: BlueberryAbstractRequestInfo): Int = this.mPriority.compareTo(other.mPriority)
+    override fun compareTo(other: BlueberryAbstractRequest): Int = this.mPriority.compareTo(other.mPriority)
 
     override fun toString(): String = this::class.java.simpleName + convertToSimpleHashMap().toList().joinToString(
         separator = "\n # ",
@@ -41,11 +39,11 @@ abstract class BlueberryAbstractRequestInfo (
 
     internal fun startTimer() {
         mRequestTimer.postDelayed({
-            mBlueberryRequest.mBlueberryDevice.disconnect()
+            mBlueberryRequestInfo.mBlueberryDevice.disconnect()
         }, mAwaitingMills.toLong())
     }
 
-    open fun cancel() = mBlueberryRequest.mBlueberryDevice.cancelBlueberryRequest(this)
+    open fun cancel() = mBlueberryRequestInfo.mBlueberryDevice.cancelBlueberryRequest(this)
     internal open fun onResponse(status : Int?, characteristic : BluetoothGattCharacteristic?) {
         mRequestTimer.removeCallbacksAndMessages(null)
     }

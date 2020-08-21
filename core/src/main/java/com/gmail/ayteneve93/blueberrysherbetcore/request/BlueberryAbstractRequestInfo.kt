@@ -1,16 +1,13 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.request
 
-import androidx.annotation.Keep
-import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryConverter
+import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryConverterPrev
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
-import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryAbstractRequestInfo
-import com.google.gson.Gson
-import com.squareup.moshi.Moshi
+import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryAbstractRequest
 import java.util.*
 import kotlin.collections.HashMap
 
 @Suppress("SpellCheckingInspection")
-abstract class BlueberryAbstractRequest<ReturnType>
+abstract class BlueberryAbstractRequestInfo<ReturnType>
     constructor(
 
         internal val mReturnTypeClass : Class<ReturnType>,
@@ -21,7 +18,7 @@ abstract class BlueberryAbstractRequest<ReturnType>
 
     internal val mUuid = UUID.fromString(uuidString)
 
-    val blueberryConverter : BlueberryConverter = mBlueberryDevice.blueberryConverter.imitate()
+    val blueberryConverterPrev : BlueberryConverterPrev = mBlueberryDevice.blueberryConverterPrev.imitate()
 
     protected open fun convertToSimpleHashMap() : HashMap<String, Any?> = HashMap<String, Any?>().apply {
         this["Device MAC Address"] = mBlueberryDevice.mBluetoothDevice.address
@@ -39,7 +36,7 @@ abstract class BlueberryAbstractRequest<ReturnType>
         }
     )
 
-    abstract fun call(awaitingMills : Int = 29000) : BlueberryAbstractRequestInfo
+    abstract fun call(awaitingMills : Int = 29000) : BlueberryAbstractRequest
 
     /*
     companion object {

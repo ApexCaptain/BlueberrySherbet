@@ -2,15 +2,13 @@ package com.gmail.ayteneve93.blueberryshertbettestapplication.slave
 
 import com.gmail.ayteneve93.blueberrysherbetannotations.BlueberryService
 import com.gmail.ayteneve93.blueberrysherbetannotations.READ
-import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE
-import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryReadRequest
-import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryWriteRequest
+import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryReadRequestInfo
 
 @BlueberryService
 interface ExampleService {
 
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1")
-    fun testRead() : BlueberryReadRequest<String>
+    fun testRead() : BlueberryReadRequestInfo<String>
 
     /*
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")

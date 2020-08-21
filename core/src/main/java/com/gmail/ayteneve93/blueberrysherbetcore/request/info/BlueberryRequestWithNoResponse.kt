@@ -1,23 +1,23 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.request.info
 
-import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryAbstractRequest
+import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryAbstractRequestInfo
 import java.util.*
 import kotlin.collections.HashMap
 
 @Suppress("SpellCheckingInspection")
-class BlueberryRequestInfoWithNoResponse(
+class BlueberryRequestWithNoResponse(
     uuid : UUID,
     priority : Int,
     awaitingMills: Int,
-    blueberryRequest : BlueberryAbstractRequest<out Any>,
+    blueberryRequestInfo : BlueberryAbstractRequestInfo<out Any>,
     requestType : Class<out Annotation>,
     internal val inputString : String?,
     val checkIsReliable: Boolean
-) : BlueberryAbstractRequestInfo(
+) : BlueberryAbstractRequest(
     mUuid =  uuid,
     mPriority = priority,
     mAwaitingMills = awaitingMills,
-    mBlueberryRequest = blueberryRequest,
+    mBlueberryRequestInfo = blueberryRequestInfo,
     mRequestType = requestType) {
     override fun convertToSimpleHashMap(): HashMap<String, Any?> = super.convertToSimpleHashMap().apply {
         this["Input Data"] = inputString
@@ -25,6 +25,6 @@ class BlueberryRequestInfoWithNoResponse(
     }
 
     fun enqueue() {
-        mBlueberryRequest.mBlueberryDevice.enqueueBlueberryRequestInfo(this)
+        mBlueberryRequestInfo.mBlueberryDevice.enqueueBlueberryRequestInfo(this)
     }
 }

@@ -1,6 +1,5 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.device
 
-import android.util.Log
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
@@ -8,10 +7,9 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import java.lang.Exception
 import java.lang.reflect.Type
-import kotlin.reflect.typeOf
 
 @Suppress("SpellCheckingInspection")
-class BlueberryConverter internal constructor() {
+class BlueberryConverterPrev internal constructor() {
 
     private var mGson = Gson()
     private var mMoshi = Moshi.Builder().build()
@@ -21,11 +19,11 @@ class BlueberryConverter internal constructor() {
         mMoshi = moshi.newBuilder().build()
     }
 
-    internal fun imitate() : BlueberryConverter {
-        return BlueberryConverter(mGson, mMoshi)
+    internal fun imitate() : BlueberryConverterPrev {
+        return BlueberryConverterPrev(mGson, mMoshi)
     }
 
-    fun <ConversionType> addGsonAdapter(coversionType : Class<ConversionType>, gsonAdapter : GsonAdapter<ConversionType>) : BlueberryConverter{
+    fun <ConversionType> addGsonAdapter(coversionType : Class<ConversionType>, gsonAdapter : GsonAdapter<ConversionType>) : BlueberryConverterPrev{
         mGson = mGson
             .newBuilder().apply {
                 gsonAdapter.getSerializer()?.let { registerTypeAdapter(coversionType, it) }
@@ -57,7 +55,7 @@ class BlueberryConverter internal constructor() {
         }
     }
 
-    fun <ConversionType>addMoshiAdapter(type : Class<ConversionType>, jsonAdapter : JsonAdapter<ConversionType>) : BlueberryConverter {
+    fun <ConversionType>addMoshiAdapter(type : Class<ConversionType>, jsonAdapter : JsonAdapter<ConversionType>) : BlueberryConverterPrev {
         mMoshi = mMoshi.newBuilder().add(type, jsonAdapter).build()
         return this
     }

@@ -1,21 +1,19 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.request
 
 import android.os.Build
-import androidx.annotation.Keep
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
-import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestInfoWithRepetitiousResults
-import com.squareup.moshi.Moshi
+import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestWithRepetitiousResults
 import java.util.HashMap
 
 @Suppress("SpellCheckingInspection")
-class BlueberryNotifyOrIndicateRequest<ReturnType>(
+class BlueberryNotifyOrIndicateRequestInfo<ReturnType>(
     returnTypeClass : Class<ReturnType>,
     blueberryDevice : BlueberryDevice<out Any>,
     priority : Int,
     uuidString : String,
     private val requestType : Class<out Annotation>,
     private val endSignal : String
-) : BlueberryAbstractRequest<ReturnType>(
+) : BlueberryAbstractRequestInfo<ReturnType>(
     mReturnTypeClass = returnTypeClass,
     mBlueberryDevice = blueberryDevice,
     mPriority = priority,
@@ -28,11 +26,11 @@ class BlueberryNotifyOrIndicateRequest<ReturnType>(
         this["End Signal"] = endSignal
     }
 
-    override fun call(awaitingMills : Int) : BlueberryRequestInfoWithRepetitiousResults<ReturnType> = BlueberryRequestInfoWithRepetitiousResults(
+    override fun call(awaitingMills : Int) : BlueberryRequestWithRepetitiousResults<ReturnType> = BlueberryRequestWithRepetitiousResults(
         uuid = mUuid,
         priority = mPriority,
         awaitingMills = awaitingMills,
-        blueberryRequest = this,
+        blueberryRequestInfo = this,
         requestType = requestType,
         endSignal = endSignal
     )

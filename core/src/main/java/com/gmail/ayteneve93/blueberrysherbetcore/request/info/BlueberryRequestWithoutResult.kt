@@ -1,8 +1,7 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.request.info
 
 import android.bluetooth.BluetoothGattCharacteristic
-import android.util.Log
-import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryAbstractRequest
+import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryAbstractRequestInfo
 import io.reactivex.Single
 import java.util.*
 import kotlin.collections.HashMap
@@ -10,19 +9,19 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @Suppress("SpellCheckingInspection")
-class BlueberryRequestInfoWithoutResult(
+class BlueberryRequestWithoutResult(
     uuid : UUID,
     priority: Int,
     awaitingMills: Int,
-    blueberryRequest: BlueberryAbstractRequest<out Any>,
+    blueberryRequestInfo: BlueberryAbstractRequestInfo<out Any>,
     requestType : Class<out Annotation>,
     internal val inputString : String?,
     val checkIsReliable : Boolean
-) : BlueberryAbstractRequestInfo(
+) : BlueberryAbstractRequest(
     mUuid = uuid,
     mPriority = priority,
     mAwaitingMills = awaitingMills,
-    mBlueberryRequest = blueberryRequest,
+    mBlueberryRequestInfo = blueberryRequestInfo,
     mRequestType = requestType) {
     private lateinit var callback : BlueberryCallbackWithoutResult
 
@@ -33,7 +32,7 @@ class BlueberryRequestInfoWithoutResult(
 
     fun enqueue(callback : BlueberryCallbackWithoutResult) {
         this.callback = callback
-        mBlueberryRequest.mBlueberryDevice.enqueueBlueberryRequestInfo(this)
+        mBlueberryRequestInfo.mBlueberryDevice.enqueueBlueberryRequestInfo(this)
     }
 
     fun byRx2() : Single<Int> = Single.create { emitter -> enqueue { emitter.onSuccess(it) } }

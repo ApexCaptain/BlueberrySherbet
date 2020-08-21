@@ -11,10 +11,10 @@ import kotlin.String
 interface TestDeviceService {
 
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
-    fun registerUserWrite(data : MyDataClassAsGson<MyEnum>) : BlueberryWriteRequest
+    fun registerUserWrite(data : MyDataClassAsGson<MyEnum>) : BlueberryWriteRequestInfo
 
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
-    fun registerUserRead() : BlueberryReadRequest<String>
+    fun registerUserRead() : BlueberryReadRequestInfo<String>
 
     /*
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0601")
