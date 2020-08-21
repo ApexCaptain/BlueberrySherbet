@@ -27,26 +27,14 @@ class MainActivity : AppCompatActivity() {
             BlueberryScanner.rxStartScan(this)
                 .subscribe {
                     it.bluetoothDevice.name?.let { advertisingName ->
-
-                        /*
-                        if(advertisingName == "MyDevice") {
-
-                            /*
-                            exampleDevice = it.interlock(this, ExampleDevice::class.java)
-                            exampleDevice.connect()
-                            GlobalScope.launch {
-                                exampleDevice.blueberryService.sayHelloToDevice("Some String...").call().byCoroutine()
-                            }
-                            BlueberryScanner.stopScan()
-                            */
-                        }
-                        */
-
                         if(advertisingName.startsWith("SleepCare")) {
                             exampleDevice = it.interlock(this, ExampleDevice::class.java)
                             exampleDevice.connect()
                             GlobalScope.launch {
 
+
+
+                                /*
                                 var isFinished = false
                                 var result = ""
                                 while(!isFinished) {
@@ -59,6 +47,7 @@ class MainActivity : AppCompatActivity() {
 
                                 Log.d("ayteneve93_test", result)
                                 Log.d("ayteneve93_test", "${result.length}")
+                                */
 
 
                             }
@@ -68,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
         )
+
 
 
 
