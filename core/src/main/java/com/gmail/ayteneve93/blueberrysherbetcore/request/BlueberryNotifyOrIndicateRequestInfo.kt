@@ -2,7 +2,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore.request
 
 import android.os.Build
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
-import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestWithRepetitiousResults
+import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryRequestWithRepetitiousResults
 import java.util.HashMap
 
 @Suppress("SpellCheckingInspection")

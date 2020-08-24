@@ -2,7 +2,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore.request
 
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryConverterPrev
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
-import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryAbstractRequest
+import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryAbstractRequest
 import java.util.*
 import kotlin.collections.HashMap
 

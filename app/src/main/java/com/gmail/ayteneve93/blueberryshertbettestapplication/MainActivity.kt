@@ -3,7 +3,12 @@ package com.gmail.ayteneve93.blueberryshertbettestapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberryGsonConverter
+import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberryMoshiConverter
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.ExampleDevice
+import com.gmail.ayteneve93.blueberryshertbettestapplication.temp.MyDataClass2
+import com.google.gson.Gson
+import com.squareup.moshi.Moshi
 import io.reactivex.disposables.CompositeDisposable
 import javax.crypto.Cipher
 
@@ -19,6 +24,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val converter = BlueberryMoshiConverter(Moshi.Builder().build())//BlueberryGsonConverter(Gson())
+        val md = MyDataClass2("qwe")
+        val s = converter.stringify(md, MyDataClass2::class.java)
+        Log.d("ayteneve93_test", s)
 
         /*
         mCompositeDisposable.add(

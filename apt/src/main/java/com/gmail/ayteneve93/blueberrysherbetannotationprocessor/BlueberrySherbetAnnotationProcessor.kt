@@ -207,7 +207,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                             if(it.toString() == "*") Any::class.asTypeName()
                             else it
                         }
-                        ClassName("${BLUEBERRY_SHERBET.CORE.REQUEST}", BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_READ_REQUEST.simpleName).parameterizedBy(originalReturnTypeArgumentTypeName!!)
+                        ClassName("${BLUEBERRY_SHERBET.CORE.REQUEST}", BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_READ_REQUEST.simpleName).parameterizedBy(originalReturnTypeArgumentTypeName)
                     }
 
                     NOTIFY::class.java, INDICATE::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_NOTIFY_OR_INDICATE_REQUEST}")) {
@@ -218,7 +218,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                             if(it.toString() == "*") Any::class.java.asTypeName()
                             else it
                         }
-                        ClassName("${BLUEBERRY_SHERBET.CORE.REQUEST}", BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_NOTIFY_OR_INDICATE_REQUEST.simpleName).parameterizedBy(originalReturnTypeArgumentTypeName!!)
+                        ClassName("${BLUEBERRY_SHERBET.CORE.REQUEST}", BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_NOTIFY_OR_INDICATE_REQUEST.simpleName).parameterizedBy(originalReturnTypeArgumentTypeName)
                     }
 
                     else -> return@generateDeviceServiceMethodImplements true
@@ -362,10 +362,10 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
             object CORE { const val simpleName = "blueberrysherbetcore"; override fun toString(): String = "${BLUEBERRY_SHERBET}.$simpleName"
                 object DEVICE { const val simpleName = "device"; override fun toString(): String = "${CORE}.$simpleName" }
                 object REQUEST { const val simpleName = "request"; override fun toString(): String = "${CORE}.$simpleName"
-                    object BLUEBERRY_NOTIFY_OR_INDICATE_REQUEST { const val simpleName = "BlueberryNotifyOrIndicateRequest"; override fun toString(): String = "${REQUEST}.$simpleName"}
-                    object BLUEBERRY_READ_REQUEST { const val simpleName = "BlueberryReadRequest"; override fun toString(): String = "${REQUEST}.$simpleName"}
-                    object BLUEBERRY_WRITE_REQUEST { const val simpleName = "BlueberryWriteRequest"; override fun toString(): String = "${REQUEST}.$simpleName"}
-                    object BLUEBERRY_WRITE_REQUEST_WITHOUT_RESPONSE { const val simpleName = "BlueberryWriteRequestWithoutResponse"; override fun toString(): String = "${REQUEST}.$simpleName"}
+                    object BLUEBERRY_NOTIFY_OR_INDICATE_REQUEST { const val simpleName = "BlueberryNotifyOrIndicateRequestInfo"; override fun toString(): String = "${REQUEST}.$simpleName"}
+                    object BLUEBERRY_READ_REQUEST { const val simpleName = "BlueberryReadRequestInfo"; override fun toString(): String = "${REQUEST}.$simpleName"}
+                    object BLUEBERRY_WRITE_REQUEST { const val simpleName = "BlueberryWriteRequestInfo"; override fun toString(): String = "${REQUEST}.$simpleName"}
+                    object BLUEBERRY_WRITE_REQUEST_WITHOUT_RESPONSE { const val simpleName = "BlueberryWriteRequestInfoWithoutResponse"; override fun toString(): String = "${REQUEST}.$simpleName"}
                 }
             }
         }

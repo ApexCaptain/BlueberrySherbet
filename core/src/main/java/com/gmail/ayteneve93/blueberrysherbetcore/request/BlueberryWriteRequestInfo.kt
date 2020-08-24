@@ -2,7 +2,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore.request
 
 import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
-import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestWithoutResult
+import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryRequestWithoutResult
 import java.util.HashMap
 
 @Suppress("SpellCheckingInspection")

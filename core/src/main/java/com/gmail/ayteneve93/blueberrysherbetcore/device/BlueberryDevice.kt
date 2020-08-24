@@ -7,10 +7,10 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import com.gmail.ayteneve93.blueberrysherbetannotations.*
-import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryAbstractRequest
-import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestWithNoResponse
-import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestWithRepetitiousResults
-import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestWithoutResult
+import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryAbstractRequest
+import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryRequestWithNoResponse
+import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryRequestWithRepetitiousResults
+import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryRequestWithoutResult
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
 import io.reactivex.disposables.Disposable
 import java.lang.ClassCastException

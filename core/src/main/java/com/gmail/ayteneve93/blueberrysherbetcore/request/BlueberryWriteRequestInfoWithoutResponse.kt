@@ -2,7 +2,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore.request
 
 import com.gmail.ayteneve93.blueberrysherbetannotations.WRITE_WITHOUT_RESPONSE
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
-import com.gmail.ayteneve93.blueberrysherbetcore.request.info.BlueberryRequestWithNoResponse
+import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryRequestWithNoResponse
 import java.util.HashMap
 
 @Suppress("SpellCheckingInspection")

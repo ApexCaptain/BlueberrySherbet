@@ -51,9 +51,15 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rxjava2_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$corutine_version"
 
-    // Converter
+    // Converter Dependencies
     implementation "com.google.code.gson:gson:$gson_version"
+    
     implementation "com.squareup.moshi:moshi:$moshi_version"
+
+    implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
+
 
     implementation project(':annotations')
 
