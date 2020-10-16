@@ -7,6 +7,7 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
+import android.net.MacAddress
 import android.os.Build
 import android.util.Log
 import androidx.annotation.Keep
@@ -31,6 +32,11 @@ object BlueberryScanner {
 
     var bleScanPermissionRequestTitle : String? = null
     var bleScanPermissionRequestMessage : String? = null
+
+    fun scanByAddress(macAddress : MacAddress) = scanByAddress(macAddress.toString())
+    fun scanByAddress(macAddress : ByteArray) = scanByAddress(macAddress.toString())
+    fun scanByAddress(macAddress : String) = BlueberryScanResult(mBluetoothAdapter.getRemoteDevice(macAddress))
+
 
     fun rxStartScan(context : Context) : Observable<BlueberryScanResult> = rxStartScanImp(context).subscribeOn(Schedulers.io())
     fun rxStartScan(context : Context, filters : MutableList<ScanFilter>, scanSettings: ScanSettings) = rxStartScanImp(context, filters, scanSettings).subscribeOn(Schedulers.io())

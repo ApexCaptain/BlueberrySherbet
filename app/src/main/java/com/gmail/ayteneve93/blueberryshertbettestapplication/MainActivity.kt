@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberryGsonConverter
 import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberryMoshiConverter
+import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.ExampleDevice
 import com.gmail.ayteneve93.blueberryshertbettestapplication.temp.MyDataClass2
 import com.google.gson.Gson
@@ -24,10 +25,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        /*
         val converter = BlueberryMoshiConverter(Moshi.Builder().build())//BlueberryGsonConverter(Gson())
         val md = MyDataClass2("qwe")
         val s = converter.stringify(md, MyDataClass2::class.java)
         Log.d("ayteneve93_test", s)
+        */
 
         /*
         mCompositeDisposable.add(
@@ -48,6 +51,7 @@ class MainActivity : AppCompatActivity() {
                 }
         )
         */
+
 
 
 
