@@ -27,7 +27,9 @@ abstract class BlueberryAbstractRequest (
         this["Is On Progress"] = mIsOnProgress
     }
 
-    override fun compareTo(other: BlueberryAbstractRequest): Int = this.mPriority.compareTo(other.mPriority)
+    override fun compareTo(other: BlueberryAbstractRequest): Int =
+        if(this.mPriority == other.mPriority) this.mRequestCode.compareTo(other.mRequestCode)
+        else this.mPriority.compareTo(other.mPriority)
 
     override fun toString(): String = this::class.java.simpleName + convertToSimpleHashMap().toList().joinToString(
         separator = "\n # ",

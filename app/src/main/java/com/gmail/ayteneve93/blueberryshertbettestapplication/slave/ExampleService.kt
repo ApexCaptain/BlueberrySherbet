@@ -1,24 +1,39 @@
 package com.gmail.ayteneve93.blueberryshertbettestapplication.slave
 
-import com.gmail.ayteneve93.blueberrysherbetannotations.BlueberryService
-import com.gmail.ayteneve93.blueberrysherbetannotations.READ
+import com.gmail.ayteneve93.blueberrysherbetannotations.*
+import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryNotifyOrIndicateRequestInfo
 import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryReadRequestInfo
+import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryWriteRequestInfo
+import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryWriteRequestInfoWithoutResponse
 
 @BlueberryService
 interface ExampleService {
 
-    @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1")
-    fun testRead() : BlueberryReadRequestInfo<String>
+    // Simple String Characteristic
+    @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
+    fun simpleStringRead() : BlueberryReadRequestInfo<String>
+
+    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
+    fun simpleStringWrite(dataToSend : String) : BlueberryWriteRequestInfo
+
+    @WRITE_WITHOUT_RESPONSE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
+    fun simpleStringWriteWithoutResponse(dataToSend: String) : BlueberryWriteRequestInfoWithoutResponse
 
     /*
-    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
-    fun sayHelloToDevice(data : String) : BlueberryWriteRequest
-
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
-    fun beGreetedFromDevice() : BlueberryReadRequest<Int>
+    fun testRead() : BlueberryReadRequestInfo<ReadData>
 
-    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0102")
-    fun sayHelloToDevice2(data : String) : BlueberryWriteRequest
-     */
+    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
+    fun testWrite(sendingData : WriteData) : BlueberryWriteRequestInfo
+
+    @WRITE_WITHOUT_RESPONSE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
+    fun testWriteWithoutResponse(str : String) : BlueberryWriteRequestInfoWithoutResponse
+
+    @NOTIFY("aaaaaaaabbbbccccddddeeeeeeee0101", "\$EoD")
+    fun testNotify() : BlueberryNotifyOrIndicateRequestInfo<String>
+
+    @INDICATE("aaaaaaaabbbbccccddddeeeeeeee0101", "\$EoD")
+    fun testIndicate() : BlueberryNotifyOrIndicateRequestInfo<String>
+    */
 
 }

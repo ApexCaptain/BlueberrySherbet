@@ -1,0 +1,3 @@
+[submodule "SlaveDeviceExample\\RaspberryPi"]
+	path = SlaveDeviceExample\\RaspberryPi
+	url = https://github.com/ApexCaptain/BlueberrySherbet_RPI_Example
