@@ -9,31 +9,46 @@ import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryWriteRequestIn
 @BlueberryService
 interface ExampleService {
 
-    // Simple String Characteristic
+
+    /* Simple String Characteristic */
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
     fun simpleStringRead() : BlueberryReadRequestInfo<String>
+
+
 
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
     fun simpleStringWrite(dataToSend : String) : BlueberryWriteRequestInfo
 
+    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101", true)
+    fun simpleReliableStringWrite(dataToSend : String) : BlueberryWriteRequestInfo
+
+
+
     @WRITE_WITHOUT_RESPONSE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
     fun simpleStringWriteWithoutResponse(dataToSend: String) : BlueberryWriteRequestInfoWithoutResponse
 
-    /*
-    @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
-    fun testRead() : BlueberryReadRequestInfo<ReadData>
+    @WRITE_WITHOUT_RESPONSE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101", true)
+    fun simpleReliableStringWriteWithoutResponse(dataToSend: String) : BlueberryWriteRequestInfoWithoutResponse
 
-    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
-    fun testWrite(sendingData : WriteData) : BlueberryWriteRequestInfo
 
-    @WRITE_WITHOUT_RESPONSE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
-    fun testWriteWithoutResponse(str : String) : BlueberryWriteRequestInfoWithoutResponse
 
-    @NOTIFY("aaaaaaaabbbbccccddddeeeeeeee0101", "\$EoD")
-    fun testNotify() : BlueberryNotifyOrIndicateRequestInfo<String>
+    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101", "\$EoD")
+    fun simpleStringNotifyWithEndSignal() : BlueberryNotifyOrIndicateRequestInfo<String>
 
-    @INDICATE("aaaaaaaabbbbccccddddeeeeeeee0101", "\$EoD")
-    fun testIndicate() : BlueberryNotifyOrIndicateRequestInfo<String>
-    */
+    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
+    fun simpleStringNotifyWithoutEndSignal() : BlueberryNotifyOrIndicateRequestInfo<String>
+
+
+
+    @INDICATE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101", "\$EoD")
+    fun simpleStringIndicateWithEndSignal() : BlueberryNotifyOrIndicateRequestInfo<String>
+
+    @INDICATE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
+    fun simpleStringIndicateWithoutEndSignal() : BlueberryNotifyOrIndicateRequestInfo<String>
+
+
+    /* Simple Data Characteristic */
+    @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0102")
+    fun simpleDataRead() : BlueberryReadRequestInfo<SimpleData>
 
 }

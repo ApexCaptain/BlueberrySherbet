@@ -2,6 +2,8 @@ package com.gmail.ayteneve93.blueberryshertbettestapplication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.ExampleDevice
@@ -31,34 +33,9 @@ class MainActivity : AppCompatActivity() {
                             exampleDevice.connect()
                             GlobalScope.launch {
 
-
-                                exampleDevice.blueberryService.simpleStringWrite("Start").call().enqueue { resultCode ->
-                                    //Log.d("ayteneve93_test", "Result Code : $resultCode")
+                                exampleDevice.blueberryService.simpleDataRead().call().byCoroutine().let {
+                                    Log.d("ayteneve93_test", it.value?.toString()?:"NoResult")
                                 }
-                                exampleDevice.blueberryService.simpleStringWriteWithoutResponse("String Data from M").call().enqueue()
-                                exampleDevice.blueberryService.simpleStringWriteWithoutResponse("String Data from M").call().enqueue()
-                                exampleDevice.blueberryService.simpleStringWriteWithoutResponse("String Data from M").call().enqueue()
-                                exampleDevice.blueberryService.simpleStringWriteWithoutResponse("String Data from M").call().enqueue()
-                                exampleDevice.blueberryService.simpleStringWriteWithoutResponse("String Data from M").call().enqueue()
-                                exampleDevice.blueberryService.simpleStringWriteWithoutResponse("String Data from M").call().enqueue()
-                                exampleDevice.blueberryService.simpleStringWrite("End").call().enqueue { resultCode ->
-                                    //Log.d("ayteneve93_test", "Result Code : $resultCode")
-                                }
-                                /*
-                                exampleDevice.blueberryService.simpleStringWrite("End").call().enqueue { resultCode ->
-                                    Log.d("ayteneve93_test", "Result Code : $resultCode")
-                                }
-                                exampleDevice.blueberryService.simpleStringWriteWithoutResponse("String Data from M").call().enqueue()
-                                exampleDevice.blueberryService.simpleStringWriteWithoutResponse("String Data from M").call().enqueue()
-                                exampleDevice.blueberryService.simpleStringWriteWithoutResponse("String Data from M").call().enqueue()
-                                exampleDevice.blueberryService.simpleStringWriteWithoutResponse("String Data from M").call().enqueue()
-                                exampleDevice.blueberryService.simpleStringWrite("End").call().enqueue { resultCode ->
-                                    Log.d("ayteneve93_test", "Result Code : $resultCode")
-                                }
-                                */
-
-
-
 
                             }
                         }
