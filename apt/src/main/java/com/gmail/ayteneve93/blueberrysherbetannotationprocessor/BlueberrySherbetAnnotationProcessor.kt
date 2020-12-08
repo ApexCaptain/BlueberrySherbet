@@ -192,7 +192,9 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                     WRITE::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_WRITE_REQUEST}")) {
                         errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_WRITE_REQUEST}")
                         return@generateDeviceServiceMethodImplements true
-                    } else ClassName("${BLUEBERRY_SHERBET.CORE.REQUEST}", BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_WRITE_REQUEST.simpleName)
+                    } else {
+                        ClassName("${BLUEBERRY_SHERBET.CORE.REQUEST}", BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_WRITE_REQUEST.simpleName)
+                    }
 
                     WRITE_WITHOUT_RESPONSE::class.java -> if(!originalReturnTypeNameString.contains("${BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_WRITE_REQUEST_WITHOUT_RESPONSE}")) {
                         errorLog("Return Type of Method '${eachMethod.simpleName}' Must be ${BLUEBERRY_SHERBET.CORE.REQUEST.BLUEBERRY_WRITE_REQUEST_WITHOUT_RESPONSE}")
@@ -283,13 +285,17 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                     """.trimIndent()
                                 }
                                 WRITE_WITHOUT_RESPONSE::class.java -> {
+                                    var endSignal = eachMethod.getAnnotation(WRITE_WITHOUT_RESPONSE::class.java)!!.endSignal
+                                    if(endSignal.startsWith("\$")) endSignal = "\\$endSignal"
+                                    if(endSignal.length > 20) errorLog("End Signal cannot be larger than 20 bytes!")
                                     """
                                         return ${returnTypeBlueberryRequestClass}(
                                             $blueberryDeviceMemeberPropertyName,
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString",
                                             ${parameterName?:"null"},
-                                            ${eachMethod.getAnnotation(WRITE_WITHOUT_RESPONSE::class.java).checkIsReliable}
+                                            ${eachMethod.getAnnotation(WRITE_WITHOUT_RESPONSE::class.java).checkIsReliable},
+                                            "$endSignal"
                                         )
                                     """.trimIndent()
                                 }
@@ -308,6 +314,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                         if(requestType == NOTIFY::class.java) eachMethod.getAnnotation(NOTIFY::class.java)!!.endSignal
                                         else eachMethod.getAnnotation(INDICATE::class.java)!!.endSignal
                                     if(endSignal.startsWith("\$")) endSignal = "\\$endSignal"
+                                    if(endSignal.length > 20) errorLog("End Signal cannot be larger than 20 bytes!")
                                     """
                                         return ${returnTypeBlueberryRequestClass}(
                                             $originalReturnTypeArgumentTypeName::class.java,

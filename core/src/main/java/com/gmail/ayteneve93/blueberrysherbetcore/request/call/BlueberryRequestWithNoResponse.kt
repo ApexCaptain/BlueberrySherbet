@@ -12,7 +12,9 @@ class BlueberryRequestWithNoResponse(
     blueberryRequestInfo : BlueberryAbstractRequestInfo<out Any>,
     requestType : Class<out Annotation>,
     internal val inputString : String?,
-    val checkIsReliable: Boolean
+    val checkIsReliable : Boolean,
+    val endSignal : String,
+    internal var remainInputString : String? = inputString
 ) : BlueberryAbstractRequest(
     mUuid =  uuid,
     mPriority = priority,

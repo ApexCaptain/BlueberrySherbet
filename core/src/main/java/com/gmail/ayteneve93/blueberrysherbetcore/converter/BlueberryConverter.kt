@@ -4,4 +4,5 @@ package com.gmail.ayteneve93.blueberrysherbetcore.converter
 interface BlueberryConverter {
     fun <ConversionType>stringify(sourceObject : ConversionType, conversionClass : Class<ConversionType>) : String
     fun <ConversionType>parse(sourceString: String, conversionClass : Class<ConversionType>) : ConversionType?
+    fun imitate() : BlueberryConverter
 }

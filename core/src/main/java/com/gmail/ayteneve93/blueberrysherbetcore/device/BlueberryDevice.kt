@@ -8,6 +8,8 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import com.gmail.ayteneve93.blueberrysherbetannotations.*
+import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberryConverter
+import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberryGsonConverter
 import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryAbstractRequest
 import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryRequestWithNoResponse
 import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryRequestWithRepetitiousResults
@@ -34,7 +36,14 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
     val blueberryService : BlueberryService by lazy { setServiceImpl() }
     protected abstract fun setServiceImpl() : BlueberryService
 
+    /** Data Converter */
+    val blueberryConverterPrev : BlueberryConverterPrev = BlueberryConverterPrev()
+    internal val blueberryConverter : BlueberryConverter by lazy { setBlueberryConverter() }
+    protected abstract fun setBlueberryConverter() : BlueberryConverter
+
     companion object {
+
+        private val DEFAULT_END_SIGNAL = "\u0000"
         private val CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
         private val CCCF = UUID.fromString("00002901-0000-1000-8000-00805f9b34fb")
         private val RX_SERVICE_UUID = UUID.fromString("0000fff0-0000-1000-8000-00805f9b34fb")
@@ -200,6 +209,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
             if(mIsWritingWithoutResponse)  {
                 Thread.sleep(100)
                 mIsWritingWithoutResponse = false
+                mCurrentRequest?.mIsOnProgress = false
             }
             if(mIsReliableWriteOnProcess) {
                 if(characteristic != null && characteristic.getStringValue(0) == mReliableWriteValue) mBluetoothGatt.executeReliableWrite()
@@ -332,10 +342,6 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
     }
 
 
-    /** Data Converter */
-    val blueberryConverterPrev : BlueberryConverterPrev = BlueberryConverterPrev()
-
-
     /** Service Setting */
     private val mCharacteristicList = ArrayList<BluetoothGattCharacteristic>()
     private var mIsServiceDiscovered = false
@@ -408,18 +414,35 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                                     }
 
                                     WRITE_WITHOUT_RESPONSE::class.java -> (currentRequestInfo as BlueberryRequestWithNoResponse).let { blueberryWriteRequestInfoWithNoResponse ->
-                                        characteristic.setValue(blueberryWriteRequestInfoWithNoResponse.inputString)
+                                        if(blueberryWriteRequestInfoWithNoResponse.endSignal == DEFAULT_END_SIGNAL) characteristic.setValue(blueberryWriteRequestInfoWithNoResponse.inputString)
+                                        else {
+                                            val currentRemainString = blueberryWriteRequestInfoWithNoResponse.remainInputString
+                                            if(currentRemainString == null || currentRemainString == "") characteristic.setValue(blueberryWriteRequestInfoWithNoResponse.endSignal)
+                                            else {
+                                                if(currentRemainString.length < 20) {
+                                                    characteristic.setValue(currentRemainString)
+                                                    blueberryWriteRequestInfoWithNoResponse.remainInputString = ""
+                                                }
+                                                else {
+                                                    characteristic.setValue(currentRemainString.substring(0, 20))
+                                                    blueberryWriteRequestInfoWithNoResponse.remainInputString = currentRemainString.substring(20)
+                                                }
+                                            }
+                                        }
                                         characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
                                         if(blueberryWriteRequestInfoWithNoResponse.checkIsReliable) {
                                             mBluetoothGatt.beginReliableWrite()
                                             mIsReliableWriteOnProcess = true
                                             mReliableWriteValue = blueberryWriteRequestInfoWithNoResponse.inputString
                                         }
+
                                         mBluetoothGatt.writeCharacteristic(characteristic)
                                         blueberryWriteRequestInfoWithNoResponse.mIsOnProgress = true
                                         mIsBluetoothOnProgress = true
                                         mIsWritingWithoutResponse = true
                                         BlueberryLogger.i("WRITE_WITHOUT_RESPONSE method is called. Sent data : ${blueberryWriteRequestInfoWithNoResponse.inputString}")
+                                        if(blueberryWriteRequestInfoWithNoResponse.endSignal != DEFAULT_END_SIGNAL && characteristic.getStringValue(0) != blueberryWriteRequestInfoWithNoResponse.endSignal)
+                                            blueberryWriteRequestInfoWithNoResponse.enqueue()
                                     }
 
                                     READ::class.java -> {

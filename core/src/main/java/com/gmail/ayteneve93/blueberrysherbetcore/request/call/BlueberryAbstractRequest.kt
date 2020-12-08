@@ -47,6 +47,7 @@ abstract class BlueberryAbstractRequest (
 
     open fun cancel() = mBlueberryRequestInfo.mBlueberryDevice.cancelBlueberryRequest(this)
     internal open fun onResponse(status : Int?, characteristic : BluetoothGattCharacteristic?) {
+        mIsOnProgress = false
         mRequestTimer.removeCallbacksAndMessages(null)
     }
 

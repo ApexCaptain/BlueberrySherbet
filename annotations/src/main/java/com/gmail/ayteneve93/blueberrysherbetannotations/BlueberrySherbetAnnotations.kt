@@ -1,7 +1,7 @@
 package com.gmail.ayteneve93.blueberrysherbetannotations
 
 
-
+private const val DEFAULT_END_SIGNAL = "\u0000"
 
 /**
  * Entry point annotation indicating that target interface is apparently a set of BLE methods service.
@@ -166,7 +166,7 @@ annotation class WRITE(val uuidString : String, val checkIsReliable : Boolean = 
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class WRITE_WITHOUT_RESPONSE(val uuidString : String, val checkIsReliable : Boolean = false)
+annotation class WRITE_WITHOUT_RESPONSE(val uuidString : String, val checkIsReliable : Boolean = false, val endSignal : String = DEFAULT_END_SIGNAL)
 
 
 
@@ -199,7 +199,7 @@ annotation class WRITE_WITHOUT_RESPONSE(val uuidString : String, val checkIsReli
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class NOTIFY(val uuidString : String, val endSignal : String = 0x00.toChar().toString())
+annotation class NOTIFY(val uuidString : String, val endSignal : String = DEFAULT_END_SIGNAL)
 
 
 
@@ -232,5 +232,5 @@ annotation class NOTIFY(val uuidString : String, val endSignal : String = 0x00.t
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class INDICATE(val uuidString : String,  val endSignal : String = 0x00.toChar().toString())
+annotation class INDICATE(val uuidString : String,  val endSignal : String = DEFAULT_END_SIGNAL)
 

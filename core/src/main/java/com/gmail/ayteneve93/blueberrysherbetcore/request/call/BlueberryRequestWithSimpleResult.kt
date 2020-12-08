@@ -53,9 +53,8 @@ class BlueberryRequestWithSimpleResult<ReturnType>(
             callback.invoke(status!!, with(characteristic?.getStringValue(0)) {
                 if(this.isNullOrEmpty()) null
                 else when(mRequestType) {
-                    READ::class.java -> mBlueberryRequestInfo.blueberryConverterPrev.convertStringToObject<ReturnType>(
-                        mBlueberryRequestInfo.mReturnTypeClass as Class<ReturnType>,
-                        this
+                    READ::class.java -> mBlueberryRequestInfo.blueberryConverter.parse(
+                        this, mBlueberryRequestInfo.mReturnTypeClass as Class<ReturnType>
                     )
                     else -> null
                 }

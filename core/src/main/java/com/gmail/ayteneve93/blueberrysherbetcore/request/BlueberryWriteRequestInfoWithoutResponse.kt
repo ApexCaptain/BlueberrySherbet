@@ -11,18 +11,19 @@ class BlueberryWriteRequestInfoWithoutResponse(
     priority : Int,
     uuidString : String,
     inputDataSource : Any?,
-    private val checkIsReliable : Boolean
+    private val checkIsReliable : Boolean,
+    private val endSignal : String
     ) : BlueberryAbstractRequestInfo<Any>(
     Any::class.java,
     blueberryDevice,
     priority,
     uuidString
 ) {
+
+    @Suppress("UNCHECKED_CAST")
     internal val mInputString : String? by lazy {
         if(inputDataSource == null) null
-        else if(inputDataSource::class == String::class || inputDataSource::class.java.isPrimitive) inputDataSource.toString()
-        else blueberryConverterPrev.convertObjectToString(inputDataSource)
-        //else mMoshi.adapter<Any>(inputDataSource::class.java).toJson(inputDataSource)
+        else blueberryConverter.stringify(inputDataSource, inputDataSource::class.java as Class<Any>)
     }
 
     override fun convertToSimpleHashMap(): HashMap<String, Any?> = super.convertToSimpleHashMap().apply {
@@ -37,7 +38,8 @@ class BlueberryWriteRequestInfoWithoutResponse(
         blueberryRequestInfo = this,
         requestType = WRITE_WITHOUT_RESPONSE::class.java,
         inputString = mInputString,
-        checkIsReliable = checkIsReliable
+        checkIsReliable = checkIsReliable,
+        endSignal = endSignal
     )
 
 }

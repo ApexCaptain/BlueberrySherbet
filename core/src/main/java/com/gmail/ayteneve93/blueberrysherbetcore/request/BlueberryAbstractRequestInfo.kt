@@ -1,5 +1,6 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.request
 
+import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberryConverter
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryConverterPrev
 import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
 import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryAbstractRequest
@@ -19,6 +20,7 @@ abstract class BlueberryAbstractRequestInfo<ReturnType>
     internal val mUuid = UUID.fromString(uuidString)
 
     val blueberryConverterPrev : BlueberryConverterPrev = mBlueberryDevice.blueberryConverterPrev.imitate()
+    val blueberryConverter : BlueberryConverter = mBlueberryDevice.blueberryConverter.imitate()
 
     protected open fun convertToSimpleHashMap() : HashMap<String, Any?> = HashMap<String, Any?>().apply {
         this["Device MAC Address"] = mBlueberryDevice.mBluetoothDevice.address

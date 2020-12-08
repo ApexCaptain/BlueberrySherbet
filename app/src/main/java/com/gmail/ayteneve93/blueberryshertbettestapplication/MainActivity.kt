@@ -7,6 +7,7 @@ import android.os.Looper
 import android.util.Log
 import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.ExampleDevice
+import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.SimpleData
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -23,29 +24,65 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
-                .subscribe {
-                    it.bluetoothDevice.name?.let { advertisingName ->
+                .subscribe { scanResult ->
+                    scanResult.bluetoothDevice.name?.let { advertisingName ->
                         if(advertisingName == "SherbetTest") {
                             BlueberryScanner.stopScan()
-                            exampleDevice = it.interlock(this, ExampleDevice::class.java)
+                            exampleDevice = scanResult.interlock(this, ExampleDevice::class.java)
                             exampleDevice.connect()
-                            GlobalScope.launch {
-
-                                exampleDevice.blueberryService.simpleDataRead().call().byCoroutine().let {
-                                    Log.d("ayteneve93_test", it.value?.toString()?:"NoResult")
-                                }
-
-                            }
+                            testStringCharacteristic()
                         }
                     }
                 }
         )
+
+
     }
 
-    private fun testSimpleStringCharacteristic() {
+    private fun testStringCharacteristic() {
+        GlobalScope.launch {
 
+            exampleDevice
+                .blueberryService
+                .stringRead()
+                .call()
+                .byCoroutine()
+                .let { Log.d(TAG, "$it") }
+
+            exampleDevice
+                .blueberryService
+                .stringWrite("String Data from Android -- WRITE")
+                .call()
+                .byCoroutine()
+                .let { Log.d(TAG, "$it") }
+
+            exampleDevice
+                .blueberryService
+                .stringReliableWrite("String Data from Android -- Reliable WRITE")
+                .call()
+                .byCoroutine()
+                .let { Log.d(TAG, "$it") }
+
+            exampleDevice
+                .blueberryService
+                .stringWriteWithoutResponse("String Data from Android -- WRITE_WITHOUT_RESPONSE")
+                .call()
+                .enqueue()
+
+            exampleDevice
+                .blueberryService
+                .stringReliableWriteWithoutResponse("String Data from Android -- Reliable WRITE_WITHOUT_RESPONSE")
+                .call()
+                .enqueue()
+
+        }
+    }
+
+    companion object  {
+        const val TAG = "BlueberryTest"
     }
 
 }
