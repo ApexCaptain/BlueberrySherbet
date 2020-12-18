@@ -43,7 +43,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
 
     companion object {
 
-        private val DEFAULT_END_SIGNAL = "\u0000"
+        private const val DEFAULT_END_SIGNAL = "\u0000"
         private val CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
         private val CCCF = UUID.fromString("00002901-0000-1000-8000-00805f9b34fb")
         private val RX_SERVICE_UUID = UUID.fromString("0000fff0-0000-1000-8000-00805f9b34fb")
@@ -228,6 +228,13 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
             characteristic: BluetoothGattCharacteristic?
         ) {
             super.onCharacteristicChanged(gatt, characteristic)
+
+            characteristic?.let {
+                val value = it.getDescriptor(CCCD).value.toList()
+                Log.d("BlueberryTest", if(value == BluetoothGattDescriptor.ENABLE_INDICATION_VALUE.toList()) "INDI" else if(value == BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE.toList()) "NOTI" else "else")
+            }
+
+
             characteristic?.let { notifyOrIndicateCharacteristic ->
                 mNotifyOrIndicateRequestList
                     .filter { it.mBlueberryRequestInfo.mUuid == notifyOrIndicateCharacteristic.uuid }
@@ -453,24 +460,28 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                                     }
 
                                     NOTIFY::class.java, INDICATE::class.java -> (currentRequestInfo as BlueberryRequestWithRepetitiousResults<Any>).let { blueberryRequestInfoWithRepetitiousResults ->
+                                        Log.d("BlueberryTest", "request")
                                         val descriptor = characteristic.getDescriptor(CCCD)
                                         /** ToDo : Notify Limit 확인 */
                                         if(descriptor != null) {
                                             if(blueberryRequestInfoWithRepetitiousResults.isNotificationEnabled) {
+                                                if(mNotifyOrIndicateRequestList.find {
+                                                        it.mUuid == blueberryRequestInfoWithRepetitiousResults.mUuid} != null) {
+                                                    if(mNotifyOrIndicateRequestList.find {
+                                                            it.mRequestCode ==  blueberryRequestInfoWithRepetitiousResults.mRequestCode } == null)
+                                                        mNotifyOrIndicateRequestList.add(blueberryRequestInfoWithRepetitiousResults)
+                                                    executeRequest()
+                                                    return@requestProcess
+                                                }
                                                 descriptor.value =
                                                     if(currentRequestInfo.mRequestType == NOTIFY::class.java) BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
                                                     else BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
-                                                if(mNotifyOrIndicateRequestList.find { it.mUuid == characteristic.uuid } != null) {
-                                                    if(mNotifyOrIndicateRequestList.find { it.mRequestCode ==  blueberryRequestInfoWithRepetitiousResults.mRequestCode } == null) {
-                                                        mNotifyOrIndicateRequestList.add(blueberryRequestInfoWithRepetitiousResults)
-                                                    }
-                                                    return@requestProcess
-                                                }
+
                                                 mNotifyOrIndicateRequestList.add(blueberryRequestInfoWithRepetitiousResults)
                                             } else {
-
                                                 if(!mNotifyOrIndicateRequestList.removeIf { it.mRequestCode == blueberryRequestInfoWithRepetitiousResults.mRequestCode }) return@requestProcess
-                                                if(mNotifyOrIndicateRequestList.find { it.mUuid == characteristic.uuid } != null) return@requestProcess
+                                                if(mNotifyOrIndicateRequestList.find {
+                                                        it.mUuid == blueberryRequestInfoWithRepetitiousResults.mUuid} != null) return@requestProcess
                                                 descriptor.value = BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
                                             }
                                             mBluetoothGatt.setCharacteristicNotification(characteristic, blueberryRequestInfoWithRepetitiousResults.isNotificationEnabled)
@@ -594,7 +605,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
     fun connect() {
         if(bluetoothState.get() == BluetoothState.STATE_DISCONNECTED) {
             bluetoothState.set(BluetoothState.STATE_CONNECTING)
-            mBluetoothGatt = mBluetoothDevice.connectGatt(mContext, autoConnect, mBluetoothGattCallback)
+            mBluetoothGatt = mBluetoothDevice.connectGatt(mContext, autoConnect, mBluetoothGattCallback, BluetoothDevice.TRANSPORT_LE)
         }
     }
     fun disconnect() {

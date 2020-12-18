@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     private fun testStringCharacteristic() {
         GlobalScope.launch {
 
+            /*
             exampleDevice
                 .blueberryService
                 .stringRead()
@@ -77,6 +78,29 @@ class MainActivity : AppCompatActivity() {
                 .stringReliableWriteWithoutResponse("String Data from Android -- Reliable WRITE_WITHOUT_RESPONSE")
                 .call()
                 .enqueue()
+            */
+
+
+
+            exampleDevice
+                .blueberryService
+                .stringNotifyWithEndSignal()
+                .call()
+                .enqueue { status, value ->
+                    Log.d(TAG, "1 -- Noti")
+                }
+
+            exampleDevice
+                .blueberryService
+                .stringIndicateWithEndSignal()
+                .call()
+                .enqueue { status, value ->
+                    Log.d(TAG, "1 -- Indi")
+                }
+
+
+
+
 
         }
     }
