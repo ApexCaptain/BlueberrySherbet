@@ -229,12 +229,6 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
         ) {
             super.onCharacteristicChanged(gatt, characteristic)
 
-            characteristic?.let {
-                val value = it.getDescriptor(CCCD).value.toList()
-                Log.d("BlueberryTest", if(value == BluetoothGattDescriptor.ENABLE_INDICATION_VALUE.toList()) "INDI" else if(value == BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE.toList()) "NOTI" else "else")
-            }
-
-
             characteristic?.let { notifyOrIndicateCharacteristic ->
                 mNotifyOrIndicateRequestList
                     .filter { it.mBlueberryRequestInfo.mUuid == notifyOrIndicateCharacteristic.uuid }
