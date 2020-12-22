@@ -354,7 +354,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
 
     internal fun enqueueBlueberryRequestInfo(blueberryRequest: BlueberryAbstractRequest) {
         if(mIsServiceDiscovered && mCharacteristicList.find { it.uuid == blueberryRequest.mUuid } == null)
-            BlueberryLogger.w("No Such Uuid Exists : '${blueberryRequest.mUuid}'")
+            BlueberryLogger.e("No Such Uuid Exists : '${blueberryRequest.mUuid}'")
         else {
             mBlueberryRequestQueue.offer(blueberryRequest)
             if(mBlueberryRequestQueue.size == 1) {
@@ -394,8 +394,11 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
 
                 mBlueberryRequestQueue.isNotEmpty() -> {
                     mCurrentRequest = mBlueberryRequestQueue.poll()
+
                     mCurrentRequest?.let { currentRequestInfo ->
-                        mCharacteristicList.find { it.uuid == currentRequestInfo.mUuid }
+                        val foundCharacteristic = mCharacteristicList.find { it.uuid == currentRequestInfo.mUuid }
+                        if(foundCharacteristic == null) BlueberryLogger.e("No Such Uuid Exists : '${currentRequestInfo.mUuid}'")
+                        foundCharacteristic
                             ?.let requestProcess@ { characteristic ->
                                 when(currentRequestInfo.mRequestType) {
 
@@ -447,6 +450,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                                     }
 
                                     READ::class.java -> {
+                                        Log.d("ayteneve93_test", "send")
                                         mBluetoothGatt.readCharacteristic(characteristic)
                                         currentRequestInfo.mIsOnProgress = true
                                         mIsBluetoothOnProgress = true
@@ -508,13 +512,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                     }
                 }
             }
-
         }
-
-
-
-
-
     }
 
     /** Phy Value Change Delegate */

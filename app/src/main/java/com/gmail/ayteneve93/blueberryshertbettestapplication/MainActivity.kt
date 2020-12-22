@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
+import com.gmail.ayteneve93.blueberryshertbettestapplication.movement.MovementDevice
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.ExampleDevice
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.SimpleData
 import io.reactivex.disposables.CompositeDisposable
@@ -20,11 +21,38 @@ class MainActivity : AppCompatActivity() {
     private val mCompositeDisposable = CompositeDisposable()
     private lateinit var exampleDevice : ExampleDevice
 
+    private lateinit var movementDevice : MovementDevice
+
+    private fun testMovement() {
+        GlobalScope.launch {
+            movementDevice.blueberryService.testRead().call().byCoroutine().let {
+                Log.d("ayteneve93_test", it.toString())
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        mCompositeDisposable.add(
+            BlueberryScanner.rxStartScan(this)
+                .subscribe { scanResult ->
+                    scanResult.bluetoothDevice.name?.let { advertisingName ->
+                        Log.d("ayteneve93_test", advertisingName)
+                        if(advertisingName.startsWith("MVMT_")) {
+                            Log.d("ayteneve93_test", scanResult.bluetoothDevice.address)
+                            BlueberryScanner.stopScan()
+                            movementDevice = scanResult.interlock(this, MovementDevice::class.java)
+                            movementDevice.connect()
+                            testMovement()
+                        }
+                    }
+                }
+        )
 
+
+        /*
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
                 .subscribe { scanResult ->
@@ -38,6 +66,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
         )
+        */
 
 
     }
@@ -82,6 +111,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
+            /*
             exampleDevice
                 .blueberryService
                 .stringNotifyWithEndSignal()
@@ -97,6 +127,7 @@ class MainActivity : AppCompatActivity() {
                 .enqueue { status, value ->
                     Log.d(TAG, "1 -- Indi")
                 }
+            */
 
 
 
