@@ -2,6 +2,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore.request.call
 
 import android.bluetooth.BluetoothGattCharacteristic
 import android.os.Build
+import android.util.Log
 import androidx.databinding.ObservableField
 import com.gmail.ayteneve93.blueberrysherbetannotations.INDICATE
 import com.gmail.ayteneve93.blueberrysherbetannotations.NOTIFY
@@ -85,8 +86,8 @@ class BlueberryRequestWithRepetitiousResults<ReturnType>(
                                     )
                                     else -> null
                                 })
-                                synthesizedByteArrayList.clear()
                             } catch(exception : Exception) { BlueberryLogger.e("Exception Occured While Parsing Data String", exception) }
+                            finally { synthesizedByteArrayList.clear() }
                         }
                         else -> synthesizedByteArrayList.addAll(partialData.toList())
                     }

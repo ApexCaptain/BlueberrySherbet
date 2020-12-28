@@ -19,8 +19,8 @@ abstract class BlueberryAbstractRequestInfo<ReturnType>
 
     internal val mUuid = UUID.fromString(uuidString)
 
-    val blueberryConverterPrev : BlueberryConverterPrev = mBlueberryDevice.blueberryConverterPrev.imitate()
-    val blueberryConverter : BlueberryConverter = mBlueberryDevice.blueberryConverter.imitate()
+    internal val blueberryConverterPrev : BlueberryConverterPrev = mBlueberryDevice.blueberryConverterPrev.imitate()
+    internal val blueberryConverter : BlueberryConverter = mBlueberryDevice.blueberryConverter.imitate()
 
     protected open fun convertToSimpleHashMap() : HashMap<String, Any?> = HashMap<String, Any?>().apply {
         this["Device MAC Address"] = mBlueberryDevice.mBluetoothDevice.address

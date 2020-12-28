@@ -2,13 +2,11 @@ package com.gmail.ayteneve93.blueberryshertbettestapplication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
 import com.gmail.ayteneve93.blueberryshertbettestapplication.movement.MovementDevice
+import com.gmail.ayteneve93.blueberryshertbettestapplication.movement.WiFiCredential
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.ExampleDevice
-import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.SimpleData
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -25,9 +23,31 @@ class MainActivity : AppCompatActivity() {
 
     private fun testMovement() {
         GlobalScope.launch {
-            movementDevice.blueberryService.testRead().call().byCoroutine().let {
-                Log.d("ayteneve93_test", it.toString())
+
+            Log.d("ayteneve93_test", "launch")
+
+            movementDevice.blueberryService.connectionStatus().call().byRx2().subscribe {
+                Log.d("ayteneve93_test", "$it")
             }
+
+
+            movementDevice.blueberryService.scanWiFi().call().byCoroutine().let {
+                it.value?.forEach { each ->
+                    Log.d("ayteneve93_test", each.toString())
+                }
+            }
+
+            movementDevice.blueberryService.connectToWiFi(WiFiCredential(
+                "Samsung Galaxy S10 Ayteneve93",
+                "12345678"
+            )).call().byCoroutine()
+            movementDevice.blueberryService.getConnectionResult().call().byCoroutine().let {
+                Log.d("ayteneve93_test", "$it")
+            }
+
+
+
+
         }
     }
 

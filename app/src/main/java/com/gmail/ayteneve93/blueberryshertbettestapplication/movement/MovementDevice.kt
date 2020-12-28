@@ -11,7 +11,10 @@ class MovementDevice : BlueberryDevice<MovementService>() {
     override fun setServiceImpl(): MovementService = BlueberryMovementServiceImpl(this)
 
     override fun setBlueberryConverter(): BlueberryConverter {
-        return BlueberryGsonConverter(Gson())
+        return BlueberryGsonConverter(Gson()
+            .newBuilder()
+            .create()
+        )
     }
 
     override fun onServicesDiscovered() {
