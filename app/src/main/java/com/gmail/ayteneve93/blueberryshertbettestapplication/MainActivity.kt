@@ -26,24 +26,31 @@ class MainActivity : AppCompatActivity() {
 
             Log.d("ayteneve93_test", "launch")
 
+            /*
             movementDevice.blueberryService.connectionStatus().call().byRx2().subscribe {
                 Log.d("ayteneve93_test", "$it")
             }
+            */
 
-
+            /*
             movementDevice.blueberryService.scanWiFi().call().byCoroutine().let {
                 it.value?.forEach { each ->
                     Log.d("ayteneve93_test", each.toString())
                 }
             }
+            */
+
+
 
             movementDevice.blueberryService.connectToWiFi(WiFiCredential(
-                "Samsung Galaxy S10 Ayteneve93",
-                "12345678"
+                "KT_GiGA_WiFi_Home_2.4GHz",
+                "Dkdlxpspqm93!"
             )).call().byCoroutine()
             movementDevice.blueberryService.getConnectionResult().call().byCoroutine().let {
                 Log.d("ayteneve93_test", "$it")
             }
+
+
 
 
 
