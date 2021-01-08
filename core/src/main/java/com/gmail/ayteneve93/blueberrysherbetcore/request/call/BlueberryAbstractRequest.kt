@@ -9,7 +9,7 @@ import kotlin.collections.HashMap
 
 abstract class BlueberryAbstractRequest (
     internal val mUuid : UUID,
-    internal val mPriority : Int,
+    internal var mPriority : Int,
     internal var mAwaitingMills : Int,
     internal val mBlueberryRequestInfo : BlueberryAbstractRequestInfo<out Any>,
     internal val mRequestType : Class<out Annotation>

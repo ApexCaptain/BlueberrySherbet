@@ -9,6 +9,7 @@ import com.gmail.ayteneve93.blueberryshertbettestapplication.movement.WiFiCreden
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.ExampleDevice
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -26,12 +27,20 @@ class MainActivity : AppCompatActivity() {
 
             Log.d("ayteneve93_test", "launch")
 
-            /*
+
             movementDevice.blueberryService.connectionStatus().call().byRx2().subscribe {
                 Log.d("ayteneve93_test", "$it")
             }
-            */
 
+            delay(15000)
+            movementDevice.disconnect()
+            delay(5000)
+            movementDevice.connect()
+            Log.d("ayteneve93_test", "reconnect")
+
+            movementDevice.blueberryService.connectionStatus().call().byRx2().subscribe {
+                Log.d("ayteneve93_test", "$it")
+            }
             /*
             movementDevice.blueberryService.scanWiFi().call().byCoroutine().let {
                 it.value?.forEach { each ->
@@ -42,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
+            /*
             movementDevice.blueberryService.connectToWiFi(WiFiCredential(
                 "KT_GiGA_WiFi_Home_2.4GHz",
                 "Dkdlxpspqm93!"
@@ -49,6 +59,7 @@ class MainActivity : AppCompatActivity() {
             movementDevice.blueberryService.getConnectionResult().call().byCoroutine().let {
                 Log.d("ayteneve93_test", "$it")
             }
+            */
 
 
 

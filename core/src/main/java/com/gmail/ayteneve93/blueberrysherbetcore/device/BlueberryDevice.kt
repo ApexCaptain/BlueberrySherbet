@@ -161,6 +161,12 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
             }
             onServicesDiscovered()
             mIsServiceDiscovered = true
+            mNotifyOrIndicateRequestList.forEach { prevNotiRequestInfo ->
+                prevNotiRequestInfo.apply {
+                    mPriority = Int.MAX_VALUE
+                    cancel()
+                }
+            }
             executeRequest()
 
         }
@@ -311,7 +317,9 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                         mMtuRequestInfoQueue.clear()
                         mPhyRequestInfoQueue.clear()
                         mBlueberryRequestQueue.clear()
-                        mNotifyOrIndicateRequestList.clear()
+
+
+
                         mCurrentRequest = null
                         onDeviceDisconnected()
                     }
@@ -450,7 +458,6 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                                     }
 
                                     READ::class.java -> {
-                                        Log.d("ayteneve93_test", "send")
                                         mBluetoothGatt.readCharacteristic(characteristic)
                                         currentRequestInfo.mIsOnProgress = true
                                         mIsBluetoothOnProgress = true
@@ -482,6 +489,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                                                         it.mUuid == blueberryRequestInfoWithRepetitiousResults.mUuid} != null) return@requestProcess
                                                 descriptor.value = BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
                                             }
+                                            Log.d("ayteneve93_test", "${blueberryRequestInfoWithRepetitiousResults.isNotificationEnabled}")
                                             mBluetoothGatt.setCharacteristicNotification(characteristic, blueberryRequestInfoWithRepetitiousResults.isNotificationEnabled)
                                             mBluetoothGatt.writeDescriptor(descriptor)
                                             mBluetoothGatt.readDescriptor(descriptor)
