@@ -27,9 +27,11 @@ class MainActivity : AppCompatActivity() {
 
             Log.d("ayteneve93_test", "launch")
 
+            /*
             movementDevice.blueberryService.getWiFiStatus().call().byCoroutine().let {
                 Log.d("ayteneve93_test", "$it")
             }
+            */
 
             /*
             movementDevice.blueberryService.setDataSendingState(true).call().byCoroutine()
@@ -87,10 +89,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
                 .subscribe { scanResult ->
+                    Log.d("ayteneve93_test", "$scanResult")
                     scanResult.bluetoothDevice.name?.let { advertisingName ->
                         Log.d("ayteneve93_test", advertisingName)
                         if(advertisingName.startsWith("MVMT_")) {

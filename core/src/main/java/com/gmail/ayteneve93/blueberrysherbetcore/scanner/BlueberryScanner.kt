@@ -48,20 +48,24 @@ object BlueberryScanner {
             observableEmitter.onError(IllegalStateException(message))
             return@create
         }
+        val permissions = arrayListOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         mCompositeDisposable.add(
             TedRx2Permission.with(context)
                 .setRationaleTitle(bleScanPermissionRequestTitle ?: context.getString(R.string.ble_scan_permission_request_title))
                 .setRationaleMessage(bleScanPermissionRequestMessage ?: context.getString(R.string.ble_scan_permission_request_message))
-                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                .setPermissions(*(permissions.toTypedArray()))
                 .request()
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
                         isScanning.set(true)
+                        Log.d("ayteneve93_test", "start scan")
                         val blueberryScanResults = ArrayList<BlueberryScanResult>()
                         mBluetoothScanCallback = object : ScanCallback() {
                             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                                 super.onScanResult(callbackType, result)
+                                Log.d("ayteneve93_test", "$result")
                                 result?.device?.let { bluetoothDevice ->
                                     val deviceInfoString = "\nMac Address : ${bluetoothDevice.address} ${if(bluetoothDevice.name != null) "\nAdvertising Name : ${bluetoothDevice.name}" else ""}\nRssi Signal Value : ${result.rssi}"
                                     val prevResult = blueberryScanResults.find { blueberryScanResult -> blueberryScanResult.bluetoothDevice.address == bluetoothDevice.address }
