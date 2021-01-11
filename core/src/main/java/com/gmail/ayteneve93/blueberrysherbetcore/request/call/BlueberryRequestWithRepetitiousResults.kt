@@ -65,6 +65,7 @@ class BlueberryRequestWithRepetitiousResults<ReturnType>(
     override fun onResponse(status: Int?, characteristic: BluetoothGattCharacteristic?) {
         if(status == 0) {
             characteristic?.value?.let { partialData ->
+                Log.d("ayteneve93_test", String(partialData))
                 if(endSignal == 0x00.toChar().toString()) {
                     try {
                         callback.invoke(0, when(mRequestType) {

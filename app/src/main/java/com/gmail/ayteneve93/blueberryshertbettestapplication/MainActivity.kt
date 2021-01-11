@@ -27,7 +27,20 @@ class MainActivity : AppCompatActivity() {
 
             Log.d("ayteneve93_test", "launch")
 
+            movementDevice.blueberryService.getWiFiStatus().call().byCoroutine().let {
+                Log.d("ayteneve93_test", "$it")
+            }
 
+            /*
+            movementDevice.blueberryService.setDataSendingState(true).call().byCoroutine()
+            movementDevice.blueberryService.setDataSendingState(false).call().byCoroutine()
+            */
+            /*
+            movementDevice.blueberryService.onDataSendingInitiated().call().byRx2().subscribe {
+                Log.d("ayteneve93_test", "$it")
+            }
+            */
+            /*
             movementDevice.blueberryService.connectionStatus().call().byRx2().subscribe {
                 Log.d("ayteneve93_test", "$it")
             }
@@ -41,6 +54,8 @@ class MainActivity : AppCompatActivity() {
             movementDevice.blueberryService.connectionStatus().call().byRx2().subscribe {
                 Log.d("ayteneve93_test", "$it")
             }
+            */
+
             /*
             movementDevice.blueberryService.scanWiFi().call().byCoroutine().let {
                 it.value?.forEach { each ->
