@@ -89,6 +89,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        /*
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
                 .subscribe { scanResult ->
@@ -106,13 +108,15 @@ class MainActivity : AppCompatActivity() {
                 }
         )
 
+         */
 
-        /*
+
+
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
                 .subscribe { scanResult ->
                     scanResult.bluetoothDevice.name?.let { advertisingName ->
-                        if(advertisingName == "SherbetTest") {
+                        if(advertisingName.startsWith("SherbetTest")) {
                             BlueberryScanner.stopScan()
                             exampleDevice = scanResult.interlock(this, ExampleDevice::class.java)
                             exampleDevice.connect()
@@ -121,15 +125,12 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
         )
-        */
-
-
     }
 
     private fun testStringCharacteristic() {
         GlobalScope.launch {
 
-            /*
+
             exampleDevice
                 .blueberryService
                 .stringRead()
@@ -137,44 +138,47 @@ class MainActivity : AppCompatActivity() {
                 .byCoroutine()
                 .let { Log.d(TAG, "$it") }
 
+
             exampleDevice
                 .blueberryService
-                .stringWrite("String Data from Android -- WRITE")
+                .stringWrite("Hello, this is simple string writing.")
                 .call()
                 .byCoroutine()
                 .let { Log.d(TAG, "$it") }
 
+
             exampleDevice
                 .blueberryService
-                .stringReliableWrite("String Data from Android -- Reliable WRITE")
+                .stringReliableWrite("This is reliable writing.")
                 .call()
                 .byCoroutine()
                 .let { Log.d(TAG, "$it") }
 
-            exampleDevice
-                .blueberryService
-                .stringWriteWithoutResponse("String Data from Android -- WRITE_WITHOUT_RESPONSE")
-                .call()
-                .enqueue()
 
             exampleDevice
                 .blueberryService
-                .stringReliableWriteWithoutResponse("String Data from Android -- Reliable WRITE_WITHOUT_RESPONSE")
+                .stringWriteWithoutResponse("This is writing without response.")
                 .call()
                 .enqueue()
-            */
+
+
+            exampleDevice
+                .blueberryService
+                .stringReliableWriteWithoutResponse("And this is writing without response reliably.")
+                .call()
+                .enqueue()
 
 
 
-            /*
             exampleDevice
                 .blueberryService
                 .stringNotifyWithEndSignal()
                 .call()
                 .enqueue { status, value ->
-                    Log.d(TAG, "1 -- Noti")
+                    Log.d(TAG, "$value")
                 }
 
+            /*
             exampleDevice
                 .blueberryService
                 .stringIndicateWithEndSignal()
@@ -183,10 +187,6 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG, "1 -- Indi")
                 }
             */
-
-
-
-
 
         }
     }
