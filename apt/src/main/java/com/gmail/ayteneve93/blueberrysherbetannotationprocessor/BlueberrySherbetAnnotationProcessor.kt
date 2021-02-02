@@ -21,7 +21,6 @@ import kotlin.reflect.jvm.internal.impl.name.FqName
 
 
 @AutoService(Processor::class)
-@Suppress("spellCheckingInspection")
 class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
 
     private val supportedAnnotationKotlinClasses = arrayOf(
@@ -95,7 +94,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
         return doesProcessingErrorExists
     }
 
-    private val blueberryDeviceMemeberPropertyName = "mBlueberryDevice"
+    private val blueberryDeviceMemberPropertyName = "mBlueberryDevice"
     //private val moshiClass = ClassName("com.squareup.moshi", "Moshi")
     //private val moshiMemberPropertyName = "mMoshi"
 
@@ -118,7 +117,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
 
             // Blueberry Device Member
             addProperty(
-                PropertySpec.builder(blueberryDeviceMemeberPropertyName, blueberryDeviceClass)
+                PropertySpec.builder(blueberryDeviceMemberPropertyName, blueberryDeviceClass)
                     .addModifiers(KModifier.PRIVATE)
                     .build()
             )
@@ -136,8 +135,8 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
             // Construcotr
             primaryConstructor(
                 FunSpec.constructorBuilder()
-                    .addParameter(blueberryDeviceMemeberPropertyName, blueberryDeviceClass)
-                    .addStatement("this.$blueberryDeviceMemeberPropertyName = $blueberryDeviceMemeberPropertyName")
+                    .addParameter(blueberryDeviceMemberPropertyName, blueberryDeviceClass)
+                    .addStatement("this.$blueberryDeviceMemberPropertyName = $blueberryDeviceMemberPropertyName")
                     //.addStatement("this.$moshiMemberPropertyName = ${moshiClass}.Builder().build()")
                     .build()
             )
@@ -276,7 +275,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                 WRITE::class.java -> {
                                     """
                                         return ${returnTypeBlueberryRequestClass}(
-                                            $blueberryDeviceMemeberPropertyName,
+                                            $blueberryDeviceMemberPropertyName,
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString",
                                             ${parameterName?:"null"},
@@ -290,7 +289,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                     if(endSignal.length > 20) errorLog("End Signal cannot be larger than 20 bytes!")
                                     """
                                         return ${returnTypeBlueberryRequestClass}(
-                                            $blueberryDeviceMemeberPropertyName,
+                                            $blueberryDeviceMemberPropertyName,
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString",
                                             ${parameterName?:"null"},
@@ -303,7 +302,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                     """
                                         return ${returnTypeBlueberryRequestClass}(
                                             $originalReturnTypeArgumentTypeName::class.java,
-                                            $blueberryDeviceMemeberPropertyName,
+                                            $blueberryDeviceMemberPropertyName,
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString"
                                         )
@@ -318,7 +317,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                     """
                                         return ${returnTypeBlueberryRequestClass}(
                                             $originalReturnTypeArgumentTypeName::class.java,
-                                            $blueberryDeviceMemeberPropertyName,
+                                            $blueberryDeviceMemberPropertyName,
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString",
                                             ${requestType.asTypeName()}::class.java,

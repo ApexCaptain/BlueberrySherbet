@@ -28,7 +28,6 @@ import kotlin.collections.ArrayList
  * You can configure specific options for each BLE device by inheriting this abstract class.
  *
  */
-@Suppress("spellCheckingInspection")
 abstract class BlueberryDevice<BlueberryService> protected constructor() {
 
     var autoConnect: Boolean = true
@@ -64,12 +63,13 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
             companion object {
                 internal fun getStateFromCode(stateCode : Int) : BluetoothState = values().find { it.stateCode == stateCode }!!
             }
+
         }
 
         // https://medium.com/@abrisad_it/ble-error-codes-a3c6675b29c1
         enum class BleStatus(val statusCode : Short) {
             BLE_HCI_STATUS_CODE_SUCCESS(0x00),
-            BLE_HCI_STATUS_CODE_UNKNWON_BTLE_COMMAND(0x01),
+            BLE_HCI_STATUS_CODE_UNKNOWN_BTLE_COMMAND(0x01),
             BLE_HCI_STATUS_CODE_UNKNOWN_CONNECTION_IDENTIFIER(0x02),
             BLE_HCI_AUTHENTICATION_FAILURE(0x05),
             BLE_HCI_STATUS_CODE_PIN_OR_KEY_MISSING(0x06),
@@ -88,7 +88,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
             BLE_HCI_STATUS_CODE_LMP_PDU_NOT_ALLOWED(0x24),
             BLE_HCI_INSTANT_PASSED(0x28),
             BLE_HCI_PAIRING_WITH_UNIT_KEY_SUPPORTED(0x29),
-            BLE_HCI_DIFFERENT_TRANSATION_COLLISION(0x2A),
+            BLE_HCI_DIFFERENT_TRANSACTION_COLLISION(0x2A),
             BLE_HCI_CONTROLLER_BUSY(0x3A),
             BLE_HCI_CONN_INTERVAL_UNACCEPTABLE(0x3B),
             BLE_HCI_DIRECTED_ADVERTISER_TIMEOUT(0x3C),

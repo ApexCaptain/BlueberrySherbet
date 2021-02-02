@@ -4,7 +4,6 @@ import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryAbstractReques
 import java.util.*
 import kotlin.collections.HashMap
 
-@Suppress("SpellCheckingInspection")
 class BlueberryRequestWithNoResponse(
     uuid : UUID,
     priority : Int,

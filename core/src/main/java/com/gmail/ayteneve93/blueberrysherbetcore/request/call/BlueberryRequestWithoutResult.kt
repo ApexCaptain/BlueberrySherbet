@@ -8,7 +8,6 @@ import kotlin.collections.HashMap
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-@Suppress("SpellCheckingInspection")
 class BlueberryRequestWithoutResult(
     uuid : UUID,
     priority: Int,

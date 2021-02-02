@@ -8,7 +8,6 @@ import com.squareup.moshi.Moshi
 import java.lang.Exception
 import java.lang.reflect.Type
 
-@Suppress("SpellCheckingInspection")
 class BlueberryConverterPrev internal constructor() {
 
     private var mGson = Gson()
@@ -23,11 +22,11 @@ class BlueberryConverterPrev internal constructor() {
         return BlueberryConverterPrev(mGson, mMoshi)
     }
 
-    fun <ConversionType> addGsonAdapter(coversionType : Class<ConversionType>, gsonAdapter : GsonAdapter<ConversionType>) : BlueberryConverterPrev{
+    fun <ConversionType> addGsonAdapter(conversionType : Class<ConversionType>, gsonAdapter : GsonAdapter<ConversionType>) : BlueberryConverterPrev{
         mGson = mGson
             .newBuilder().apply {
-                gsonAdapter.getSerializer()?.let { registerTypeAdapter(coversionType, it) }
-                gsonAdapter.getDeserializer()?.let { registerTypeAdapter(coversionType, it) }
+                gsonAdapter.getSerializer()?.let { registerTypeAdapter(conversionType, it) }
+                gsonAdapter.getDeserializer()?.let { registerTypeAdapter(conversionType, it) }
             }
             .create()
         return this

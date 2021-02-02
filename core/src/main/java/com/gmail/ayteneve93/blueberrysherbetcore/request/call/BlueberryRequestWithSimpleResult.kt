@@ -11,7 +11,7 @@ import kotlin.collections.HashMap
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-@Suppress("SpellCheckingInspection", "UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST")
 class BlueberryRequestWithSimpleResult<ReturnType>(
     uuid : UUID,
     priority: Int,
@@ -59,6 +59,6 @@ class BlueberryRequestWithSimpleResult<ReturnType>(
                     else -> null
                 }
             })
-        } catch(exception : Exception) { BlueberryLogger.e("Exception Occured While Parsing Data String", exception) }
+        } catch(exception : Exception) { BlueberryLogger.e("Exception Occurred While Parsing Data String", exception) }
     }
 }

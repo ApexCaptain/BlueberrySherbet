@@ -13,7 +13,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-@Suppress("SpellCheckingInspection", "UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST")
 class BlueberryRequestWithRepetitiousResults<ReturnType>(
     uuid : UUID,
     priority : Int,
@@ -75,7 +75,7 @@ class BlueberryRequestWithRepetitiousResults<ReturnType>(
                             )
                             else -> null
                         })
-                    } catch(exception : Exception) { BlueberryLogger.e("Exception Occured While Parsing Data String", exception)}
+                    } catch(exception : Exception) { BlueberryLogger.e("Exception Occurred While Parsing Data String", exception)}
                 } else {
                     when(String(partialData)) {
                         endSignal -> {
@@ -87,7 +87,7 @@ class BlueberryRequestWithRepetitiousResults<ReturnType>(
                                     )
                                     else -> null
                                 })
-                            } catch(exception : Exception) { BlueberryLogger.e("Exception Occured While Parsing Data String", exception) }
+                            } catch(exception : Exception) { BlueberryLogger.e("Exception Occurred While Parsing Data String", exception) }
                             finally { synthesizedByteArrayList.clear() }
                         }
                         else -> synthesizedByteArrayList.addAll(partialData.toList())

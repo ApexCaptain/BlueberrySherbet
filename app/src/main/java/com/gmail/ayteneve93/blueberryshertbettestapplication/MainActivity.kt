@@ -120,16 +120,19 @@ class MainActivity : AppCompatActivity() {
                             BlueberryScanner.stopScan()
                             exampleDevice = scanResult.interlock(this, ExampleDevice::class.java)
                             exampleDevice.connect()
-                            testStringCharacteristic()
+
+                            // testStringCharacteristic()
+                            testIntegerCharacteristic()
+
                         }
                     }
                 }
         )
     }
 
+
     private fun testStringCharacteristic() {
         GlobalScope.launch {
-
 
             exampleDevice
                 .blueberryService
@@ -157,39 +160,84 @@ class MainActivity : AppCompatActivity() {
 
             exampleDevice
                 .blueberryService
-                .stringWriteWithoutResponse("This is writing without response.")
-                .call()
-                .enqueue()
-
-
-            exampleDevice
-                .blueberryService
-                .stringReliableWriteWithoutResponse("And this is writing without response reliably.")
-                .call()
-                .enqueue()
-
-
-
-            exampleDevice
-                .blueberryService
                 .stringNotifyWithEndSignal()
                 .call()
-                .enqueue { status, value ->
-                    Log.d(TAG, "$value")
+                .enqueue { _, value ->
+                    Log.d(TAG, "Noti with signal -- $value")
                 }
 
-            /*
+
             exampleDevice
                 .blueberryService
-                .stringIndicateWithEndSignal()
+                .stringNotifyWithoutEndSignal()
                 .call()
-                .enqueue { status, value ->
-                    Log.d(TAG, "1 -- Indi")
+                .enqueue { _, value ->
+                    Log.d(TAG, "Noti without signal -- $value")
                 }
-            */
 
         }
     }
+
+
+    private fun testIntegerCharacteristic() {
+        GlobalScope.launch {
+
+
+            exampleDevice
+                .blueberryService
+                .integerRead()
+                .call()
+                .byCoroutine()
+                .let {
+                    Log.d(TAG, "$it")
+                }
+
+
+            exampleDevice
+                .blueberryService
+                .integerWrite(100)
+                .call()
+                .byCoroutine()
+                .let {
+                    Log.d(TAG, "$it")
+                }
+
+
+            exampleDevice
+                .blueberryService
+                .integerReliableWrite(200)
+                .call()
+                .byCoroutine()
+                .let {
+                    Log.d(TAG ,"$it")
+                }
+
+
+            exampleDevice
+                .blueberryService
+                .integerNotifyWithEndSignal()
+                .call()
+                .enqueue { _, value ->
+                    Log.d(TAG, "$value")
+                }
+
+
+            exampleDevice
+                .blueberryService
+                .integerNotifyWithoutEndSignal()
+                .call()
+                .enqueue { _, value ->
+                    Log.d(TAG, "$value")
+                }
+
+
+
+
+
+        }
+    }
+
+
 
     companion object  {
         const val TAG = "BlueberryTest"

@@ -2,7 +2,6 @@ package com.gmail.ayteneve93.blueberrysherbetcore.converter
 
 import com.google.gson.Gson
 
-@Suppress("SpellCheckingInspection")
 class BlueberryGsonConverter(private val mGson : Gson) : BlueberryConverter {
 
     override fun <ConversionType> stringify(

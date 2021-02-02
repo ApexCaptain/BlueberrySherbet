@@ -2,7 +2,6 @@ package com.gmail.ayteneve93.blueberrysherbetcore.converter
 
 import com.squareup.moshi.Moshi
 
-@Suppress("SpellCheckingInspection")
 class BlueberryMoshiConverter(private val mMoshi : Moshi) : BlueberryConverter {
 
     override fun <ConversionType> stringify(

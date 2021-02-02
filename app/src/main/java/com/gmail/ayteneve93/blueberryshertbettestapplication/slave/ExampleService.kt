@@ -9,29 +9,16 @@ import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryWriteRequestIn
 @BlueberryService
 interface ExampleService {
 
-
     /* Primitive Service*/
     /* String Characteristic */
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
     fun stringRead() : BlueberryReadRequestInfo<String>
-
-
 
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
     fun stringWrite(dataToSend : String) : BlueberryWriteRequestInfo
 
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101", true)
     fun stringReliableWrite(dataToSend : String) : BlueberryWriteRequestInfo
-
-
-
-    @WRITE_WITHOUT_RESPONSE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101", false, "\$EoD")
-    fun stringWriteWithoutResponse(dataToSend: String) : BlueberryWriteRequestInfoWithoutResponse
-
-    @WRITE_WITHOUT_RESPONSE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101", true)
-    fun stringReliableWriteWithoutResponse(dataToSend: String) : BlueberryWriteRequestInfoWithoutResponse
-
-
 
     @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101", "\$EoD")
     fun stringNotifyWithEndSignal() : BlueberryNotifyOrIndicateRequestInfo<String>
@@ -40,21 +27,23 @@ interface ExampleService {
     fun stringNotifyWithoutEndSignal() : BlueberryNotifyOrIndicateRequestInfo<String>
 
 
-
-    @INDICATE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101", "\$EoD")
-    fun stringIndicateWithEndSignal() : BlueberryNotifyOrIndicateRequestInfo<String>
-
-    @INDICATE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
-    fun stringIndicateWithoutEndSignal() : BlueberryNotifyOrIndicateRequestInfo<String>
-
-
-    /* Gson Data Characteristic */
+    /* Integer Characteristic */
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0102")
-    fun simpleDataRead() : BlueberryReadRequestInfo<SimpleData>
-
+    fun integerRead() : BlueberryReadRequestInfo<Int>
 
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0102")
-    fun simpleDataWrite(dataToSend : SimpleData) : BlueberryWriteRequestInfo
+    fun integerWrite(dataToSend : Int) : BlueberryWriteRequestInfo
+
+    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0102", true)
+    fun integerReliableWrite(dataToSend : Int) : BlueberryWriteRequestInfo
+
+    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0102", "\$EoD")
+    fun integerNotifyWithEndSignal() : BlueberryNotifyOrIndicateRequestInfo<Int>
+
+    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0102")
+    fun integerNotifyWithoutEndSignal() : BlueberryNotifyOrIndicateRequestInfo<Int>
+
+
 
 
 }

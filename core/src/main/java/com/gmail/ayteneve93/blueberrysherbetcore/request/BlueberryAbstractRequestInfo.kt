@@ -7,7 +7,6 @@ import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryAbstractR
 import java.util.*
 import kotlin.collections.HashMap
 
-@Suppress("SpellCheckingInspection")
 abstract class BlueberryAbstractRequestInfo<ReturnType>
     constructor(
 

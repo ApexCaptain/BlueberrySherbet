@@ -6,7 +6,6 @@ import com.gmail.ayteneve93.blueberrysherbetcore.device.BlueberryDevice
 import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryRequestWithSimpleResult
 import java.util.HashMap
 
-@Suppress("SpellCheckingInspection")
 class BlueberryReadRequestInfo<ReturnType>(
     returnTypeClass : Class<ReturnType>,
     blueberryDevice : BlueberryDevice<out Any>,
