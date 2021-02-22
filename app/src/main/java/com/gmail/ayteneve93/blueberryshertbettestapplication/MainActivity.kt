@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
                             // testStringCharacteristic()
                             // testIntegerCharacteristic()
+                            testJsonCharacteristic()
 
                         }
                     }
