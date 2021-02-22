@@ -43,6 +43,11 @@ interface ExampleService {
     @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0102")
     fun integerNotifyWithoutEndSignal() : BlueberryNotifyOrIndicateRequestInfo<Int>
 
+    /* Object Service */
+    /* Json Characteristic */
+    @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0201")
+    fun jsonRead() : BlueberryReadRequestInfo<String>
+
 
 
 

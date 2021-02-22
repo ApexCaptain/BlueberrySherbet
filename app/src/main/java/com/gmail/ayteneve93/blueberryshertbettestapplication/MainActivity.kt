@@ -19,98 +19,9 @@ class MainActivity : AppCompatActivity() {
 
     private val mCompositeDisposable = CompositeDisposable()
     private lateinit var exampleDevice : ExampleDevice
-
-    private lateinit var movementDevice : MovementDevice
-
-    private fun testMovement() {
-        GlobalScope.launch {
-
-            Log.d("ayteneve93_test", "launch")
-
-            /*
-            movementDevice.blueberryService.getWiFiStatus().call().byCoroutine().let {
-                Log.d("ayteneve93_test", "$it")
-            }
-            */
-
-            /*
-            movementDevice.blueberryService.setDataSendingState(true).call().byCoroutine()
-            movementDevice.blueberryService.setDataSendingState(false).call().byCoroutine()
-            */
-            /*
-            movementDevice.blueberryService.onDataSendingInitiated().call().byRx2().subscribe {
-                Log.d("ayteneve93_test", "$it")
-            }
-            */
-            /*
-            movementDevice.blueberryService.connectionStatus().call().byRx2().subscribe {
-                Log.d("ayteneve93_test", "$it")
-            }
-
-            delay(15000)
-            movementDevice.disconnect()
-            delay(5000)
-            movementDevice.connect()
-            Log.d("ayteneve93_test", "reconnect")
-
-            movementDevice.blueberryService.connectionStatus().call().byRx2().subscribe {
-                Log.d("ayteneve93_test", "$it")
-            }
-            */
-
-            /*
-            movementDevice.blueberryService.scanWiFi().call().byCoroutine().let {
-                it.value?.forEach { each ->
-                    Log.d("ayteneve93_test", each.toString())
-                }
-            }
-            */
-
-
-
-            /*
-            movementDevice.blueberryService.connectToWiFi(WiFiCredential(
-                "KT_GiGA_WiFi_Home_2.4GHz",
-                "Dkdlxpspqm93!"
-            )).call().byCoroutine()
-            movementDevice.blueberryService.getConnectionResult().call().byCoroutine().let {
-                Log.d("ayteneve93_test", "$it")
-            }
-            */
-
-
-
-
-
-
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        /*
-        mCompositeDisposable.add(
-            BlueberryScanner.rxStartScan(this)
-                .subscribe { scanResult ->
-                    Log.d("ayteneve93_test", "$scanResult")
-                    scanResult.bluetoothDevice.name?.let { advertisingName ->
-                        Log.d("ayteneve93_test", advertisingName)
-                        if(advertisingName.startsWith("MVMT_")) {
-                            Log.d("ayteneve93_test", scanResult.bluetoothDevice.address)
-                            BlueberryScanner.stopScan()
-                            movementDevice = scanResult.interlock(this, MovementDevice::class.java)
-                            movementDevice.connect()
-                            testMovement()
-                        }
-                    }
-                }
-        )
-
-         */
-
-
 
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
@@ -122,7 +33,7 @@ class MainActivity : AppCompatActivity() {
                             exampleDevice.connect()
 
                             // testStringCharacteristic()
-                            testIntegerCharacteristic()
+                            // testIntegerCharacteristic()
 
                         }
                     }
@@ -238,6 +149,20 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private fun testJsonCharacteristic() {
+        GlobalScope.launch {
+
+            exampleDevice
+                .blueberryService
+                .jsonRead()
+                .call()
+                .byCoroutine()
+                .let {
+                    Log.d(TAG ,"$it")
+                }
+
+        }
+    }
 
     companion object  {
         const val TAG = "BlueberryTest"
