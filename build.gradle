@@ -1,5 +1,11 @@
 buildscript {
     ext {
+        /** Core... */
+        sherbet_version_name = '0.2.7-alpha'
+        sherbet_version_code = 5
+        sdk_version_min = 24
+        sdk_version_target = 30
+
         /** Bases... */
         // Kotlin
         kotlin_version = '1.4.0'
@@ -23,6 +29,8 @@ buildscript {
         moshi_version = '1.8.0'
         // Gson
         gson_version = "2.8.6"
+        // Simple XML
+        simple_xml_version = "2.7.1"
         // Jackson
         jackson_version = "2.9.7"
 

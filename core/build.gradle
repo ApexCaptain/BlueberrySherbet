@@ -13,10 +13,10 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 30
-        versionCode 5
-        versionName "0.2.7-alpha"
+        minSdkVersion sdk_version_min
+        targetSdkVersion sdk_version_target
+        versionCode sherbet_version_code
+        versionName "$sherbet_version_name"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -53,9 +53,16 @@ dependencies {
 
     // Converter Dependencies
     implementation "com.google.code.gson:gson:$gson_version"
-    
     implementation "com.squareup.moshi:moshi:$moshi_version"
 
+    // XML
+    implementation("org.simpleframework:simple-xml:$simple_xml_version"){
+        exclude module: 'stax'
+        exclude module: 'stax-api'
+        exclude module: 'xpp3'
+    }
+
+    // ToDo NOT YET IMPLEMENTED
     implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
     implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"

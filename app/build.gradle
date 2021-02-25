@@ -13,8 +13,8 @@ android {
     buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.gmail.ayteneve93.blueberrysherbet"
-        minSdkVersion 24
-        targetSdkVersion 30
+        minSdkVersion sdk_version_min
+        targetSdkVersion sdk_version_target
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -49,6 +49,12 @@ dependencies {
     // Temp
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation "com.squareup.moshi:moshi:$moshi_version"
+
+    implementation('org.simpleframework:simple-xml:2.7.1'){
+        exclude module: 'stax'
+        exclude module: 'stax-api'
+        exclude module: 'xpp3'
+    }
 
     implementation project(':core')
     implementation project(':annotations')

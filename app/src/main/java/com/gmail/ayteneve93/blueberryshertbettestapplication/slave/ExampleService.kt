@@ -46,7 +46,30 @@ interface ExampleService {
     /* Object Service */
     /* Json Characteristic */
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0201")
-    fun jsonRead() : BlueberryReadRequestInfo<String>
+    fun gsonRead() : BlueberryReadRequestInfo<Person>
+
+    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0201")
+    fun gsonWrite(dataToSend: Person) : BlueberryWriteRequestInfo
+
+    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0201", true)
+    fun gsonReliableWrite(dataToSend : Person) : BlueberryWriteRequestInfo
+
+    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0201", "\$EoD")
+    fun gsonNotifyWithEndSignal() : BlueberryNotifyOrIndicateRequestInfo<Person>
+
+
+    /* Xml Characteristic */
+    @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0202")
+    fun simpleXmlRead() : BlueberryReadRequestInfo<Product>
+
+    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0202")
+    fun simpleXmlWrite(dataToSend : Product) : BlueberryWriteRequestInfo
+
+    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0202", true)
+    fun simpleXmlReliableWrite(dataToSend : Product) : BlueberryWriteRequestInfo
+
+    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0202", "\$EoD")
+    fun simpleXmlNotifyWithEndSignal() : BlueberryNotifyOrIndicateRequestInfo<Product>
 
 
 

@@ -65,13 +65,12 @@ class BlueberryRequestWithRepetitiousResults<ReturnType>(
     override fun onResponse(status: Int?, characteristic: BluetoothGattCharacteristic?) {
         if(status == 0) {
             characteristic?.value?.let { partialData ->
-                Log.d("ayteneve93_test", String(partialData))
                 if(endSignal == 0x00.toChar().toString()) {
                     try {
                         callback.invoke(0, when(mRequestType) {
-                            NOTIFY::class.java, INDICATE::class.java -> mBlueberryRequestInfo.blueberryConverterPrev.convertStringToObject(
-                                mBlueberryRequestInfo.mReturnTypeClass as Class<ReturnType>,
-                                String(partialData)
+                            NOTIFY::class.java, INDICATE::class.java -> mBlueberryRequestInfo.blueberryConverter.parse(
+                                String(partialData),
+                                mBlueberryRequestInfo.mReturnTypeClass as Class<ReturnType>
                             )
                             else -> null
                         })
@@ -81,9 +80,9 @@ class BlueberryRequestWithRepetitiousResults<ReturnType>(
                         endSignal -> {
                             try {
                                 callback.invoke(0, when(mRequestType) {
-                                    NOTIFY::class.java, INDICATE::class.java -> mBlueberryRequestInfo.blueberryConverterPrev.convertStringToObject(
-                                        mBlueberryRequestInfo.mReturnTypeClass as Class<ReturnType>,
-                                        String(synthesizedByteArrayList.toTypedArray().toByteArray())
+                                    NOTIFY::class.java, INDICATE::class.java -> mBlueberryRequestInfo.blueberryConverter.parse(
+                                        String(synthesizedByteArrayList.toTypedArray().toByteArray()),
+                                        mBlueberryRequestInfo.mReturnTypeClass as Class<ReturnType>
                                     )
                                     else -> null
                                 })

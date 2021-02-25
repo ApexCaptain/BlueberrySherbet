@@ -36,7 +36,6 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
     protected abstract fun setServiceImpl() : BlueberryService
 
     /** Data Converter */
-    val blueberryConverterPrev : BlueberryConverterPrev = BlueberryConverterPrev()
     internal val blueberryConverter : BlueberryConverter by lazy { setBlueberryConverter() }
     protected abstract fun setBlueberryConverter() : BlueberryConverter
 

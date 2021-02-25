@@ -3,14 +3,15 @@ package com.gmail.ayteneve93.blueberryshertbettestapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberrySimpleXmlConverter
 import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
-import com.gmail.ayteneve93.blueberryshertbettestapplication.movement.MovementDevice
-import com.gmail.ayteneve93.blueberryshertbettestapplication.movement.WiFiCredential
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.ExampleDevice
+import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.Person
+import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.Product
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 
 /**
  * @author ayteneve93@gmail.com
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
                 .subscribe { scanResult ->
@@ -34,12 +36,15 @@ class MainActivity : AppCompatActivity() {
 
                             // testStringCharacteristic()
                             // testIntegerCharacteristic()
-                            testJsonCharacteristic()
+                            // testGsonCharacteristic()
+                            // testSimpleXmlCharacteristic()
 
                         }
                     }
                 }
         )
+
+
     }
 
 
@@ -150,17 +155,102 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun testJsonCharacteristic() {
+    private fun testGsonCharacteristic() {
         GlobalScope.launch {
 
             exampleDevice
                 .blueberryService
-                .jsonRead()
+                .gsonRead()
                 .call()
                 .byCoroutine()
                 .let {
                     Log.d(TAG ,"$it")
                 }
+
+            exampleDevice
+                .blueberryService
+                .gsonWrite(Person("Steve", 38))
+                .call()
+                .byCoroutine()
+                .let {
+                    Log.d(TAG, "$it")
+                }
+
+            exampleDevice
+                .blueberryService
+                .gsonReliableWrite(Person("Amanda", 21))
+                .call()
+                .byCoroutine()
+                .let {
+                    Log.d(TAG, "$it")
+                }
+
+            exampleDevice
+                .blueberryService
+                .gsonNotifyWithEndSignal()
+                .call()
+                .enqueue { _, value ->
+                    Log.d(TAG, "$value")
+                }
+
+        }
+    }
+
+
+    private fun testSimpleXmlCharacteristic() {
+        GlobalScope.launch {
+
+
+            exampleDevice
+                .blueberryService
+                .simpleXmlRead()
+                .apply {
+                    setConverter(BlueberrySimpleXmlConverter())
+                }
+                .call()
+                .byCoroutine()
+                .let {
+                    Log.d(TAG, "$it")
+                }
+
+
+            exampleDevice
+                .blueberryService
+                .simpleXmlWrite(Product("Iphone", 2000))
+                .apply {
+                    setConverter(BlueberrySimpleXmlConverter())
+                }
+                .call()
+                .byCoroutine()
+                .let {
+                    Log.d(TAG, "$it")
+                }
+
+
+            exampleDevice
+                .blueberryService
+                .simpleXmlReliableWrite(Product("IPad", 1300))
+                .apply {
+                    setConverter(BlueberrySimpleXmlConverter())
+                }
+                .call()
+                .byCoroutine()
+                .let {
+                    Log.d(TAG, "$it")
+                }
+
+
+            exampleDevice
+                .blueberryService
+                .simpleXmlNotifyWithEndSignal()
+                .apply {
+                    setConverter(BlueberrySimpleXmlConverter())
+                }
+                .call()
+                .enqueue { _, value ->
+                    Log.d(TAG, "$value")
+                }
+
 
         }
     }
