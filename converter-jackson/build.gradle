@@ -1,0 +1,40 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'com.github.dcendents.android-maven'
+}
+group='com.github.ApexCaptain'
+
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
+    defaultConfig {
+        minSdkVersion sdk_version_min
+        targetSdkVersion sdk_version_target
+        versionCode sherbet_version_code
+        versionName "$sherbet_version_name"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    api "com.fasterxml.jackson.core:jackson-core:$jackson_version"
+    api "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
+    api "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
+    api "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
+    implementation project(':core')
+
+}

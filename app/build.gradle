@@ -2,8 +2,6 @@ apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
 
-apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'kotlin-kapt'
 
 
@@ -38,25 +36,21 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.core:core-ktx:1.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
     implementation "io.reactivex.rxjava2:rxandroid:$rxjava2_version"
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$corutine_version"
 
-
-    // Temp
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation "com.squareup.moshi:moshi:$moshi_version"
-
-    implementation('org.simpleframework:simple-xml:2.7.1'){
-        exclude module: 'stax'
-        exclude module: 'stax-api'
-        exclude module: 'xpp3'
-    }
-
+    // Core
     implementation project(':core')
-    implementation project(':annotations')
     kapt project(':apt')
+
+    // Converter
+    implementation project(':converter-gson')
+    implementation project(':converter-jackson')
+    implementation project(':converter-moshi')
+    implementation project(':converter-simple-xml')
+
 }

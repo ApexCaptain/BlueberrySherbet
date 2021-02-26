@@ -1,2 +1,6 @@
+include ':converter-jackson'
+include ':converter-simple-xml'
+include ':converter-moshi'
+include ':converter-gson'
 include ':app', ':annotations', ':apt', ':core'
 rootProject.name='BlueberrySherbet'

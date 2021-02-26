@@ -3,8 +3,11 @@ package com.gmail.ayteneve93.blueberryshertbettestapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberrySimpleXmlConverter
-import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
+import androidx.databinding.DataBindingUtil
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.gmail.ayteneve93.blueberryshertbettestapplication.databinding.ActivityMainBinding
+import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.Animal
+import com.gmail.ayteneve93.converter_simple_xml.BlueberrySimpleXmlConverter
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.ExampleDevice
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.Person
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.Product
@@ -18,31 +21,56 @@ import kotlinx.coroutines.launch
  */
 class MainActivity : AppCompatActivity() {
 
+    // https://stackoverflow.com/questions/33937005/monitor-non-beacon-ble-devices-android-beacon-library
+    lateinit var binding : ActivityMainBinding
     private val mCompositeDisposable = CompositeDisposable()
     private lateinit var exampleDevice : ExampleDevice
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
 
+        // Object -> Json
+        val objectMapper = ObjectMapper()
+        val jsonString = objectMapper.writeValueAsString(Animal("A-Long", "Dog"))
+
+        // Json -> Object
+        val obj = objectMapper.readValue(jsonString, Animal::class.java)
+        Log.d(TAG, "$obj")
+
+        // Object -> Xml
+        /*
+        val xmlMapper = XmlMapper()
+        val xmlString = xmlMapper.writeValueAsString(obj)
+        Log.d(TAG, xmlString)
+        */
+        /*
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
                 .subscribe { scanResult ->
                     scanResult.bluetoothDevice.name?.let { advertisingName ->
-                        if(advertisingName.startsWith("SherbetTest")) {
-                            BlueberryScanner.stopScan()
-                            exampleDevice = scanResult.interlock(this, ExampleDevice::class.java)
-                            exampleDevice.connect()
+                        if(advertisingName.startsWith("MyDevice"/*"SherbetTest"*/)) {
+                            scanResult.onRssiChanged {
+                                binding.rssiValue.text = "$it"
+                            }
+                            scanResult.onDistanceChanged(-55, 4) {
+                                binding.distance.text = "$it"
+                            }
+
+                            // BlueberryScanner.stopScan()
+                            // exampleDevice = scanResult.interlock(this, ExampleDevice::class.java)
+                            // exampleDevice.connect()
 
                             // testStringCharacteristic()
                             // testIntegerCharacteristic()
                             // testGsonCharacteristic()
                             // testSimpleXmlCharacteristic()
-
                         }
                     }
                 }
         )
+        */
+
 
 
     }

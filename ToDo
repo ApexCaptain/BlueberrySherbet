@@ -1,0 +1,10 @@
+Gson: com.squareup.retrofit2:converter-gson
+
+Jackson: com.squareup.retrofit2:converter-jackson
+
+Moshi: com.squareup.retrofit2:converter-moshi
+
+Protobuf: com.squareup.retrofit2:converter-protobuf
+Wire: com.squareup.retrofit2:converter-wire
+Simple XML: com.squareup.retrofit2:converter-simplexml
+JAXB: com.squareup.retrofit2:converter-jaxb

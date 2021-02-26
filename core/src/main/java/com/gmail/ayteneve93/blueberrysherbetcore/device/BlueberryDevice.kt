@@ -9,7 +9,6 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import com.gmail.ayteneve93.blueberrysherbetannotations.*
 import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberryConverter
-import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberryGsonConverter
 import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryAbstractRequest
 import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryRequestWithNoResponse
 import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryRequestWithRepetitiousResults

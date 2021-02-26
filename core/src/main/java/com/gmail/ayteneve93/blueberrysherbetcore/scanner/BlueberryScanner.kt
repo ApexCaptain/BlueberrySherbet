@@ -10,7 +10,6 @@ import android.content.Context
 import android.net.MacAddress
 import android.os.Build
 import android.util.Log
-import androidx.annotation.Keep
 import androidx.databinding.ObservableField
 import com.gmail.ayteneve93.blueberrysherbetcore.R
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
@@ -65,23 +64,25 @@ object BlueberryScanner {
                         mBluetoothScanCallback = object : ScanCallback() {
                             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                                 super.onScanResult(callbackType, result)
-                                Log.d("ayteneve93_test", "$result")
                                 result?.device?.let { bluetoothDevice ->
                                     val deviceInfoString = "\nMac Address : ${bluetoothDevice.address} ${if(bluetoothDevice.name != null) "\nAdvertising Name : ${bluetoothDevice.name}" else ""}\nRssi Signal Value : ${result.rssi}"
-                                    val prevResult = blueberryScanResults.find { blueberryScanResult -> blueberryScanResult.bluetoothDevice.address == bluetoothDevice.address }
-                                    if(prevResult == null) {
-                                        val newBlueberryScanResult = BlueberryScanResult(bluetoothDevice)
-                                        val isConnectable : Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) result.isConnectable
+                                    var blueberryScanResult = blueberryScanResults.find { blueberryScanResult -> blueberryScanResult.bluetoothDevice.address == bluetoothDevice.address }
+                                    if(blueberryScanResult == null) {
+                                        blueberryScanResult = BlueberryScanResult(bluetoothDevice)
+                                        val isConnectible : Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) result.isConnectable
                                         else result.scanRecord?.advertiseFlags.let { advertisingFlag -> advertisingFlag != null && advertisingFlag.and(2) == 2 }
-                                        if(isConnectable) {
+                                        if(isConnectible) {
                                             BlueberryLogger.i("New Ble Device is Found. $deviceInfoString")
-                                            blueberryScanResults.add(newBlueberryScanResult)
-                                            observableEmitter.onNext(newBlueberryScanResult)
+                                            blueberryScanResults.add(blueberryScanResult)
+                                            observableEmitter.onNext(blueberryScanResult)
                                         }
                                     } else {
                                         BlueberryLogger.v("Ble Device Info is Updated. $deviceInfoString")
-                                        prevResult.updateDevice(bluetoothDevice)
+                                        blueberryScanResult.updateDevice(bluetoothDevice)
                                     }
+
+                                    blueberryScanResult.mRssiValue.set(result.rssi)
+
                                 }
                             }
                         }

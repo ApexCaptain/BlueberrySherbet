@@ -8,9 +8,13 @@ import org.simpleframework.xml.Text
 
 // Data Class For Gson
 data class Person(
-
     val name : String,
     val age : Int
+)
+
+data class Animal(
+    val name : String? = null,
+    val species : String? = null
 )
 
 // Data Class For Simple XML

@@ -15,6 +15,10 @@
             <option value="$PROJECT_DIR$/annotations" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/apt" />
+            <option value="$PROJECT_DIR$/converter-gson" />
+            <option value="$PROJECT_DIR$/converter-jackson" />
+            <option value="$PROJECT_DIR$/converter-moshi" />
+            <option value="$PROJECT_DIR$/converter-simple-xml" />
             <option value="$PROJECT_DIR$/core" />
           </set>
         </option>

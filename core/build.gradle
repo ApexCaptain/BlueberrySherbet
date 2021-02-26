@@ -1,11 +1,10 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
-
-apply plugin: 'org.jetbrains.dokka'
-
-apply plugin: 'com.github.dcendents.android-maven'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'org.jetbrains.dokka'
+    id 'com.github.dcendents.android-maven'
+}
 group='com.github.ApexCaptain'
 
 android {
@@ -50,24 +49,5 @@ dependencies {
     implementation "gun0912.ted:tedpermission-rx2:$tedpermission_rxjava2_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxjava2_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$corutine_version"
-
-    // Converter Dependencies
-    implementation "com.google.code.gson:gson:$gson_version"
-    implementation "com.squareup.moshi:moshi:$moshi_version"
-
-    // XML
-    implementation("org.simpleframework:simple-xml:$simple_xml_version"){
-        exclude module: 'stax'
-        exclude module: 'stax-api'
-        exclude module: 'xpp3'
-    }
-
-    // ToDo NOT YET IMPLEMENTED
-    implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
-    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
-
-
-    implementation project(':annotations')
-
+    api project(':annotations')
 }

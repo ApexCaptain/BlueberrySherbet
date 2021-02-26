@@ -1,5 +1,6 @@
-package com.gmail.ayteneve93.blueberrysherbetcore.converter
+package com.gmail.ayteneve93.converter_moshi
 
+import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberryConverter
 import com.squareup.moshi.Moshi
 
 class BlueberryMoshiConverter(private val mMoshi : Moshi) : BlueberryConverter {

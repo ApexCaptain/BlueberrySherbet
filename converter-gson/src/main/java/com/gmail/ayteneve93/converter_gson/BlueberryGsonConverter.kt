@@ -1,5 +1,6 @@
-package com.gmail.ayteneve93.blueberrysherbetcore.converter
+package com.gmail.ayteneve93.converter_gson
 
+import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberryConverter
 import com.google.gson.Gson
 
 class BlueberryGsonConverter(private val mGson : Gson) : BlueberryConverter {
