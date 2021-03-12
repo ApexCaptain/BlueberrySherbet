@@ -1,8 +1,8 @@
 buildscript {
     ext {
         /** Core... */
-        sherbet_version_name = '0.2.8-alpha'
-        sherbet_version_code = 6
+        sherbet_version_name = '0.3.0-alpha'
+        sherbet_version_code = 8
         sdk_version_min = 24
         sdk_version_target = 30
 
