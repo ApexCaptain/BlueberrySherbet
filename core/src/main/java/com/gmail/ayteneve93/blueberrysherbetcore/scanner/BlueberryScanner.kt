@@ -47,8 +47,9 @@ object BlueberryScanner {
             observableEmitter.onError(IllegalStateException(message))
             return@create
         }
+
         val permissions = arrayListOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+        // if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION) ToDo <-- 이 부분 필요함?
         mCompositeDisposable.add(
             TedRx2Permission.with(context)
                 .setRationaleTitle(bleScanPermissionRequestTitle ?: context.getString(R.string.ble_scan_permission_request_title))
@@ -59,7 +60,6 @@ object BlueberryScanner {
                 .subscribe(
                     {
                         isScanning.set(true)
-                        Log.d("ayteneve93_test", "start scan")
                         val blueberryScanResults = ArrayList<BlueberryScanResult>()
                         mBluetoothScanCallback = object : ScanCallback() {
                             override fun onScanResult(callbackType: Int, result: ScanResult?) {
@@ -96,6 +96,7 @@ object BlueberryScanner {
                     }
                 )
         )
+
     }
 
     fun stopScan() {

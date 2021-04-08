@@ -12,9 +12,10 @@ data class Person(
     val age : Int
 )
 
+// Data Class For Moshi
 data class Animal(
-    val name : String? = null,
-    val species : String? = null
+    val species : String? = null,
+    val name : String? = null
 )
 
 // Data Class For Simple XML

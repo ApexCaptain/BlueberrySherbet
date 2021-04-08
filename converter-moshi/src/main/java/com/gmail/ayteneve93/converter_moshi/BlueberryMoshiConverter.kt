@@ -3,7 +3,7 @@ package com.gmail.ayteneve93.converter_moshi
 import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberryConverter
 import com.squareup.moshi.Moshi
 
-class BlueberryMoshiConverter(private val mMoshi : Moshi) : BlueberryConverter {
+class BlueberryMoshiConverter(private val mMoshi : Moshi = Moshi.Builder().build()) : BlueberryConverter {
 
     override fun <ConversionType> stringify(
         sourceObject: ConversionType,

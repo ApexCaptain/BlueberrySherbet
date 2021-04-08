@@ -5,12 +5,15 @@ import android.os.Bundle
 import android.util.Log
 import androidx.databinding.DataBindingUtil
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
 import com.gmail.ayteneve93.blueberryshertbettestapplication.databinding.ActivityMainBinding
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.Animal
 import com.gmail.ayteneve93.converter_simple_xml.BlueberrySimpleXmlConverter
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.ExampleDevice
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.Person
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.Product
+import com.gmail.ayteneve93.converter_moshi.BlueberryMoshiConverter
+import com.squareup.moshi.Moshi
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -31,12 +34,16 @@ class MainActivity : AppCompatActivity() {
 
 
         // Object -> Json
+        /*
         val objectMapper = ObjectMapper()
         val jsonString = objectMapper.writeValueAsString(Animal("A-Long", "Dog"))
+        */
 
         // Json -> Object
+        /*
         val obj = objectMapper.readValue(jsonString, Animal::class.java)
         Log.d(TAG, "$obj")
+        */
 
         // Object -> Xml
         /*
@@ -44,32 +51,27 @@ class MainActivity : AppCompatActivity() {
         val xmlString = xmlMapper.writeValueAsString(obj)
         Log.d(TAG, xmlString)
         */
-        /*
+
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
                 .subscribe { scanResult ->
                     scanResult.bluetoothDevice.name?.let { advertisingName ->
-                        if(advertisingName.startsWith("MyDevice"/*"SherbetTest"*/)) {
-                            scanResult.onRssiChanged {
-                                binding.rssiValue.text = "$it"
-                            }
-                            scanResult.onDistanceChanged(-55, 4) {
-                                binding.distance.text = "$it"
-                            }
+                        if(advertisingName.startsWith("SherbetTest")) {
 
-                            // BlueberryScanner.stopScan()
-                            // exampleDevice = scanResult.interlock(this, ExampleDevice::class.java)
-                            // exampleDevice.connect()
+                            BlueberryScanner.stopScan()
+                            exampleDevice = scanResult.interlock(this, ExampleDevice::class.java)
+                            exampleDevice.connect()
 
                             // testStringCharacteristic()
                             // testIntegerCharacteristic()
                             // testGsonCharacteristic()
+                            testMoshiCharacteristic()
                             // testSimpleXmlCharacteristic()
                         }
                     }
                 }
         )
-        */
+
 
 
 
@@ -224,10 +226,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun testMoshiCharacteristic() {
+        GlobalScope.launch {
+
+            exampleDevice
+                .blueberryService
+                .moshiRead()
+                .apply {
+                    setConverter(BlueberryMoshiConverter())
+                }
+                .call()
+                .byCoroutine()
+                .let {
+                    Log.d(TAG, "$it")
+                }
+
+        }
+    }
 
     private fun testSimpleXmlCharacteristic() {
         GlobalScope.launch {
-
 
             exampleDevice
                 .blueberryService
@@ -241,7 +259,6 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG, "$it")
                 }
 
-
             exampleDevice
                 .blueberryService
                 .simpleXmlWrite(Product("Iphone", 2000))
@@ -253,7 +270,6 @@ class MainActivity : AppCompatActivity() {
                 .let {
                     Log.d(TAG, "$it")
                 }
-
 
             exampleDevice
                 .blueberryService
@@ -267,7 +283,6 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG, "$it")
                 }
 
-
             exampleDevice
                 .blueberryService
                 .simpleXmlNotifyWithEndSignal()
@@ -278,7 +293,6 @@ class MainActivity : AppCompatActivity() {
                 .enqueue { _, value ->
                     Log.d(TAG, "$value")
                 }
-
 
         }
     }

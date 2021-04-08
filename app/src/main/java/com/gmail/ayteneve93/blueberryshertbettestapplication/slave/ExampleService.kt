@@ -58,17 +58,22 @@ interface ExampleService {
     fun gsonNotifyWithEndSignal() : BlueberryNotifyOrIndicateRequestInfo<Person>
 
 
-    /* Xml Characteristic */
+    /* Moshi Characteristic */
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0202")
+    fun moshiRead() : BlueberryReadRequestInfo<Animal>
+
+
+    /* Xml Characteristic */
+    @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0203")
     fun simpleXmlRead() : BlueberryReadRequestInfo<Product>
 
-    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0202")
+    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0203")
     fun simpleXmlWrite(dataToSend : Product) : BlueberryWriteRequestInfo
 
-    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0202", true)
+    @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0203", true)
     fun simpleXmlReliableWrite(dataToSend : Product) : BlueberryWriteRequestInfo
 
-    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0202", "\$EoD")
+    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0203", "\$EoD")
     fun simpleXmlNotifyWithEndSignal() : BlueberryNotifyOrIndicateRequestInfo<Product>
 
 
