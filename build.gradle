@@ -1,12 +1,15 @@
 buildscript {
     ext {
-        /** Core... */
+
+
+        /** Builds */
         sherbet_version_name = '0.3.3-alpha'
         sherbet_version_code = 11
         sdk_version_min = 24
         sdk_version_target = 30
+        build_tools_version = "30.0.3"
 
-        /** Bases... */
+        /** Bases */
         // Kotlin
         kotlin_version = '1.4.31'
         // Dokka
@@ -17,14 +20,14 @@ buildscript {
         tedpermission_rxjava2_version = '2.2.3'
 
 
-        /** Call Adapters... */
+        /** Call Adapters */
         // RxJava2
         rxjava2_version = '2.1.1'
         // Coroutine
         corutine_version = '1.3.8'
 
 
-        /** Converters... */
+        /** Converters */
         // Gson
         gson_version = "2.8.6"
         // Jackson
@@ -35,16 +38,13 @@ buildscript {
         simple_xml_version = "2.7.1"
 
 
-
-
-
     }
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.2'
+        classpath 'com.android.tools.build:gradle:4.1.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.github.dcendents:android-maven-gradle-plugin:$maven_gradle_plugin_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"

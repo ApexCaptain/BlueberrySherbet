@@ -9,7 +9,7 @@ group='com.github.ApexCaptain'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "$build_tools_version"
 
     defaultConfig {
         minSdkVersion sdk_version_min
