@@ -17,7 +17,7 @@ buildscript {
         // Maven Gradle Plugin
         maven_gradle_plugin_version = '2.1'
         // Ted RxJava2
-        tedpermission_rxjava2_version = '2.2.3'
+        tedpermission_rxjava2_version = '2.3.0'
 
 
         /** Call Adapters */

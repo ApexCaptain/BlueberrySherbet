@@ -3,6 +3,12 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.8">
       <module name="annotations" target="1.7" />
+      <module name="BlueberrySherbet.app" target="11" />
+      <module name="BlueberrySherbet.converter-gson" target="11" />
+      <module name="BlueberrySherbet.converter-jackson" target="11" />
+      <module name="BlueberrySherbet.converter-moshi" target="11" />
+      <module name="BlueberrySherbet.converter-simple-xml" target="11" />
+      <module name="BlueberrySherbet.core" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
