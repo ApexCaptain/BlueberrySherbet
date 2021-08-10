@@ -8,3 +8,9 @@ Protobuf: com.squareup.retrofit2:converter-protobuf
 Wire: com.squareup.retrofit2:converter-wire
 Simple XML: com.squareup.retrofit2:converter-simplexml
 JAXB: com.squareup.retrofit2:converter-jaxb
+
+안드 패키지 메이븐 센트럴로 배포하고 리드미에 해당 내용 추가해야 함
+
+리플렉션 자바 클래스패스 미스매치 오류 해결
+
+node Slave 예시 프로젝트 맥 및 윈도우에서 사용 가능하도록 설정//데브 컨테이너 활성화

@@ -61,7 +61,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                     enclosedElements
                         .find { eachEnclosedElement -> eachEnclosedElement.kind != ElementKind.METHOD }
                         ?.let { unsupportedEnclosedElement ->
-                            val unsupportedElementTypeName = unsupportedEnclosedElement.kind.name.let { "${it.substring(0,1).toUpperCase(Locale.US)}${it.substring(1).toLowerCase(Locale.US)}" }
+                            val unsupportedElementTypeName = unsupportedEnclosedElement.kind.name.let { "${it.substring(0,1).uppercase(Locale.US)}${it.substring(1).lowercase(Locale.US)}" }
                             errorLog("The $unsupportedElementTypeName '${unsupportedEnclosedElement.simpleName}' is not a Method")
                             doesProcessingErrorExists = true
                             return@forEach
@@ -252,7 +252,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                             errorLog("UUID String '$sourceUuidString' is not valid. It must be matched with either one of ${arrayListOf(uuidRegexWithHyphen, uuidRegexWithoutHyphen, uuidRegex16bit)}")
                             return true
                         }
-                    }.toLowerCase(Locale.US)
+                    }.lowercase(Locale.US)
                 }
                 var parameterName : String? = null
                 addFunction(

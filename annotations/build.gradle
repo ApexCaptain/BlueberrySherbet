@@ -2,7 +2,7 @@ plugins {
     id 'java-library'
     id 'kotlin'
     id 'org.jetbrains.dokka'
-    id 'maven'
+    // id 'maven'
 }
 
 sourceCompatibility = 1.8
