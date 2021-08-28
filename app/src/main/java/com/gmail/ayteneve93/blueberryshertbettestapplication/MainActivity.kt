@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.databinding.DataBindingUtil
 import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
 import com.gmail.ayteneve93.blueberryshertbettestapplication.databinding.ActivityMainBinding
+import com.gmail.ayteneve93.blueberryshertbettestapplication.mask.MaskDevice
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.Animal
 import com.gmail.ayteneve93.converter_simple_xml.BlueberrySimpleXmlConverter
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.ExampleDevice
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding : ActivityMainBinding
     private val mCompositeDisposable = CompositeDisposable()
     private lateinit var exampleDevice : ExampleDevice
+    private lateinit var maskDevice : MaskDevice
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -63,6 +65,17 @@ class MainActivity : AppCompatActivity() {
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
                 .subscribe { scanResult ->
+
+                    scanResult.bluetoothDevice.name?.let { advertisingName ->
+                        if(advertisingName.startsWith("SleepCare")) {
+                            BlueberryScanner.stopScan()
+                            maskDevice = scanResult.interlock(this, MaskDevice::class.java)
+                            maskDevice.connect()
+                            BlueberryScanner.stopScan()
+                        }
+                    }
+
+                    /*
                     scanResult.bluetoothDevice.name?.let { advertisingName ->
                         if(advertisingName.startsWith("SherbetTest")) {
 
@@ -77,6 +90,8 @@ class MainActivity : AppCompatActivity() {
                             // testSimpleXmlCharacteristic()
                         }
                     }
+                    */
+
                 }
         )
 
