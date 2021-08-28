@@ -28,9 +28,11 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    /*
     api "com.fasterxml.jackson.core:jackson-core:$jackson_version"
     api "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
     api "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
     api "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
+    */
     implementation project(':core')
 }

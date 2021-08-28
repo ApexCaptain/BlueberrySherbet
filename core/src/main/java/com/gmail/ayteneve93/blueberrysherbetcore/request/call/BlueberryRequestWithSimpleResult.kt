@@ -50,6 +50,9 @@ class BlueberryRequestWithSimpleResult<ReturnType>(
     override fun onResponse(status: Int?, characteristic: BluetoothGattCharacteristic?) {
         super.onResponse(status, characteristic)
         try {
+
+            BlueberryLogger.i("Error -- ${characteristic?.getStringValue(0)}")
+
             callback.invoke(status!!, with(characteristic?.getStringValue(0)) {
                 if(this.isNullOrEmpty()) null
                 else when(mRequestType) {

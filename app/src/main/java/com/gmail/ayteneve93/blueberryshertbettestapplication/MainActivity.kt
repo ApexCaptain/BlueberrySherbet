@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.databinding.DataBindingUtil
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
 import com.gmail.ayteneve93.blueberryshertbettestapplication.databinding.ActivityMainBinding
 import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.Animal
@@ -15,6 +14,7 @@ import com.gmail.ayteneve93.blueberryshertbettestapplication.slave.Product
 import com.gmail.ayteneve93.converter_moshi.BlueberryMoshiConverter
 import com.squareup.moshi.Moshi
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 /**
  * @author ayteneve93@gmail.com
  */
+@DelicateCoroutinesApi
 class MainActivity : AppCompatActivity() {
 
     // https://stackoverflow.com/questions/33937005/monitor-non-beacon-ble-devices-android-beacon-library
@@ -52,6 +53,13 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, xmlString)
         */
 
+
+        
+        /*
+            Context context = requireContext().getApplicationContext();
+            WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+        */
         mCompositeDisposable.add(
             BlueberryScanner.rxStartScan(this)
                 .subscribe { scanResult ->
@@ -61,11 +69,11 @@ class MainActivity : AppCompatActivity() {
                             BlueberryScanner.stopScan()
                             exampleDevice = scanResult.interlock(this, ExampleDevice::class.java)
                             exampleDevice.connect()
-
-                            // testStringCharacteristic()
+                            BlueberryScanner.stopScan()
+                            testStringCharacteristic()
                             // testIntegerCharacteristic()
                             // testGsonCharacteristic()
-                            testMoshiCharacteristic()
+                            // testMoshiCharacteristic()
                             // testSimpleXmlCharacteristic()
                         }
                     }
@@ -80,7 +88,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun testStringCharacteristic() {
         GlobalScope.launch {
-
             exampleDevice
                 .blueberryService
                 .stringRead()
@@ -89,6 +96,7 @@ class MainActivity : AppCompatActivity() {
                 .let { Log.d(TAG, "$it") }
 
 
+            /*
             exampleDevice
                 .blueberryService
                 .stringWrite("Hello, this is simple string writing.")
@@ -121,6 +129,7 @@ class MainActivity : AppCompatActivity() {
                 .enqueue { _, value ->
                     Log.d(TAG, "Noti without signal -- $value")
                 }
+            */
 
         }
     }

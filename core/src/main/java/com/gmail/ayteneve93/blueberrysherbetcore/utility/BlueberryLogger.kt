@@ -6,13 +6,11 @@ import com.gmail.ayteneve93.blueberrysherbetcore.BuildConfig
 
 @Keep
 object BlueberryLogger {
-
     var isReleaseBuildOutLoggingEnabled = false
     var isStackTraceOutLoggingEnabled = true
     var stackTraceDepth = 5
     var isThreadNameOutLoggingEnabled = true
-
-    private val TAG = this::class.java.simpleName
+    private val TAG: String = this::class.java.simpleName
 
 
 

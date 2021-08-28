@@ -42,6 +42,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
 
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latest()
 
+    @DelicateKotlinPoetApi("BLE Service Model Impl Generation")
     override fun process(annotations: MutableSet<out TypeElement>?, roundEnv: RoundEnvironment): Boolean {
 
         var doesProcessingErrorExists = false
@@ -98,6 +99,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
     //private val moshiClass = ClassName("com.squareup.moshi", "Moshi")
     //private val moshiMemberPropertyName = "mMoshi"
 
+    @DelicateKotlinPoetApi("BLE Service Model Impl Generation")
     private fun generateDeviceServiceImplements
                 (blueberryElement : Element,
                  blueberryMethods : List<ExecutableElement>) : Boolean {
@@ -166,6 +168,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
     private val uuidRegexWithHyphen = Regex("""[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}""")
     private val uuidRegexWithoutHyphen = Regex("""[0-9a-fA-F]{32}""")
     private val uuidRegex16bit = Regex("""[0-9a-fA-F]{4}""")
+    @DelicateKotlinPoetApi("BLE Service Model Impl Generation")
     private fun generateDeviceServiceMethodImplements(classBuilder : TypeSpec.Builder, methods : List<ExecutableElement>) : Boolean {
         classBuilder.apply {
             methods.forEach { eachMethod ->

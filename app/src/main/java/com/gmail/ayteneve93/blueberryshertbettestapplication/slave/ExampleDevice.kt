@@ -13,7 +13,12 @@ class ExampleDevice : BlueberryDevice<ExampleService>() {
     override fun setServiceImpl(): ExampleService = BlueberryExampleServiceImpl(this)
 
     override fun setBlueberryConverter(): BlueberryConverter {
-        return BlueberryMoshiConverter(Moshi.Builder().build())
+        // return BlueberryMoshiConverter(Moshi.Builder().build())
+        return BlueberryGsonConverter(
+            Gson()
+                .newBuilder()
+                .create()
+        )
     }
 
     override fun onServicesDiscovered() {

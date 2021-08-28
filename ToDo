@@ -10,6 +10,9 @@ Simple XML: com.squareup.retrofit2:converter-simplexml
 JAXB: com.squareup.retrofit2:converter-jaxb
 
 안드 패키지 메이븐 센트럴로 배포하고 리드미에 해당 내용 추가해야 함
+https://getstream.io/blog/publishing-libraries-to-mavencentral-2021/
+
+converter-moshi string 파싱 오류 해결
 
 리플렉션 자바 클래스패스 미스매치 오류 해결
 

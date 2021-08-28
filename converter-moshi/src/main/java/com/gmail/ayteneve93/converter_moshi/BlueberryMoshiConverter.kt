@@ -14,8 +14,10 @@ class BlueberryMoshiConverter(private val mMoshi : Moshi = Moshi.Builder().build
         conversionClass: Class<ConversionType>
     ): ConversionType? = mMoshi.adapter(conversionClass).fromJson(sourceString)
 
+
     override fun imitate(): BlueberryConverter {
         return BlueberryMoshiConverter(mMoshi.newBuilder().build())
     }
+
 
 }
