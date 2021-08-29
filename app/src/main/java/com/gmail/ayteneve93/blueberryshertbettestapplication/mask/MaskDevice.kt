@@ -18,11 +18,24 @@ class MaskDevice : BlueberryDevice<MaskService>() {
         )
     }
 
+    override fun onDeviceConnected() {
+        super.onDeviceConnected()
+        Log.d("ayteneve93_test", "connected")
+    }
+
+    override fun onDeviceDisconnected() {
+        super.onDeviceDisconnected()
+        Log.d("ayteneve93_test", "disconnected")
+    }
+
     override fun onServicesDiscovered() {
         super.onServicesDiscovered()
+        Log.d("ayteneve93_test", "service discovered")
+
         blueberryService.indicateFromRPI().call().enqueue { _, value ->
             Log.d("ayteneve93_test", "$value")
         }
+
     }
 
 }

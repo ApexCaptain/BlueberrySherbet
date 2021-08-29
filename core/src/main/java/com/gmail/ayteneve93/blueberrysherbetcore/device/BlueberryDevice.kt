@@ -157,7 +157,6 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                 mCharacteristicList.clear()
                 bluetoothGatt.services.forEach { eachGattService -> mCharacteristicList.addAll(eachGattService.characteristics) }
             }
-            onServicesDiscovered()
             mIsServiceDiscovered = true
             mNotifyOrIndicateRequestList.forEach { prevNotiRequestInfo ->
                 prevNotiRequestInfo.apply {
@@ -165,6 +164,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                     cancel()
                 }
             }
+            onServicesDiscovered()
             executeRequest()
 
         }
@@ -463,11 +463,10 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                                     }
 
                                     NOTIFY::class.java, INDICATE::class.java -> (currentRequestInfo as BlueberryRequestWithRepetitiousResults<Any>).let { blueberryRequestInfoWithRepetitiousResults ->
-                                        Log.d("BlueberryTest", "request")
                                         val descriptor = characteristic.getDescriptor(CCCD)
                                         /** ToDo : Notify Limit 확인 */
                                         if(descriptor != null) {
-                                            if(blueberryRequestInfoWithRepetitiousResults.isNotificationEnabled) {
+                                            if(blueberryRequestInfoWithRepetitiousResults.isEnabled) {
                                                 if(mNotifyOrIndicateRequestList.find {
                                                         it.mUuid == blueberryRequestInfoWithRepetitiousResults.mUuid} != null) {
                                                     if(mNotifyOrIndicateRequestList.find {
@@ -483,17 +482,23 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                                                 mNotifyOrIndicateRequestList.add(blueberryRequestInfoWithRepetitiousResults)
                                             } else {
                                                 if(!mNotifyOrIndicateRequestList.removeIf { it.mRequestCode == blueberryRequestInfoWithRepetitiousResults.mRequestCode }) return@requestProcess
+
                                                 if(mNotifyOrIndicateRequestList.find {
                                                         it.mUuid == blueberryRequestInfoWithRepetitiousResults.mUuid} != null) return@requestProcess
-                                                descriptor.value = BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
+                                                if(descriptor.value in arrayOf(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE, BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE))
+                                                    descriptor.value = BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
+                                                else return@requestProcess
                                             }
-                                            Log.d("ayteneve93_test", "${blueberryRequestInfoWithRepetitiousResults.isNotificationEnabled}")
-                                            mBluetoothGatt.setCharacteristicNotification(characteristic, blueberryRequestInfoWithRepetitiousResults.isNotificationEnabled)
+
+                                            mBluetoothGatt.setCharacteristicNotification(characteristic, blueberryRequestInfoWithRepetitiousResults.isEnabled)
                                             mBluetoothGatt.writeDescriptor(descriptor)
                                             mBluetoothGatt.readDescriptor(descriptor)
                                             blueberryRequestInfoWithRepetitiousResults.mIsOnProgress = true
                                             mIsBluetoothOnProgress = true
-                                        } else disconnect()
+                                        } else {
+                                            BlueberryLogger.e("${this.javaClass.canonicalName} has no descriptor.")
+                                            disconnect()
+                                        }
                                         BlueberryLogger.i("${currentRequestInfo.mRequestType.simpleName} is called.")
                                     }
                                     else -> throw IllegalAccessException("Blueberry Execution Access by Unknown Request Type")

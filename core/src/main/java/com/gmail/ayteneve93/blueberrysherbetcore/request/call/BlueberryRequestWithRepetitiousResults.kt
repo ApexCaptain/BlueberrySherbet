@@ -2,7 +2,6 @@ package com.gmail.ayteneve93.blueberrysherbetcore.request.call
 
 import android.bluetooth.BluetoothGattCharacteristic
 import android.os.Build
-import android.util.Log
 import androidx.databinding.ObservableField
 import com.gmail.ayteneve93.blueberrysherbetannotations.INDICATE
 import com.gmail.ayteneve93.blueberrysherbetannotations.NOTIFY
@@ -28,17 +27,18 @@ class BlueberryRequestWithRepetitiousResults<ReturnType>(
     mBlueberryRequestInfo = blueberryRequestInfo as BlueberryAbstractRequestInfo<out Any>,
     mRequestType = requestType) {
 
-    internal var isNotificationEnabled = true
+    internal var isEnabled = true
     private lateinit var callback : BlueberryCallbackWithResult<ReturnType>
 
     override fun convertToSimpleHashMap(): HashMap<String, Any?> = super.convertToSimpleHashMap().apply {
         this["Return Type"] = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) mBlueberryRequestInfo.mReturnTypeClass.typeName
         else mBlueberryRequestInfo.mReturnTypeClass.simpleName
         this["End Signal"] = endSignal
+        this["isEnabled"] = isEnabled
     }
 
     override fun cancel() {
-        isNotificationEnabled = false
+        isEnabled = false
         super.cancel()
     }
 

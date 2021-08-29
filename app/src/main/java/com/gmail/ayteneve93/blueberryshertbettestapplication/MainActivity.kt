@@ -72,6 +72,12 @@ class MainActivity : AppCompatActivity() {
                             maskDevice = scanResult.interlock(this, MaskDevice::class.java)
                             maskDevice.connect()
                             BlueberryScanner.stopScan()
+
+                            /*
+                            maskDevice.blueberryService.indicateFromRPI().call().enqueue { _, value ->
+                                Log.d("ayteneve93_test", "$value")
+                            }
+                            */
                         }
                     }
 
