@@ -28,17 +28,8 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'org.jetbrains.dokka'
-    // id 'com.github.dcendents.android-maven'
 }
-// group='com.github.ApexCaptain'
-
-ext {
-    PUBLISH_GROUP_ID = 'io.github.ApexCaptain'
-    PUBLISH_VERSION = '0.4.2-alpha'
-    PUBLISH_ARTIFACT_ID = 'core'
-}
-
-apply from: "${rootProject.projectDir}/scripts/publish-module.gradle"
+group='com.github.ApexCaptain'
 
 android {
     compileSdkVersion 30
