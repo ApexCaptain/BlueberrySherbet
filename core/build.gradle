@@ -28,6 +28,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'org.jetbrains.dokka'
+    id 'maven-publish'
 }
 group='com.github.ApexCaptain'
 
@@ -70,4 +71,14 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rxjava2_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$corutine_version"
     api project(':annotations')
+}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+            }
+        }
+    }
 }

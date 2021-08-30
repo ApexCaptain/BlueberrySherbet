@@ -1,12 +1,12 @@
+import org.gradle.internal.jvm.Jvm
 buildscript {
     ext {
         /** Builds */
-        sherbet_version_name = '0.4.1-alpha'
-        sherbet_version_code = 13
+        sherbet_version_name = '0.4.2-alpha'
+        sherbet_version_code = 14
         sdk_version_min = 24
         sdk_version_target = 30
         build_tools_version = "30.0.3"
-        maven_gradle_plugin_version = "2.1"
 
         /** Bases */
         // Kotlin
@@ -41,24 +41,25 @@ buildscript {
         google()
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
+        maven { url 'https://jitpack.io' }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
-
-
-        classpath "com.github.dcendents:android-maven-gradle-plugin:$maven_gradle_plugin_version"
-
-
     }
 
 }
+
+println "Gradle uses Java ${Jvm.current()}"
 
 allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://jitpack.io" }
     }
 }
 
