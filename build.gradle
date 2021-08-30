@@ -1,3 +1,5 @@
+apply plugin: 'io.github.gradle-nexus.publish-plugin'
+
 buildscript {
     ext {
         /** Builds */
@@ -9,7 +11,7 @@ buildscript {
 
         /** Bases */
         // Kotlin
-        kotlin_version = '1.5.21'
+        kotlin_version = '1.5.30'
         // Dokka
         dokka_version = "0.10.1"
         // Maven Gradle Plugin
@@ -35,17 +37,22 @@ buildscript {
         // Simple XML
         simple_xml_version = "2.7.1"
 
-
+        /** Publish */
+        PUBLISH_GROUP_ID = 'io.github.ApexCaptain'
+        PUBLISH_VERSION = '0.4.2-alpha'
     }
     repositories {
         google()
         mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
+        classpath 'io.github.gradle-nexus:publish-plugin:1.1.0'
     }
+
 }
 
 allprojects {
@@ -58,3 +65,5 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+apply from: "${rootDir}/scripts/publish-root.gradle"
