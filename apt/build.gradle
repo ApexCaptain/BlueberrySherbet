@@ -3,7 +3,9 @@ plugins {
     id 'kotlin'
     id 'kotlin-kapt'
     // id 'maven'
+    id 'maven-publish'
 }
+
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -16,5 +18,18 @@ dependencies {
     implementation 'com.squareup:kotlinpoet:1.9.0'
     implementation 'com.google.auto.service:auto-service:1.0'
     kapt 'com.google.auto.service:auto-service:1.0'
+}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.java
+                groupId = group_id
+                artifactId = "apt"
+                version = sherbet_version_name
+            }
+        }
+    }
 }
 

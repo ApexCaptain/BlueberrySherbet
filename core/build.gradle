@@ -5,8 +5,6 @@ plugins {
     id 'org.jetbrains.dokka'
     id 'maven-publish'
 }
-group='com.github.ApexCaptain'
-
 android {
     compileSdkVersion 30
     buildToolsVersion "$build_tools_version"
@@ -60,6 +58,9 @@ project.afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
+                groupId = group_id
+                artifactId = "core"
+                version = sherbet_version_name
             }
         }
     }

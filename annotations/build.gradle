@@ -3,7 +3,9 @@ plugins {
     id 'kotlin'
     id 'org.jetbrains.dokka'
     // id 'maven'
+    id 'maven-publish'
 }
+group='com.github.ApexCaptain'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -27,4 +29,17 @@ dokka {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.java
+                groupId = group_id
+                artifactId = "annotations"
+                version = sherbet_version_name
+            }
+        }
+    }
 }
