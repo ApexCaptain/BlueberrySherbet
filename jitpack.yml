@@ -6,3 +6,4 @@ install:
  - ./gradlew :converter-moshi:build :converter-moshi:publishToMavenLocal
  - ./gradlew :converter-simple-xml:build :converter-simple-xml:publishToMavenLocal
  - find . -name "*.aar"
+ - find . -name "*.jar"
