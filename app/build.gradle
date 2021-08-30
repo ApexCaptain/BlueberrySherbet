@@ -49,7 +49,6 @@ dependencies {
 
     // Converter
     implementation project(':converter-gson')
-    implementation project(':converter-jackson')
     implementation project(':converter-moshi')
     implementation project(':converter-simple-xml')
 
