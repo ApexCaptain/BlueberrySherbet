@@ -108,6 +108,19 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun testStringCharacteristic() {
+        exampleDevice.blueberryService.stringRead().call().enqueue { status, value ->
+
+        }
+        mCompositeDisposable.add(
+            exampleDevice
+                .blueberryService
+                .stringRead()
+                .call()
+                .byRx2()
+                .subscribe { result, error ->
+
+                }
+        )
         GlobalScope.launch {
             exampleDevice
                 .blueberryService

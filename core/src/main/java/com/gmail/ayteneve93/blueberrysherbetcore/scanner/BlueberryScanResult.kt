@@ -31,6 +31,7 @@ class BlueberryScanResult internal constructor(bluetoothDevice: BluetoothDevice)
         mRssiPropertyChangedListenerId++
     }
 
+
     fun onDistanceChanged(txPower : Int, envFactor : Byte = 2, onDistanceChangedListener : (Double) -> Unit) : Int = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
             onDistanceChangedListener(

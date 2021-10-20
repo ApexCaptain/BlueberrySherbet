@@ -9,6 +9,7 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import com.gmail.ayteneve93.blueberrysherbetannotations.*
 import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberryConverter
+import com.gmail.ayteneve93.blueberrysherbetcore.converter.BlueberryDefaultConverter
 import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryAbstractRequest
 import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryRequestWithNoResponse
 import com.gmail.ayteneve93.blueberrysherbetcore.request.call.BlueberryRequestWithRepetitiousResults
@@ -36,7 +37,7 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
 
     /** Data Converter */
     internal val blueberryConverter : BlueberryConverter by lazy { setBlueberryConverter() }
-    protected abstract fun setBlueberryConverter() : BlueberryConverter
+    protected open fun setBlueberryConverter() : BlueberryConverter = BlueberryDefaultConverter()
 
     companion object {
 
