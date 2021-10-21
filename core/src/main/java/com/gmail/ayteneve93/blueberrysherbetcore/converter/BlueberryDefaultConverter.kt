@@ -1,6 +1,6 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.converter
 
-class BlueberryDefaultConverter : BlueberryConverter {
+internal class BlueberryDefaultConverter : BlueberryConverter {
     override fun <ConversionType> stringify(
         sourceObject: ConversionType,
         conversionClass: Class<ConversionType>

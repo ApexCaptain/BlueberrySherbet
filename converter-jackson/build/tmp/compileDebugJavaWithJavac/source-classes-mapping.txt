@@ -1,0 +1,2 @@
+com/gmail/ayteneve93/converter_jackson/BuildConfig.java
+ com.gmail.ayteneve93.converter_jackson.BuildConfig
