@@ -1,5 +1,6 @@
 package com.gmail.ayteneve93.blueberryshertbettestapplication
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private val mCompositeDisposable = CompositeDisposable()
     private lateinit var exampleDevice : ExampleDevice
     private lateinit var maskDevice : MaskDevice
+    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -67,18 +69,21 @@ class MainActivity : AppCompatActivity() {
                 .subscribe { scanResult ->
 
                     scanResult.bluetoothDevice.name?.let { advertisingName ->
-                        if(advertisingName.startsWith("SleepCare")) {
-                            BlueberryScanner.stopScan()
-                            maskDevice = scanResult.interlock(this, MaskDevice::class.java)
-                            maskDevice.connect()
-                            BlueberryScanner.stopScan()
-
-                            /*
-                            maskDevice.blueberryService.indicateFromRPI().call().enqueue { _, value ->
-                                Log.d("ayteneve93_test", "$value")
-                            }
-                            */
+                        if(advertisingName.startsWith("USY")) {
+                            BlueberryScanner.stopScan(this@MainActivity)
                         }
+//                        if(advertisingName.startsWith("SleepCare")) {
+//                            BlueberryScanner.stopScan(this@MainActivity)
+//                            maskDevice = scanResult.interlock(this, MaskDevice::class.java)
+//                            maskDevice.connect()
+//                            BlueberryScanner.stopScan(this@MainActivity)
+//
+//                            /*
+//                            maskDevice.blueberryService.indicateFromRPI().call().enqueue { _, value ->
+//                                Log.d("ayteneve93_test", "$value")
+//                            }
+//                            */
+//                        }
                     }
 
                     /*
