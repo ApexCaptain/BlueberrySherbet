@@ -69,21 +69,19 @@ class MainActivity : AppCompatActivity() {
                 .subscribe { scanResult ->
 
                     scanResult.bluetoothDevice.name?.let { advertisingName ->
-                        if(advertisingName.startsWith("USY")) {
+
+                        if(advertisingName.startsWith("SleepCare")) {
                             BlueberryScanner.stopScan(this@MainActivity)
+                            maskDevice = scanResult.interlock(this, MaskDevice::class.java)
+                            maskDevice.connect()
+                            BlueberryScanner.stopScan(this@MainActivity)
+
+                            /*
+                            maskDevice.blueberryService.indicateFromRPI().call().enqueue { _, value ->
+                                Log.d("ayteneve93_test", "$value")
+                            }
+                            */
                         }
-//                        if(advertisingName.startsWith("SleepCare")) {
-//                            BlueberryScanner.stopScan(this@MainActivity)
-//                            maskDevice = scanResult.interlock(this, MaskDevice::class.java)
-//                            maskDevice.connect()
-//                            BlueberryScanner.stopScan(this@MainActivity)
-//
-//                            /*
-//                            maskDevice.blueberryService.indicateFromRPI().call().enqueue { _, value ->
-//                                Log.d("ayteneve93_test", "$value")
-//                            }
-//                            */
-//                        }
                     }
 
                     /*

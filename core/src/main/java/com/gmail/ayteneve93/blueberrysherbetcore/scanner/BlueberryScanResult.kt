@@ -1,5 +1,6 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.scanner
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.os.Build
@@ -18,40 +19,7 @@ class BlueberryScanResult internal constructor(bluetoothDevice: BluetoothDevice)
         return blueberryDevice
     }
 
-    private val mRssiPropertyChangedListenerMap = HashMap<Int, Observable.OnPropertyChangedCallback>()
-    private var mRssiPropertyChangedListenerId = 0
-    internal val mRssiValue = ObservableField<Int>()
-    fun onRssiChanged(onRssiChangedCallback : (Int) -> Unit) : Int = object : Observable.OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                onRssiChangedCallback(mRssiValue.get()!!)
-            }
-    }.let {
-        mRssiValue.addOnPropertyChangedCallback(it)
-        mRssiPropertyChangedListenerMap[mRssiPropertyChangedListenerId] = it
-        mRssiPropertyChangedListenerId++
-    }
-
-
-    fun onDistanceChanged(txPower : Int, envFactor : Byte = 2, onDistanceChangedListener : (Double) -> Unit) : Int = object : Observable.OnPropertyChangedCallback() {
-        override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-            onDistanceChangedListener(
-            10.toDouble().pow(
-                (txPower - mRssiValue.get()!!) / (10 * when {
-                    envFactor < 2 -> 2
-                    envFactor > 4 -> 4
-                    else -> envFactor
-                }.toDouble()))
-            )
-        }
-    }.let {
-        mRssiValue.addOnPropertyChangedCallback(it)
-        mRssiPropertyChangedListenerMap[mRssiPropertyChangedListenerId] = it
-        mRssiPropertyChangedListenerId++
-    }
-
-    fun removeRssiListener(listenerId : Int) {
-        mRssiPropertyChangedListenerMap.remove(listenerId)
-    }
+    val rssi = ObservableField<Int>()
 
     override fun hashCode(): Int = 31 * bluetoothDevice.address.hashCode()
 
@@ -62,6 +30,7 @@ class BlueberryScanResult internal constructor(bluetoothDevice: BluetoothDevice)
         return false
     }
 
+    @SuppressLint("MissingPermission")
     override fun toString(): String = HashMap<String, Any?>().apply {
         this@BlueberryScanResult.bluetoothDevice.let {
             put("address", it.address)

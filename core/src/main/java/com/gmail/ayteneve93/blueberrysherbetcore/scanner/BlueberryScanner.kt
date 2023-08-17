@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.net.MacAddress
 import android.os.Build
+import android.util.Log
 import androidx.databinding.ObservableField
 import com.gmail.ayteneve93.blueberrysherbetcore.R
 import com.gmail.ayteneve93.blueberrysherbetcore.utility.BlueberryLogger
@@ -18,6 +19,8 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlin.math.abs
+import kotlin.math.pow
 
 object BlueberryScanner {
 
@@ -85,7 +88,7 @@ object BlueberryScanner {
                                         blueberryScanResult.updateDevice(bluetoothDevice)
                                     }
 
-                                    blueberryScanResult.mRssiValue.set(result.rssi)
+                                    blueberryScanResult.rssi.set(result.rssi)
 
                                 }
                             }
