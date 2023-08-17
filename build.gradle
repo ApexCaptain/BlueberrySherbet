@@ -2,16 +2,17 @@ import org.gradle.internal.jvm.Jvm
 buildscript {
     ext {
         /** Builds */
-        sherbet_version_name = '0.5.2-alpha'
+        sherbet_version_name = '0.5.3-alpha'
         sherbet_version_code = 15
         sdk_version_min = 24
         sdk_version_target = 30
         build_tools_version = "30.0.3"
         group_id = "com.github.ApexCaptain"
+        compie_sdk_version = "android-31"
 
         /** Bases */
         // Kotlin
-        kotlin_version = '1.5.30'
+        kotlin_version = '1.6.21'
         // Dokka
         dokka_version = "0.10.1"
         // Maven Gradle Plugin
@@ -41,7 +42,7 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.3'
+        classpath 'com.android.tools.build:gradle:7.4.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"

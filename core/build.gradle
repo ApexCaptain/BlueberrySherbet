@@ -6,7 +6,7 @@ plugins {
     id 'maven-publish'
 }
 android {
-    compileSdkVersion 30
+    compileSdkVersion "$compie_sdk_version"
     buildToolsVersion "$build_tools_version"
 
     defaultConfig {
@@ -41,6 +41,7 @@ android {
             // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.gmail.ayteneve93.blueberrysherbetcore'
 
 }
 

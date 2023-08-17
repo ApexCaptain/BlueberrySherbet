@@ -323,6 +323,10 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                         onDeviceDisconnected()
                     }
 
+                    else -> {
+                        BlueberryLogger.w("Unknown state")
+                    }
+
                 }
             }
         })

@@ -7,7 +7,7 @@ apply plugin: 'kotlin-kapt'
 
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion "$compie_sdk_version"
     buildToolsVersion "$build_tools_version"
     defaultConfig {
         applicationId "com.gmail.ayteneve93.blueberrysherbet"
@@ -29,6 +29,7 @@ android {
         dataBinding = true
         viewBinding = true
     }
+    namespace 'com.gmail.ayteneve93.blueberryshertbettestapplication'
 
 }
 
