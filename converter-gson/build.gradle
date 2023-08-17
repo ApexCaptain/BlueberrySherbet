@@ -12,6 +12,11 @@ android {
     compileSdkVersion "$compie_sdk_version"
     buildToolsVersion "$build_tools_version"
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     defaultConfig {
         minSdkVersion sdk_version_min
         targetSdkVersion sdk_version_target

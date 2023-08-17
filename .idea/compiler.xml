@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="1.8">
+    <bytecodeTargetLevel target="17">
       <module name="annotations" target="1.7" />
-      <module name="BlueberrySherbet.app" target="17" />
-      <module name="BlueberrySherbet.converter-gson" target="17" />
       <module name="BlueberrySherbet.converter-jackson" target="11" />
-      <module name="BlueberrySherbet.converter-moshi" target="17" />
-      <module name="BlueberrySherbet.converter-simple-xml" target="17" />
-      <module name="BlueberrySherbet.core" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

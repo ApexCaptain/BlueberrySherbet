@@ -9,6 +9,13 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion "$compie_sdk_version"
     buildToolsVersion "$build_tools_version"
+
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     defaultConfig {
         applicationId "com.gmail.ayteneve93.blueberrysherbet"
         minSdkVersion sdk_version_min
