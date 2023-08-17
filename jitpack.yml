@@ -1,11 +1,11 @@
 jdk:
- - openjdk11
+  - openjdk17
 install:
- - ./gradlew :annotations:build :annotations:publishToMavenLocal
- - ./gradlew :apt:build :apt:publishToMavenLocal
- - ./gradlew :core:build :core:publishToMavenLocal
- - ./gradlew :converter-gson:build :converter-gson:publishToMavenLocal
- - ./gradlew :converter-moshi:build :converter-moshi:publishToMavenLocal
- - ./gradlew :converter-simple-xml:build :converter-simple-xml:publishToMavenLocal
- - find . -name "*.aar"
- - find . -name "*.jar"
+  - ./gradlew :annotations:build :annotations:publishToMavenLocal
+  - ./gradlew :apt:build :apt:publishToMavenLocal
+  - ./gradlew :core:build :core:publishToMavenLocal
+  - ./gradlew :converter-gson:build :converter-gson:publishToMavenLocal
+  - ./gradlew :converter-moshi:build :converter-moshi:publishToMavenLocal
+  - ./gradlew :converter-simple-xml:build :converter-simple-xml:publishToMavenLocal
+  - find . -name "*.aar"
+  - find . -name "*.jar"
