@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
+import androidx.databinding.Observable.OnPropertyChangedCallback
 import com.gmail.ayteneve93.blueberrysherbetcore.scanner.BlueberryScanner
 import com.gmail.ayteneve93.blueberryshertbettestapplication.databinding.ActivityMainBinding
 import com.gmail.ayteneve93.blueberryshertbettestapplication.mask.MaskDevice
@@ -70,18 +72,30 @@ class MainActivity : AppCompatActivity() {
 
                     scanResult.bluetoothDevice.name?.let { advertisingName ->
 
-                        if(advertisingName.startsWith("SleepCare")) {
-                            BlueberryScanner.stopScan(this@MainActivity)
-                            maskDevice = scanResult.interlock(this, MaskDevice::class.java)
-                            maskDevice.connect()
-                            BlueberryScanner.stopScan(this@MainActivity)
+                        if(advertisingName.startsWith("USY")) {
+                            Log.d("ayteneve93_test", advertisingName)
+                            exampleDevice = scanResult.interlock(this, ExampleDevice::class.java, false)
+                            exampleDevice.connect()
 
-                            /*
-                            maskDevice.blueberryService.indicateFromRPI().call().enqueue { _, value ->
-                                Log.d("ayteneve93_test", "$value")
-                            }
-                            */
+//                            exampleDevice.blueberryService.openDoorLock(
+//
+//                            )
+
                         }
+
+//                        if(advertisingName.startsWith("SleepCare")) {
+//                            BlueberryScanner.stopScan(this@MainActivity)
+//                            maskDevice = scanResult.interlock(this, MaskDevice::class.java)
+//                            maskDevice.connect()
+//                            BlueberryScanner.stopScan(this@MainActivity)
+//
+//                            /*
+//                            maskDevice.blueberryService.indicateFromRPI().call().enqueue { _, value ->
+//                                Log.d("ayteneve93_test", "$value")
+//                            }
+//                            */
+//                        }
+
                     }
 
                     /*

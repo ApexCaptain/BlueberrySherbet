@@ -9,6 +9,9 @@ import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryWriteRequestIn
 @BlueberryService
 interface ExampleService {
 
+    @WRITE("0000fff2-0000-1000-8000-00805f9b34fb")
+    fun openDoorLock(data : CharArray) : BlueberryWriteRequestInfo
+
     /* Primitive Service*/
     /* String Characteristic */
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
