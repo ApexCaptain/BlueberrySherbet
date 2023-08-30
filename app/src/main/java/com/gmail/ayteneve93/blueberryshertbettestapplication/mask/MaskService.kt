@@ -7,7 +7,7 @@ import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryNotifyOrIndica
 @BlueberryService
 interface MaskService {
 
-    @INDICATE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeee102", "\$EoD")
+    @INDICATE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeee102", endSignal = "\$EoD")
     fun indicateFromRPI() : BlueberryNotifyOrIndicateRequestInfo<String>
 
 }

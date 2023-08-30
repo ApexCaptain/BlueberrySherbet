@@ -10,14 +10,6 @@ class ExampleDevice : BlueberryDevice<ExampleService>() {
 
     override fun setServiceImpl(): ExampleService = BlueberryExampleServiceImpl(this)
 
-//    override fun setBlueberryConverter(): BlueberryConverter {
-//        return BlueberryGsonConverter(
-//            Gson()
-//                .newBuilder()
-//                .create()
-//        )
-//    }
-
     override fun onDeviceConnected() {
         super.onDeviceConnected()
         Log.d("ayteneve93_test", "connected")

@@ -133,7 +133,7 @@ annotation class READ(val uuidString : String)
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class WRITE(val uuidString : String, val checkIsReliable : Boolean = false)
+annotation class WRITE(val uuidString : String, val checkIsReliable : Boolean = false, val useSimpleBytes : Boolean = false)
 
 
 
@@ -199,7 +199,7 @@ annotation class WRITE_WITHOUT_RESPONSE(val uuidString : String, val checkIsReli
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class NOTIFY(val uuidString : String, val endSignal : String = DEFAULT_END_SIGNAL)
+annotation class NOTIFY(val uuidString : String, val useEndSignal : Boolean = true, val endSignal : String = DEFAULT_END_SIGNAL)
 
 
 
@@ -232,5 +232,5 @@ annotation class NOTIFY(val uuidString : String, val endSignal : String = DEFAUL
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class INDICATE(val uuidString : String,  val endSignal : String = DEFAULT_END_SIGNAL)
+annotation class INDICATE(val uuidString : String, val useEndSignal : Boolean = true,  val endSignal : String = DEFAULT_END_SIGNAL)
 

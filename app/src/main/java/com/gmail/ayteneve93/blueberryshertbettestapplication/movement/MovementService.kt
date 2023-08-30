@@ -22,7 +22,7 @@ interface MovementService {
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeee201")
     fun getConnectionResult() : BlueberryReadRequestInfo<WiFiConnectionResult>
 
-    @INDICATE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeee201", "\$EoD")
+    @INDICATE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeee201", endSignal = "\$EoD")
     fun connectionStatus() : BlueberryNotifyOrIndicateRequestInfo<WiFiConnectionState>
 
     @READ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeee202")

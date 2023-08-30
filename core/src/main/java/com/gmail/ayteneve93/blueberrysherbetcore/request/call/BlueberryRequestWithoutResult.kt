@@ -15,7 +15,9 @@ class BlueberryRequestWithoutResult(
     blueberryRequestInfo: BlueberryAbstractRequestInfo<out Any>,
     requestType : Class<out Annotation>,
     internal val inputString : String?,
-    val checkIsReliable : Boolean
+    internal val inputBytes: ByteArray?,
+    val checkIsReliable : Boolean,
+    val useSimpleBytes : Boolean
 ) : BlueberryAbstractRequest(
     mUuid = uuid,
     mPriority = priority,
@@ -25,7 +27,7 @@ class BlueberryRequestWithoutResult(
     private lateinit var callback : BlueberryCallbackWithoutResult
 
     override fun convertToSimpleHashMap(): HashMap<String, Any?> = super.convertToSimpleHashMap().apply {
-        this["Input Data"] = inputString
+        this["Input Data"] = if(useSimpleBytes) inputBytes else inputString
         this["Use Reliable Write"] = checkIsReliable
     }
 

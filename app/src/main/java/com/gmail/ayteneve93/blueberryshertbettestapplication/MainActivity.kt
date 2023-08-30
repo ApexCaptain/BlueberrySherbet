@@ -1,9 +1,11 @@
 package com.gmail.ayteneve93.blueberryshertbettestapplication
 
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.databinding.Observable.OnPropertyChangedCallback
@@ -21,6 +23,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.Base64
 
 
 /**
@@ -34,6 +37,8 @@ class MainActivity : AppCompatActivity() {
     private val mCompositeDisposable = CompositeDisposable()
     private lateinit var exampleDevice : ExampleDevice
     private lateinit var maskDevice : MaskDevice
+
+
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,9 +82,72 @@ class MainActivity : AppCompatActivity() {
                             exampleDevice = scanResult.interlock(this, ExampleDevice::class.java, false)
                             exampleDevice.connect()
 
-//                            exampleDevice.blueberryService.openDoorLock(
-//
-//                            )
+
+                            val a = arrayOf(
+                                0x02,
+                                0x73,
+                                0x13,
+                                0x00,
+                                0x02,
+                                0x1A,
+                                0x01,
+                                0x01,
+                                0x02,
+                                0x03,
+                                0x04,
+                                0x05,
+                                0x06,
+                                0x07,
+                                0x08,
+                                0x00,
+                                0x00,
+                                0xc9.toByte(),
+                                0x03,
+                            )
+
+                            GlobalScope.launch {
+                                Log.d("ayteneve93_test", "start")
+
+                                exampleDevice
+                                    .blueberryService
+                                    .doorLockState()
+                                    .call()
+                                    .enqueue { _, value ->
+                                        value?.forEach {
+                                            Log.d("ayteneve93_test", "Noti with signal -- $it")
+                                        }
+
+                                    }
+
+                                exampleDevice.blueberryService.openDoorLock(
+                                    a
+                                ).call()
+                                .byCoroutine()
+                                .let {
+                                    Log.d("ayteneve93_test", "result $it")
+                                }
+
+                                Thread.sleep(2000)
+
+                                exampleDevice.blueberryService.openDoorLock(
+                                    a
+                                ).call()
+                                    .byCoroutine()
+                                    .let {
+                                        Log.d("ayteneve93_test", "result $it")
+                                }
+
+                                Thread.sleep(2000)
+
+                                exampleDevice.blueberryService.openDoorLock(
+                                    a
+                                ).call()
+                                    .byCoroutine()
+                                    .let {
+                                        Log.d("ayteneve93_test", "result $it")
+                                }
+
+                            }
 
                         }
 

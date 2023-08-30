@@ -11,7 +11,8 @@ class BlueberryNotifyOrIndicateRequestInfo<ReturnType>(
     priority : Int,
     uuidString : String,
     private val requestType : Class<out Annotation>,
-    private val endSignal : String
+    private val endSignal : String,
+    private val useEndSignal : Boolean
 ) : BlueberryAbstractRequestInfo<ReturnType>(
     mReturnTypeClass = returnTypeClass,
     mBlueberryDevice = blueberryDevice,
@@ -31,6 +32,7 @@ class BlueberryNotifyOrIndicateRequestInfo<ReturnType>(
         awaitingMills = awaitingMills,
         blueberryRequestInfo = this,
         requestType = requestType,
-        endSignal = endSignal
+        endSignal = endSignal,
+        useEndSignal = useEndSignal
     )
 }

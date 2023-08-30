@@ -10,7 +10,8 @@ class BlueberryWriteRequestInfo(
     priority : Int,
     uuidString : String,
     inputDataSource : Any?,
-    private val checkIsReliable : Boolean
+    private val checkIsReliable : Boolean,
+    private val useSimpleBytes : Boolean
     ) : BlueberryAbstractRequestInfo<Any>(
     Any::class.java,
     blueberryDevice,
@@ -24,8 +25,18 @@ class BlueberryWriteRequestInfo(
         else blueberryConverter.stringify(inputDataSource, inputDataSource::class.java as Class<Any>)
     }
 
+    @Suppress("UNCHECKED_CAST")
+    internal val mInputBytes : ByteArray ? by lazy {
+        when {
+            inputDataSource is ByteArray -> inputDataSource
+            inputDataSource is Array<*> && inputDataSource.isArrayOf<Byte>() -> (inputDataSource as Array<Byte>).toByteArray()
+            inputDataSource is ArrayList<*> && inputDataSource.toArray().isArrayOf<Byte>() -> (inputDataSource as ArrayList<Byte>).toByteArray()
+            else -> null
+        }
+    }
+
     override fun convertToSimpleHashMap(): HashMap<String, Any?> = super.convertToSimpleHashMap().apply {
-        this["Input Data"] = mInputString
+        this["Input Data"] = if(useSimpleBytes) mInputBytes else mInputString
         this["Use Reliable Write"] = checkIsReliable
     }
 
@@ -36,7 +47,9 @@ class BlueberryWriteRequestInfo(
         blueberryRequestInfo = this,
         requestType = WRITE::class.java,
         inputString = mInputString,
-        checkIsReliable = checkIsReliable
+        inputBytes = mInputBytes,
+        checkIsReliable = checkIsReliable,
+        useSimpleBytes = useSimpleBytes
     )
 
 }

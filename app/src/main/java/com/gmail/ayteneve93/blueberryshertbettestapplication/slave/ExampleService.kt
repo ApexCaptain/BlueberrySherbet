@@ -4,13 +4,16 @@ import com.gmail.ayteneve93.blueberrysherbetannotations.*
 import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryNotifyOrIndicateRequestInfo
 import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryReadRequestInfo
 import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryWriteRequestInfo
-import com.gmail.ayteneve93.blueberrysherbetcore.request.BlueberryWriteRequestInfoWithoutResponse
 
 @BlueberryService
 interface ExampleService {
 
-    @WRITE("0000fff2-0000-1000-8000-00805f9b34fb")
-    fun openDoorLock(data : CharArray) : BlueberryWriteRequestInfo
+    // Usys BCE
+    @WRITE(uuidString = "0000fff2-0000-1000-8000-00805f9b34fb", useSimpleBytes = true)
+    fun openDoorLock(dataToSend :Array<Byte>) : BlueberryWriteRequestInfo
+
+    @NOTIFY(uuidString = "0000fff1-0000-1000-8000-00805f9b34fb", useEndSignal = false)
+    fun doorLockState() : BlueberryNotifyOrIndicateRequestInfo<Array<Byte>>
 
     /* Primitive Service*/
     /* String Characteristic */
@@ -23,7 +26,7 @@ interface ExampleService {
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101", true)
     fun stringReliableWrite(dataToSend : String) : BlueberryWriteRequestInfo
 
-    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101", "\$EoD")
+    @NOTIFY(uuidString = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101", endSignal = "\$EoD")
     fun stringNotifyWithEndSignal() : BlueberryNotifyOrIndicateRequestInfo<String>
 
     @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0101")
@@ -40,7 +43,7 @@ interface ExampleService {
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0102", true)
     fun integerReliableWrite(dataToSend : Int) : BlueberryWriteRequestInfo
 
-    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0102", "\$EoD")
+    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0102", endSignal = "\$EoD")
     fun integerNotifyWithEndSignal() : BlueberryNotifyOrIndicateRequestInfo<Int>
 
     @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0102")
@@ -57,7 +60,7 @@ interface ExampleService {
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0201", true)
     fun gsonReliableWrite(dataToSend : Person) : BlueberryWriteRequestInfo
 
-    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0201", "\$EoD")
+    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0201", endSignal = "\$EoD")
     fun gsonNotifyWithEndSignal() : BlueberryNotifyOrIndicateRequestInfo<Person>
 
 
@@ -76,7 +79,7 @@ interface ExampleService {
     @WRITE("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0203", true)
     fun simpleXmlReliableWrite(dataToSend : Product) : BlueberryWriteRequestInfo
 
-    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0203", "\$EoD")
+    @NOTIFY("aaaaaaaa-bbbb-cccc-dddd-eeeeeeee0203", endSignal = "\$EoD")
     fun simpleXmlNotifyWithEndSignal() : BlueberryNotifyOrIndicateRequestInfo<Product>
 
 

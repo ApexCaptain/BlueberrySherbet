@@ -134,7 +134,7 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
             )
              */
 
-            // Construcotr
+            // Constructor
             primaryConstructor(
                 FunSpec.constructorBuilder()
                     .addParameter(blueberryDeviceMemberPropertyName, blueberryDeviceClass)
@@ -263,7 +263,9 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                         .addModifiers(KModifier.OVERRIDE, KModifier.FINAL)
                         .apply {
                             if(eachMethod.parameters.size == 1) {
+
                                 eachMethod.parameters[0].let {
+                                    verboseLog(it.asType().asTypeName().javaToKotlinType().toString())
                                     parameterName = it.simpleName.toString()
                                     addParameter(
                                         it.simpleName.toString(),
@@ -282,7 +284,8 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString",
                                             ${parameterName?:"null"},
-                                            ${eachMethod.getAnnotation(WRITE::class.java).checkIsReliable}
+                                            ${eachMethod.getAnnotation(WRITE::class.java).checkIsReliable},
+                                            ${eachMethod.getAnnotation(WRITE::class.java).useSimpleBytes}
                                         )
                                     """.trimIndent()
                                 }
@@ -315,6 +318,9 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                     var endSignal =
                                         if(requestType == NOTIFY::class.java) eachMethod.getAnnotation(NOTIFY::class.java)!!.endSignal
                                         else eachMethod.getAnnotation(INDICATE::class.java)!!.endSignal
+                                    val useEndSignal =
+                                        if(requestType == NOTIFY::class.java) eachMethod.getAnnotation(NOTIFY::class.java)!!.useEndSignal
+                                        else eachMethod.getAnnotation(INDICATE::class.java)!!.useEndSignal
                                     if(endSignal.startsWith("\$")) endSignal = "\\$endSignal"
                                     if(endSignal.length > 20) errorLog("End Signal cannot be larger than 20 bytes!")
                                     """
@@ -324,7 +330,8 @@ class BlueberrySherbetAnnotationProcessor : AbstractProcessor() {
                                             ${eachMethod.getAnnotation(Priority::class.java)?.priority?:Priority.defaultPriority},
                                             "$uuidString",
                                             ${requestType.asTypeName()}::class.java,
-                                            "$endSignal"
+                                            "$endSignal",
+                                            $useEndSignal
                                         )
                                     """.trimIndent()
                                 }

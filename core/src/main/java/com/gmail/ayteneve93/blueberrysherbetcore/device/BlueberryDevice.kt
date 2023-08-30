@@ -1,7 +1,10 @@
 package com.gmail.ayteneve93.blueberrysherbetcore.device
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -414,9 +417,15 @@ abstract class BlueberryDevice<BlueberryService> protected constructor() {
                                 when(currentRequestInfo.mRequestType) {
 
                                     WRITE::class.java -> (currentRequestInfo as BlueberryRequestWithoutResult).let { blueberryWriteRequestInfoWithoutResult ->
-                                        characteristic.setValue(blueberryWriteRequestInfoWithoutResult.inputString)
-                                        if(currentRequestInfo.mRequestType == WRITE::class.java)
-                                            characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                                        characteristic.apply {
+                                            if(blueberryWriteRequestInfoWithoutResult.useSimpleBytes)
+                                                value = blueberryWriteRequestInfoWithoutResult.inputBytes
+                                            else
+                                                setValue(blueberryWriteRequestInfoWithoutResult.inputString)
+                                            writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                                        }
+
+                                        characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
                                         if(blueberryWriteRequestInfoWithoutResult.checkIsReliable) {
                                             mBluetoothGatt.beginReliableWrite()
                                             mIsReliableWriteOnProcess = true

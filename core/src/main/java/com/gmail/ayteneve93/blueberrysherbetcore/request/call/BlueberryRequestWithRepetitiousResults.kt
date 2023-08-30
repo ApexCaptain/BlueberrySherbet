@@ -2,6 +2,7 @@ package com.gmail.ayteneve93.blueberrysherbetcore.request.call
 
 import android.bluetooth.BluetoothGattCharacteristic
 import android.os.Build
+import android.util.Log
 import androidx.databinding.ObservableField
 import com.gmail.ayteneve93.blueberrysherbetannotations.INDICATE
 import com.gmail.ayteneve93.blueberrysherbetannotations.NOTIFY
@@ -19,7 +20,8 @@ class BlueberryRequestWithRepetitiousResults<ReturnType>(
     awaitingMills : Int,
     blueberryRequestInfo : BlueberryAbstractRequestInfo<ReturnType>,
     requestType : Class<out Annotation>,
-    private val endSignal : String
+    private val endSignal : String,
+    private val useEndSignal : Boolean
 ) : BlueberryAbstractRequest(
     mUuid = uuid,
     mPriority = priority,
@@ -65,7 +67,9 @@ class BlueberryRequestWithRepetitiousResults<ReturnType>(
     override fun onResponse(status: Int?, characteristic: BluetoothGattCharacteristic?) {
         if(status == 0) {
             characteristic?.value?.let { partialData ->
-                if(endSignal == 0x00.toChar().toString()) {
+                if(!useEndSignal) {
+                    callback.invoke(0, partialData.toTypedArray() as ReturnType)
+                } else if(endSignal == 0x00.toChar().toString()) {
                     try {
                         callback.invoke(0, when(mRequestType) {
                             NOTIFY::class.java, INDICATE::class.java -> mBlueberryRequestInfo.blueberryConverter.parse(
