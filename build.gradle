@@ -2,8 +2,8 @@ import org.gradle.internal.jvm.Jvm
 buildscript {
     ext {
         /** Builds */
-        sherbet_version_name = '0.5.7-alpha'
-        sherbet_version_code = 57
+        sherbet_version_name = '0.5.8-alpha'
+        sherbet_version_code = 58
         sdk_version_min = 24
         sdk_version_target = 30
         build_tools_version = "30.0.3"
